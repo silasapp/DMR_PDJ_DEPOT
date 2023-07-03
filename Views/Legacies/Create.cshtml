@@ -1,0 +1,176 @@
+﻿@*@model NewDepot.Models.Legacies
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Legacy</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CompanyId" class="control-label"></label>
+                <input asp-for="CompanyId" class="form-control" />
+                <span asp-validation-for="CompanyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PermitNumber" class="control-label"></label>
+                <input asp-for="PermitNumber" class="form-control" />
+                <span asp-validation-for="PermitNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IssuedDate" class="control-label"></label>
+                <input asp-for="IssuedDate" class="form-control" />
+                <span asp-validation-for="IssuedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExpiryDate" class="control-label"></label>
+                <input asp-for="ExpiryDate" class="form-control" />
+                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LinkId" class="control-label"></label>
+                <input asp-for="LinkId" class="form-control" />
+                <span asp-validation-for="LinkId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FacilityName" class="control-label"></label>
+                <input asp-for="FacilityName" class="form-control" />
+                <span asp-validation-for="FacilityName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FacilityAddress" class="control-label"></label>
+                <input asp-for="FacilityAddress" class="form-control" />
+                <span asp-validation-for="FacilityAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"></label>
+                <input asp-for="State" class="form-control" />
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lga" class="control-label"></label>
+                <input asp-for="Lga" class="form-control" />
+                <span asp-validation-for="Lga" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LandMeters" class="control-label"></label>
+                <input asp-for="LandMeters" class="form-control" />
+                <span asp-validation-for="LandMeters" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsPipeLine" /> @Html.DisplayNameFor(model => model.IsPipeLine)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsHighTention" /> @Html.DisplayNameFor(model => model.IsHighTention)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsHighWay" /> @Html.DisplayNameFor(model => model.IsHighWay)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactName" class="control-label"></label>
+                <input asp-for="ContactName" class="form-control" />
+                <span asp-validation-for="ContactName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactPhone" class="control-label"></label>
+                <input asp-for="ContactPhone" class="form-control" />
+                <span asp-validation-for="ContactPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Products" class="control-label"></label>
+                <input asp-for="Products" class="form-control" />
+                <span asp-validation-for="Products" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedAt" class="control-label"></label>
+                <input asp-for="UpdatedAt" class="form-control" />
+                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedAt" class="control-label"></label>
+                <input asp-for="DeletedAt" class="form-control" />
+                <span asp-validation-for="DeletedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedBy" class="control-label"></label>
+                <input asp-for="DeletedBy" class="form-control" />
+                <span asp-validation-for="DeletedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeleteStatus" class="control-label"></label>
+                <input asp-for="DeleteStatus" class="form-control" />
+                <span asp-validation-for="DeleteStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovedBy" class="control-label"></label>
+                <input asp-for="ApprovedBy" class="form-control" />
+                <span asp-validation-for="ApprovedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AppDocId" class="control-label"></label>
+                <input asp-for="AppDocId" class="form-control" />
+                <span asp-validation-for="AppDocId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompElpsDocId" class="control-label"></label>
+                <input asp-for="CompElpsDocId" class="form-control" />
+                <span asp-validation-for="CompElpsDocId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DocSource" class="control-label"></label>
+                <input asp-for="DocSource" class="form-control" />
+                <span asp-validation-for="DocSource" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DropStaffId" class="control-label"></label>
+                <input asp-for="DropStaffId" class="form-control" />
+                <span asp-validation-for="DropStaffId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovedAt" class="control-label"></label>
+                <input asp-for="ApprovedAt" class="form-control" />
+                <span asp-validation-for="ApprovedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
+

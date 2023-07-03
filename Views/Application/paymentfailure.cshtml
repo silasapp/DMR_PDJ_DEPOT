@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Transaction Failed";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+<div class="col-md-10 col-md-offset-1 ">
+
+
+    <div class="">
+        <div class="widget-content">
+            <h3>Transaction Failed!</h3>
+            <h5>Reason: @ViewBag.Message</h5>
+            <h5>Remita Retrieval Reference: @ViewBag.RRR</h5>
+            <h5>Your Order ID: @ViewBag.OrderId</h5>
+
+            <br /><br /><br />
+            <p>You can try again by going to <a href="/Application/MyApplications" class="btn btn-sm btn-warning">My Applications</a> and click on the "Pay Now" button again.</p>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+
+</div>

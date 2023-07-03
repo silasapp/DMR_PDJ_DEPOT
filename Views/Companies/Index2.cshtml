@@ -1,0 +1,180 @@
+﻿@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Company Information";
+    string currentview = (ViewBag.ActiveView != null ? ViewBag.ActiveView : "");
+    var AppSession = 1;
+}
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+
+<div class="row">
+    @if (ViewBag.Msg != null)
+    {
+        string alerttype = (ViewBag.Type.ToLower() == "fail" ? "alert-danger" : (ViewBag.Type.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+        string head = (ViewBag.Type.ToLower() == "fail" ? "Application Error!" : (ViewBag.Type.ToLower() == "warn" ? "Alert!" : "Success"));
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@head</strong> @ViewBag.Msg
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.StatusMsg != null)
+    {
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Alert!</strong> &nbsp; @ViewBag.StatusMsg
+            </div>
+        </div>
+    }
+</div>
+
+<div role="tabpanel">
+    <div class="widget">
+        <div class="widget-header">
+            <ul class="nav nav-tabs" role="tablist" style="margin-left: 10px;">
+                <li role="presentation" id="liProfile" class=""><a href="#Profile" aria-controls="Profile" role="tab" data-toggle="tab">Company Profile</a></li>
+                <li role="presentation" id="liAddress" class=""><a href="#Address" aria-controls="Address" role="tab" data-toggle="tab">Company Address</a></li>
+                <li role="presentation" id="liDirectors" class=""><a href="#Directors" aria-controls="Directors" role="tab" data-toggle="tab">Company Directors</a></li>
+                @*<li role="presentation" id="liKeyStaffs" class=""><a href="#KeyStaffs" aria-controls="KeyStaffs" role="tab" data-toggle="tab">Company Staffs</a></li>*@
+            </ul>
+        </div>
+        <div class="widget-content">
+            @if (ViewBag.ApplicationStage != null)
+            {
+                int appid = AppSession;
+                ViewBag.ApplicationId = appid;
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane" id="Profile">@Html.ActionLink("UpdateCompany", "Company", new { view = "application" })</div>
+                    <div role="tabpanel" class="tab-pane" id="Address">@Html.ActionLink("UpdateAddress", "Company", new { view = "application" })</div>
+                    <div role="tabpanel" class="tab-pane" id="Directors">@Html.ActionLink("UpdateDirector", "Company", new { view = "application" })</div>
+                    @*<div role="tabpanel" class="tab-pane" id="KeyStaffs">@Html.ActionLink("UpdateStaff", "Company", new { view = "application" })</div>*@
+                </div>
+            }
+            else
+            {
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane" id="Profile">@Html.ActionLink("UpdateCompany", "Company")</div>
+                    <div role="tabpanel" class="tab-pane" id="Address">@Html.ActionLink("UpdateAddress", "Company")</div>
+                    <div role="tabpanel" class="tab-pane" id="Directors">@Html.ActionLink("UpdateDirector", "Company")</div>
+                    @*<div role="tabpanel" class="tab-pane" id="KeyStaffs">@Html.ActionLink("UpdateStaff", "Company")</div>*@
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts  {
+
+
+    <script type="text/javascript" src="~/OldDepotStyle/Scripts/Company.js"></script>
+    <script type="text/javascript" src="~/OldDepotStyle/Scripts/Director.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#lnkAccount").addClass("active");
+
+            if ('@ViewBag.ApplicationStage'.length > 0) {
+                if ('@currentview'.length > 0) {
+                    //Remove all active views 1st
+
+                    $(".tab-content div").each(function () {
+                        $(this).removeClass("active");
+                    });
+                    $("ul.nav-tabs li").each(function () {
+                        $(this).removeClass("active");
+                    });
+                    var view = 'div#@currentview';
+                    var lnk = '#li' + '@currentview';
+                    $(lnk).addClass("active").removeClass("disabled").find("a").removeAttr("disabled");
+                    $(view).addClass("active");
+
+                    switch ('@currentview') {
+                        case "Profile":
+                            break;
+                        case "Address":
+                            $("#liProfile").addClass("tab-done").removeClass("disabled").find("a").removeClass("disabled").append(' <i class="fa fa-check-circle"></i>');
+                            break;
+                        case "Directors":
+                            $("#liProfile").addClass("tab-done").removeClass("disabled").find("a").removeClass("disabled").append(' <i class="fa fa-check-circle"></i>');
+                            $("#liAddress").addClass("tab-done").removeClass("disabled").find("a").removeClass("disabled").append(' <i class="fa fa-check-circle"></i>');
+                            break;
+                        case "KeyStaffs":
+                            $("#liProfile").addClass("tab-done").removeClass("disabled").find("a").removeClass("disabled").append(' <i class="fa fa-check-circle"></i>');
+                            $("#liAddress").addClass("tab-done").removeClass("disabled").find("a").removeClass("disabled").append(' <i class="fa fa-check-circle"></i>');
+                            $("#liDirectors").addClass("tab-done").removeClass("disabled").find("a").removeClass("disabled").append(' <i class="fa fa-check-circle"></i>');
+                            break;
+                        default:
+
+                    }
+                }
+                else {
+                    //alert("Default View");
+                    $("div#Profile").addClass("active");
+                    $("#liProfile").addClass("active").removeClass("disabled").find("a").removeAttr("disabled");
+                }
+            }
+            else {
+                $("div#Profile").addClass("active");
+                $("#liProfile").addClass("active").removeClass("disabled").find("a").removeAttr("disabled");
+            }
+
+            $("ul.nav-tabs > li > a[disabled='disabled']").click(function (e) {
+                e.preventDefault();
+                if ($(this).parent("li").hasClass("tab-done")) {
+                    //Do nothing
+                }
+                else {
+                    $("#modalPopup").on('show.bs.modal', function () {
+                        var modal = $(this);
+                        modal.find('.modal-title').text('Alert');
+                        modal.find('.modal-body').text('Please Complete this step before proceeding. Use the button(s) below to Proceed.');
+                        modal.find('.modal-footer').html('<button class="btn btn-default" data-dismiss="modal">Close</button>');
+                    });
+                    $("#modalPopup").modal('show');
+
+                    return false;
+                }
+            });
+
+
+            $(".imgSilent").click(function (e) {
+                e.preventDefault();
+                var url = $(this).data("url");
+
+                $(".modal-content").html(Loading());
+                $.get(url, function (data) {
+                    $(".modal-content").html(data);
+                });
+            });
+
+
+
+        });
+
+
+    </script>
+}

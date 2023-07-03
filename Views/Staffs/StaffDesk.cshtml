@@ -1,0 +1,191 @@
+﻿@model IEnumerable<Staff_UserBranchModel>
+
+@{
+    ViewBag.Title = "Manage Portal Users";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    int count = 0;
+    string stf = "";
+    if (Model.Count() > 0)
+    {
+
+        stf = string.Join(";", Model.Where(a => a.Active == true).Select(a => a.StaffEmail));
+    }
+}
+
+<div class="content">
+    <h2 class="lefty">My Staff @*in @ViewBag.DepartmentName*@</h2>
+    @*<div class="righty">
+            <a role="button" href="#modalPopup" data-url="/UsersAdmin/Create" class="addnew btn btn-large btn-default" data-toggle="modal">
+                <i class="glyphicon glyphicon-plus"></i> Add New Staff
+            </a>
+        </div>*@
+    <hr class="clear" />
+
+    @if (ViewBag.Msg != null)
+    {
+        string alerttype = (ViewBag.Type.ToLower() == "fail" ? "alert-danger" : (ViewBag.Type.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+        string head = (ViewBag.Type.ToLower() == "fail" ? "Application Error!" : (ViewBag.Type.ToLower() == "warn" ? "Alert!" : "Success"));
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@head</strong> @ViewBag.Msg
+            </div>
+        </div>
+    }
+
+    <table class="table table-striped dataTablee">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Staff Email</th>
+                <th>Staff Name</th>
+                <th>Branch Name (Location)</th>
+                    @*<th>Department</th>*@
+                <th>Role</th>
+                <th>On Desk</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null && Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    string Active = item.Active== true ? "Avialable" : "Not Available";
+                    string btnColor = item.Active == true ? "btn-success" : "btn-danger";
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.StaffEmail</td>
+                        <td>@item.StaffFullName</td>
+                        <td>@item.FieldOffice</td>
+                        <td>@item.RoleName</td>
+                        <td class="txtcenter deskCount" data-did="@item.Id"></td>
+                        <td>
+                            <span class="btn @btnColor btn-xs">@Active</span>
+                        </td>
+                        <td style="width: 140px;" class="txtright">
+                            <div class="btn-group">
+                                <a href="#modalPopup" data-url="/Process/ViewStaffDesk?userid=@item.StaffEmail&stf=@stf" data-name="@item.StaffFullName" data-staff="@stf" class="popAlert btn btn-primary btn-xs" data-toggle="modal">View Desk</a>
+                                @*<a href="#modalPopup" data-url="/UsersAdmin/Create/@item.UserId" class="popcaller btn btn-info btn-xs" data-toggle="modal" data-header="Edit User">Edit</a>
+                                    <a href="#modalPopup" data-url="/UsersAdmin/Delete/@item.UserId" class="popcaller btn btn-danger btn-xs" data-toggle="modal" data-header="Delete User">Delete</a>*@
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+
+            }
+        </tbody>
+        <tfoot>
+            @if (Model == null || Model.Count() <= 0)
+            {
+                <tr>
+                    <td colspan="6"><p>No staff is found in your department </p></td>
+                </tr>
+            }
+        </tfoot>
+    </table>
+
+</div>
+
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#lnk-staff > a").addClass("selected").find(".act").addClass("selected");
+            //$(".sidebar > ul > li > ul li a[href='/UsersAdmin/StaffDesk']").addClass("selected");
+
+            $("[rel='tooltip']").tooltip();
+
+           
+
+            $(".dataTablee").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            $(".deskCount").each(function () {
+                var container = $(this);
+                container.html(LoadingVSmall());
+                $.get('/UsersAdmin/GetMyDeskCount', { id: $(this).data("did") }, function (data) {
+                    container.html("").text(data);
+                });
+            });
+
+
+            $("a.popAlert").click(function (e) {
+                e.preventDefault();
+                var elem = $(this);
+                var url = elem.attr("data-url");
+                var staffName = elem.data("name");
+
+                var stf = elem.attr("data-staff");
+
+                $("#modal-body").html(Loading());
+                $(".modal-dialog").addClass("wider-body");;
+                $(".modal-title").text("Applications on " + staffName + "'s desk");
+
+                $.get(url, function (data) {
+
+                    $("#modal-body").html(data);
+
+
+                });
+            });
+
+
+
+            $(document.body).on("click", ".re-ass", function (e) {
+                e.preventDefault();
+                //alert("hi");
+                var elem = $(this).attr("data-trId");
+                $('#' + elem).show();
+
+            });
+
+
+            $(document.body).on("click", ".re-assBtn", function (e) {
+                e.preventDefault();
+
+                var elem = $(this);
+                var container = elem.attr("data-cid");
+                var stfId = elem.attr("data-staffId");
+                var appId = elem.attr("data-appId");
+                //alert(appId);
+                $.post('/Process/ReassignApp', { appId: appId, staffId: stfId }, function (data) {
+
+                    if (data !== '0') {
+                        alert(data);
+
+                    } else {
+                        location.reload();
+                        alert('Application has been mved to ' + stfId + ' Desk');
+                       // $('#' + container).html();
+                    }
+
+
+
+                });
+            });
+
+        });
+    </script>
+}
+
+

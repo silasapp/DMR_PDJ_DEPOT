@@ -1,0 +1,227 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers;
+@model NewDepot.Models.MyApps
+@{
+    ViewBag.Title = "Search Result";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+    string alertx = string.Empty;
+    var AppDocs = (List<ApplicationDocuments>)ViewBag.AppDoc;
+    GeneralClass generalClass = new GeneralClass();
+    if (Model != null)
+    {
+        ViewBag.Title = "Search Result For " + ViewBag.SearchKey;
+        if (Model.app.status.ToLower() == "approved") { alertx = "alert-success"; }
+        else if (Model.app.status.ToLower() == "processing") { alertx = "alert-info"; }
+        else if ((Model.app.status.ToLower() == "pending") || (Model.Status.ToLower() == "payment pending")) { alertx = "alert-warning"; }
+        else { alertx = "alert-danger"; }
+    }
+    int cnt = 0;
+}
+
+@if (Model != null)
+{
+
+    <div class="content">
+        <h3 class="lefty">Application Information: Reference No: @Model.app.reference</h3>
+        <div class="righty">
+            <a href="/Staffs/Dashboard" class="btn btn-default">Back <i class="icon-arrow-left"></i></a>
+        </div>
+        <hr class="clear" />
+
+        <div class="row">
+            <div class="col-sm-8 col-md-8 col-lg-8">
+                <table class="table table-bordered table-striped" style="resize:both">
+                    <tr>
+                        <td class="text-left">
+                            <b>Company Name</b>
+                        </td>
+                        <td class="text-left"><a href="/Companies/CompanyProfile/@generalClass.Encrypt(Model.comp.id.ToString())" class="checkOut">@Model.comp.name</a></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b> Category</b>
+                        </td>
+                        <td class="text-left">
+                            @Model.PhaseName
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b> Application Type</b>
+</td>
+                        <td class="text-left">
+                            @Model.Type
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b>  Year</b>
+</td>
+                        <td class="text-left">
+                            @Model.app.year
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b>Fee Payable</b>
+</td>
+                        <td class="text-left">
+                            @Model.app.fee_payable.Value.ToString("₦ ###,##0.00")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b> Service Charge</b>
+</td>
+                        <td class="text-left">
+                            @Model.app.service_charge.Value.ToString("₦ ###,##0.00")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b>Total Amount Due</b>
+</td>
+                        <td class="text-left">
+                            @{var amt = Model.app.fee_payable + Model.app.service_charge;}
+                            @amt.Value.ToString("₦ ###,##0.00")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b>Status</b>
+</td>
+                        <td class="text-left">
+                            <div class="alert alert-mini @alertx">
+                                <strong>@Model.app.status</strong>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b>Date Submitted</b>
+</td>
+                        <td class="text-left">
+                            @Model.app.CreatedAt
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">
+                            <b> Attatched Documents</b>
+</td>
+                        <td class="text-left">
+                            <div class="list-group">
+
+
+                                @foreach (var item in Model.ApplicationDocs)
+                                {
+
+                                    var dName = AppDocs.Where(d => d.AppDocID == item.AppDocID).FirstOrDefault().DocName;
+
+                                    if (item.DocSource.EndsWith(".pdf") || item.DocSource.EndsWith(".PDF"))
+                                    {
+                                        <a href="@item.DocSource" target="_blank" class="list-group-item">
+                                            @if (dName.ToLower() == "other document")
+                                            {
+                                                @dName <i class="og-icon og-pdf righty"></i>
+                                            }
+                                            else
+                                            {
+                                                @dName <i class="og-icon og-pdf righty"></i>
+                                            }
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@item.DocSource" target="_blank" class="list-group-item">
+                                            @if (dName.ToLower() == "other document")
+                                            {
+                                                @dName <i class="glyphicon glyphicon-picture righty"></i>
+                                            }
+                                            else
+                                            {
+                                                @dName <i class="glyphicon glyphicon-picture righty"></i>
+                                            }
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="patd">
+
+                </div>
+                <hr class="marg50" />
+                <div class="patd">
+                    <dl class="dl-horizontal lt">
+                        <dd><b>Current Desk</b></dd>
+                        <dd>@Model.CurrentStaff</dd>
+                        <dd>@Model.OfficeName</dd>
+                    </dl>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <p class="panel-title">Application History (Last 2)</p>
+                        </div>
+                        <table class="table table-striped">
+                            <tr>
+                                <td class="text-left">#</td>
+                                <td class="text-left">Date</td>
+                                <td class="text-left">Comment</td>
+                            </tr>
+                            @foreach (var item in ViewBag.History)
+                            {
+                                cnt++;
+                                <tr>
+                                    <td class="text-left">@cnt</td>
+                                    <td class="text-left">@item.Date</td>
+                                    <td class="text-left">@item.Comment</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="3">
+                                    <a href="/Process/History/@generalClass.Encrypt(Model.app.id.ToString())">See all</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+else
+{
+    <div class="content">
+        <h2>Nothing Found!!!</h2>
+        <hr />
+        <form action="/Search" method="get">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-md-3">Permit/Licence/App Reference</label>
+                    <div class="col-md-8">
+                        <input type="text" name="q" class="form-control" value="" placeholder="Permit/Licence/App Reference" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class=" col-lg-offset-3 col-md-8">
+                        <input type="submit" name="name" class="btn btn-success" value="Search App" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        Your query did not return any result. Please try again.
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+        });
+    </script>
+}

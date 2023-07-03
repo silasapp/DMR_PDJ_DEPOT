@@ -1,0 +1,132 @@
+﻿@model IEnumerable<NewDepot.Models.MistdoStaff>;
+@using NewDepot.Helpers;
+
+@{
+    ViewData["Title"] = "MISTDO STAFF for your company";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    var Facility = (List<Facilities>)ViewBag.Facility;
+
+}
+<div>
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName"> @ViewData["Title"] </h3>
+        <hr />
+    </div>
+
+    <br />
+
+    <div>
+
+        <br />
+
+        <div>
+
+            <h5 class="text-dark"> Minimum required HSE - Mistdo certified staff is 5</h5>
+
+            <hr />
+
+            <br />
+
+            <div class="table-responsive col-sm-12" id="FormMistdoStaff">
+
+                <center>
+                    <div style="max-width: 600px">
+
+                        <div class="form-group col-sm-12">
+                            <input type="text" hidden value="@ViewData["ApplicationId"].ToString()" id="txtAppId" />
+                            <input type="text" hidden value="@ViewData["FacilityId"].ToString()" id="txtFacId" />
+                            <input type="text" class="form-control" id="txtMistdoNumber" placeholder="Enter valid mistdo certification number here." />
+                        </div>
+
+                        <div class="col-md-offset-4">
+                            <button class="btn btn-sm btn-primary" id="btnVerifyMistdo"> Verify & Save</button>
+                        </div>
+
+                        <br />
+
+                        <div id="MistdoInfo">
+
+                        </div>
+
+                    </div>
+
+                </center>
+
+                <br />
+
+                <h6 class="text-primary"><b>List of all your certified MISTDO staff</b></h6>
+                <br />
+
+                <div id="MistdoReload">
+
+                    <table class="table table-bordered table-hover" style="font-size:smaller">
+
+                        <thead>
+                            <tr>
+                                <th>MistdoId</th>
+                                <th>CertificateNo</th>
+                                <th>Facility Name</th>
+                                <th>FullName</th>
+                                <th>PhoneNo</th>
+                                <th>Email</th>
+                                <th>Issued</th>
+                                <th>Expiry</th>
+                                <th>CreatedAt</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var s in Model.ToList())
+                                {
+                                    var fName = Facility.Where(f => f.Id == s.FacilityId).FirstOrDefault().Name;
+
+                                    <tr>
+                                        <td>@s.MistdoServerId</td>
+                                        <td>@s.CertificateNo</td>
+                                        <td>@fName</td>
+                                        <td>@s.FullName</td>
+                                        <td>@s.PhoneNo</td>
+                                        <td>@s.Email</td>
+                                        <td>@s.IssuedDate.Value.ToShortDateString()</td>
+                                        <td>@s.ExpiryDate.Value.ToShortDateString()</td>
+                                        <td>@s.CreatedAt</td>
+                                        <td><button class="btn btn-sm btn-danger" onclick="RemoveMistdoStaff('@s.MistdoId')"><i class="fa fa-trash"> </i> Bin</button></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="8" class="text-center"><span>No staff found</span></td></tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+                <br />
+
+                <div class="text-center">
+
+                    <button class="btn btn-success" id="btnSaveMistdo"> Save and Continue</button>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

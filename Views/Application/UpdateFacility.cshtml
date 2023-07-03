@@ -1,0 +1,305 @@
+﻿<!--model IEnumerable<NewDepot.Models.FacilityModel>;
+using NewDepot.Helpers;
+using Microsoft.AspNetCore.Http;
+
+{
+    ViewData["Title"] = "Update Facility for : " + ViewData["FacilityNames"];
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+
+<h1>
+    @ViewData["Title"]
+</h1>
+
+<br />
+
+
+<div class="card-black">
+
+
+    <div>
+
+        <center>
+
+            <div style="" class="text-left" id="AppDiv">
+
+                <br />
+
+
+                <div class="row">
+
+                    <div class="col-sm-7">
+
+                        <h5> <b class="text-danger">Update Facility Information</b></h5>
+
+                        <br /><br />
+
+                        <div>
+
+                            <form id="FormUpdateFacilityInformation" action="#">
+
+                                <div class="col-sm-12">
+
+                                    <div class="row">
+
+                                        <div class="col-sm-6">
+
+                                            <div class="">
+                                                <b class="text-info"> Facility Information </b>
+                                            </div>
+
+                                            <hr />
+
+                                            <input type="hidden" id="txtFacilityID" value="Model.FirstOrDefault().FacilityID" required />
+                                            <input type="hidden" id="txtFacilityElpsID" value="Model.FirstOrDefault().FacilityElpsID" required />
+                                            <input type="hidden" id="txtCompnayElpsID" value="Model.FirstOrDefault().CompanyElpsID" required />
+
+                                            <div class="form-group">
+                                                <label> Facility Name</label>
+                                                <input class="form-control col-sm-12" id="txtFacilityName" value="Model.FirstOrDefault().FacilityName" required name="txtFacilityName" placeholder="Facility name..." />
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label> Facility Address</label>
+                                                <input class="form-control" id="txtFacilityAddress" value="Model.FirstOrDefault().FacilityAddress" required name="txtFacilityAddress" placeholder="Facility address..." />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label> City </label>
+                                                <input class="form-control" id="txtFacilityCity" value="Model.FirstOrDefault().FacilityCity" required name="txtFacilityCity" placeholder="Facility city..." />
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label> State </label>
+                                                        <select class="form-control valid" id="txtFacilityState" name="txtFacilityState" required onchange="print_LGA('txtFacilityLGA',this.selectedIndex);"></select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label> LGA </label>
+                                                        <select class="form-control valid" id="txtFacilityLGA" required name="txtFacilityLGA"></select>
+                                                        <br />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-sm-6">
+
+                                            <div class="">
+                                                <b class="text-info"> Land Information </b>
+                                            </div>
+
+                                            <hr />
+
+                                            <div class="form-group">
+                                                <label> Contact Person </label>
+                                                <input type="text" class="form-control" id="txtContactName" value="Model.FirstOrDefault().ContactName" required name="txtContactName" placeholder="Fullname" />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label> Contact Phone (separate numbers by comma) </label>
+                                                <input type="text" class="form-control" id="txtContactPhone" value="Model.FirstOrDefault().ContactPhone" required name="txtContactPhone" placeholder="090**********" />
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label> Size of Land (Meters) ? </label>
+                                                        <input class="form-control" type="number" step="any" id="txtMeters" value="Model.FirstOrDefault().LandMeters" required name="txtMeters" placeholder="100" />
+
+                                                    </div>
+                                                </div>
+
+                                                {
+                                                    var pipe = Model.FirstOrDefault().isPipeLine == true ? "YES" : "NO";
+                                                    var cable = Model.FirstOrDefault().isHighTention == true ? "YES" : "NO";
+                                                    var way = Model.FirstOrDefault().isHighway == true ? "YES" : "NO";
+                                                }
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label> Site along pipe-line ? </label>
+                                                        <select class="form-control valid" id="seltxtPipeLine" required name="seltxtPipeLine">
+                                                            <option value="Model.FirstOrDefault().isPipeLine"> pipe </option>
+                                                            <option value="true">YES</option>
+                                                            <option value="false">NO</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label> <small>Site under high tension cable ?</small> </label>
+                                                        <select class="form-control valid" id="seltxtHighTention" required name="seltxtHighTention">
+                                                            <option value="Model.FirstOrDefault().isHighTention"> cable </option>
+                                                            <option value="true">YES</option>
+                                                            <option value="false">NO</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label> Site on high-way ? </label>
+                                                        <select class="form-control valid" id="seltxtHighWay" required name="seltxtHighWay">
+                                                            <option value="Model.FirstOrDefault().isHighway">way </option>
+                                                            <option value="true">YES</option>
+                                                            <option value="false">NO</option>
+                                                        </select>
+                                                    </div>s
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <br />
+
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label> What is the purpose/use of this facility </label>
+                                                <textarea id="txtFacilityUse" style="width:100%" rows="5" cols="68" placeholder="State the purpose or use of this facility...">@Model.FirstOrDefault().FacilityPurpose</textarea>
+                                            </div>
+                                        </div>
+
+                                        <br />
+
+
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="text-center">
+
+                                    <button type="submit" class="btn btn-success m-b-10 m-l-5">Update & Save</button>
+
+                                    <br /><br />
+
+                                    <div id="DivFormUpdateFacilityInfo"> </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-sm-5 alert alert-info" style="padding:30px">
+
+                        <h5 class="text-danger"> <b>Current Facility Information</b> </h5>
+                        <hr />
+
+                        <div class="row">
+
+                            <div class="col-sm-6">
+
+                                <b class="text-primary"> Facility Information</b>
+                                <hr />
+
+                                <p style="color:black">-->-->
+                                    @*Company Name : <b>@Model.FirstOrDefault().CompanyName</b>*@
+                                <!--<!--</p>
+
+                                <p style="color:black">
+                                    Facility Name : <b>Model.FirstOrDefault().Name</b>
+                                </p>-->-->
+
+                                <!--@*<p style="color:black">
+                                    Facility Address : <b>@Model.FirstOrDefault().addr</b>
+                                </p>*@
+
+                                @*<p style="color:black">
+                                    City : <b>@Model.FirstOrDefault().FacilityCity</b>
+                                </p>
+
+                                <p style="color:black">
+                                    State : <b>@Model.FirstOrDefault().FacilityState</b>
+                                </p>
+                                <p style="color:black">
+                                    LGA : <b>@Model.FirstOrDefault().LGA</b>
+                                </p>*@-->
+                                <!--<!--<br />
+                            </div>-->-->
+
+                            <!--@*<div class="col-sm-6">
+
+                                @{
+                                    var pipe2 = Model.FirstOrDefault().isPipeLine == true ? "YES" : "NO";
+                                    var cable2 = Model.FirstOrDefault().isHighTention == true ? "YES" : "NO";
+                                    var way2 = Model.FirstOrDefault().isHighway == true ? "YES" : "NO";
+                                }
+
+                                <b class="text-primary">Other Information</b>
+                                <hr />
+
+                                <p style="color:black">
+                                    Contact Person : <b>@Model.FirstOrDefault().ContactName</b>
+                                </p>
+
+                                <p style="color:black">
+                                    Contact Phone : <b>@Model.FirstOrDefault().ContactNumber</b>
+                                </p>
+
+                                <p style="color:black">
+                                    Size of Land (Hecters) : <b>@Model.FirstOrDefault().LandMeters</b>
+                                </p>
+
+                                <p style="color:black">
+                                    Site along pipe-line  : <b>
+                                        @pipe2
+
+                                    </b>
+                                </p>
+
+                                <p style="color:black">
+                                    Site under high tension cable  : <b>
+
+                                        @cable2
+                                    </b>
+                                </p>
+
+                                <p style="color:black">
+                                    Site on high-way : <b>
+
+                                        @way2
+                                    </b>
+                                </p>
+                            </div>
+
+                            <p style="color:black">
+                                <b> Purpose/Use of the facility :</b>
+                                <span>
+                                    <br />
+                                    <small> @Model.FirstOrDefault().FacilityPurpose</small>
+                                </span>
+                            </p>*@-->
+
+                        <!--</div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </center>
+
+    </div>
+
+</div>-->

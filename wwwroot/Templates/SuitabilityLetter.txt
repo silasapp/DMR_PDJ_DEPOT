@@ -1,0 +1,63 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body style="color: gray; font-size:14px; box-sizing: border-box;">
+    <font face="Helvetica, arial, sans-serif">
+        <div style=" width:700px;background-color: #ece8d4; padding: 5px 0 5px 0;">
+            <img src="~/images/nmdpra.png" alt="Logo" style="width: 98%; height: 120px; display: block; margin: 0 auto;" />
+        </div>
+
+        <div style="background-color: #ece8d4; width:700px; min-height:200px;">
+            <div style="padding: 10px 30px 30px 30px;">
+                <h3 style="text-align: center;font-weight: 300;padding-bottom: 10px; border-bottom: 1px solid #ddd;">{0}</h3>
+                <p>Dear {1},</p><p>
+                </p>
+                <p>
+                    {8}
+                </p>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 150px;"><b>Issue No:</b></td>
+                        <td>{2}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Permit Tenure:</b></td>
+                        <td>{7}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Date Issued:</b></td>
+                        <td>{3}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Expiry Date:</b></td>
+                        <td>{4}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Facility Name:</b></td>
+                        <td>{5}</td>
+                    </tr>
+                </table>
+                <br /><br />
+				
+                <p>
+                   Kindly Note that this is NOT an Approval to Commence Construction on Site. You are Required to go back online
+				   to your "Application to Construct" Stage.
+                </p>
+				<p>
+					<b>Please Note </b>that Pick up Date will be communicated once your License is Endorsed!
+				</p>
+                <br /><br />
+                <p>
+                    Nigerian Midstream and Downstream Petroleum Regulatory Authority<br />
+                    (PDJ)
+                </p>
+            </div>
+        </div>
+        <div style="padding: 10px 0; text-align: center; background-color: #888; color: #f9f9f9; width:700px">
+            &copy; {6} Nigerian Midstream and Downstream Petroleum Regulatory Authority &minus; NMDPRA Nigeria
+        </div>
+    </font>
+</body>
+</html>

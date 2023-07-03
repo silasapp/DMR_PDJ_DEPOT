@@ -1,0 +1,293 @@
+﻿@using NewDepot.Helpers
+@using System.Configuration
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Log in";
+    var body = "";
+    bool um = false;
+
+    @if (ViewBag.InProgress != null && (bool)ViewBag.InProgress)
+    {
+        um = false;
+
+    }
+}
+<style>
+    .white {
+        color: black !important;
+    }
+
+        .white:hover {
+            color: aqua
+        }
+</style>
+
+
+<div class="navbar navbar-inverse navbar-fixed-top shadow" style="height: 70px!important">
+    <div class="containerr">
+
+        <div class="navbar-header" style="margin-top:-20px; position:absolute; left:30px">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+                <img src="~/images/nmdpra.png" style="max-height: 45px;" alt="NMDPRA Depot Portal" class="img-circle"><span class="img-title">NMDPRA Depot Portal</span>
+            </a>
+        </div>
+        <div class="navbar-collapsee" style="position: absolute; right: 30px; top:30px;">
+            <a href="https://ems.dpr.gov.ng/Tickets/New" target="_blank" class="flash btn btn-danger">Complain/Enquiries</a>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+<div class="container" id="main">
+
+
+    <div class="col-md-12">
+        <div class="col-md-5 form-signin extForm">
+            <div class="padd">
+                <h1 class="form-signin-heading text-center">NMDPRA</h1>
+                <h4 class="txtcenter text-center"><b>DEPOT LICENSE PORTAL</b></h4>
+                @if (um)
+                {
+                    <div class="page-header">
+                        <h1 style="text-transform:uppercase;font-size:3em;padding:20px">Maitainance going on here, Please check back in a while.</h1>
+                    </div>
+                }
+                else
+                {
+
+                    <a class="homebutton btn btn-lg btn-info btn-block textUpper" href="/validate/">CLICK HERE TO VERIFY PERMIT</a>
+                    <br />
+                    <a href="@ElpsServices._elpsBaseUrl/Account/Login?appId=@ElpsServices.public_key" class="homebutton btn btn-lg btn-success btn-block textUpper">LOGIN</a>
+                    <br />
+                    <a href="@ElpsServices._elpsBaseUrl/Account/Register?appId=@ElpsServices.public_key" class="homebutton btn btn-lg btn-success btn-block textUpper">REGISTER</a>
+                    <br />
+                    <p class="txtcenter">
+                        <a href="@ElpsServices._elpsBaseUrl/Account/ForgotPassword?appId=@ElpsServices.public_key" class="btn-link">Forgot Password</a>
+                    </p>
+                }
+                <br />
+                <strong>Payment Processor:</strong>
+                <br />
+                <div class="">
+                    <img src="@Url.Content("~/OldDepotStyle/Content/Images/remita-logo.png")" alt="Remita" title="REMITA" style="" />
+                </div>
+                <br /><br />
+                <strong>Payment Options:</strong>
+                <br />
+                <ul class="paymentOptions">
+                    <li><i class="fa fa-check"></i> &nbsp; Cash Deposit</li>
+                    <li><i class="fa fa-check"></i> &nbsp; Bank Draft</li>
+                    <li><i class="fa fa-check"></i> &nbsp; Card Payment: MasterCard, Verve Card</li>
+                    <li><i class="fa fa-check"></i> &nbsp; Quick Teller</li>
+                </ul>
+                <div class="well">
+
+
+                    <img height="200"  style="top:0px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ViewBag.QrCodeImg))" alt="Permit Number and Company Identification Number"/>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7 adv bg1">
+                <h2 class="txtcenter" style=""> GETTING STARTED</h2>
+            <br/>
+            <div class="row howto">
+                <div class="col-md-5 col-sm-5 col-lg-5">
+                    <div class="icon">
+                        <img src="~/OldDepotStyle/Content/Images/icon-lg1.png" />
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-7 col-lg-7">
+                    <h3>User Guide</h3>
+                    @*<a href="@ConfigurationManager.AppSettings["guidelineUrl"]" target="_blank" class="white">Online Application Guide</a><br />*@
+                    <a href="" target="_blank" class="white">Online Application Guide</a><br />
+                    <a href="@Url.Action("FeeSchedule", "Home")" target="_blank" class="white">Permit Fee Schedules</a><br />
+                    <a href="#" class="white">Online Permit Printing Guide</a><br />
+                    <a href="@ElpsServices._elpsBaseUrl/Account/ResendEmailActivation?appId=@ElpsServices.public_key" class="white">Resend Activation Email</a><br />
+                    <a href="/validate/" class="white">Verify a Permit</a><br />
+                    <a href="/faq" class="white">FAQ</a><br />
+                </div>
+            </div>
+            <br class="clear" /><br />
+            <div class="row howto">
+                <div class="col-md-5 col-sm-5 col-lg-5">
+                    <div class="icon">
+                        <img src="~/OldDepotStyle/Content/Images/icon-lg2.png" />
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-7 col-lg-7">
+                    <h3>
+                        <a href="@ElpsServices._elpsBaseUrl/Account/Register?appId=@ElpsServices.public_key" class="white">Company Account Creation</a>
+                    </h3>
+                    <p>
+                        Create account to use resources on this portal. Note that Account creation
+                        is not required to validate a permit.
+                    </p>
+                </div>
+            </div>
+            <br class="clear" /><br />
+            <div class="row howto">
+                <div class="col-md-5 col-sm-5 col-lg-5">
+                    <div class="icon">
+                        <img src="~/OldDepotStyle/Content/Images/icon-lg3.png" />
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-7 col-lg-7">
+                    <h3><a href="/" class="white">Manage Licenses</a></h3>
+                    <p>Login to apply for a new licenses, renew or manage your Licenses</p>
+                </div>
+            </div>
+            <div class="clear"><br /><br /></div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @*jqueryval")*@
+
+    <script type="text/javascript">
+        $(function () {
+
+            if ('@ViewBag.Message'.length > 0) {
+                //alert('@ViewBag.Message');
+
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-title').text('Email Confirmed');
+                    modal.find('.modal-body').text('@ViewBag.Message');
+                });
+                $("#modalPopup").modal('show');
+            }
+
+            if ('@ViewBag.InProgress' === 'True') {
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-title').text('Update Notification');
+                    modal.find('.modal-body').html('@Html.Raw(body)');
+                    modal.find('.modal-footer').html('<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>');
+                });
+                $("#modalPopup").modal('show');
+            }
+
+            if ('@ViewBag.LoginIssue' === 'True') {
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-content').html($("#LoginErrorClear").html());
+                });
+                $("#modalPopup").modal('show');
+            }
+
+            $(document).on("submit", "#frmLoginCorrect1", function(){
+                console.log("Correct Login");
+                return true;
+            });
+        });
+    </script>
+    <script type="text/x-handlebars-template" id="LoginErrorClear">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel" class="modal-title">Login Issue</h3>
+        </div>
+        <div id="modalBody">
+            @using (Html.BeginForm("LogOffResolver", "Account", FormMethod.Post, new { id = "frmLoginCorrect" }))
+            {
+                <div class="modal-body">
+                    <p>
+                        Seems you are having problem Login into your account. Please Click Resolve button below to correct
+                        any issue causing it and try logging in again.
+                    </p>
+                    <p>
+                        Sorry for any inconvenience.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning btn-sm">Resolve</button>
+                </div>
+            }
+        </div>
+    </script>
+
+}
+
+
+
+
+
+@*@using NewDepot.Helpers;
+    @using Microsoft.Extensions.Configuration;
+
+    @{
+        ViewBag.Title = "Index";
+    }
+
+    <div class="jumbotron">
+        <div class="col-md-12">
+            <div class="col-md-7 adv">
+
+            </div>
+            <div class="col-md-5 extForm shadow-sm">
+                <h3 class="txtcenter">Company Login</h3>
+                <a href="@ElpsServices._elpsBaseUrl/Account/Login?appId=@ElpsServices.public_key" class="btn btn-success btn-lg"> <b>Portal Login </b></a>
+                <a href="@ElpsServices._elpsBaseUrl/Account/Register?appId=@ElpsServices.public_key" class="btn btn-warning btn-lg"> <b>Portal Registration</b> </a>
+
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="row xrow bg1">
+        <div class="col-md-12">
+            <h2 class="txtcenter">Getting Started with Depot</h2>
+        </div>
+        <div class="col-md-4 howto">
+            <div class="icon">
+                <img src="~/OldDepotStyle/Content/Images/icon-lg1.png" />
+            </div>
+            <div class="padd">
+                <h3>Step by Step</h3>
+                <a href="/img/LP-2014-GUIDELINES.pdf" target="_blank" class="white">Online Application Guide</a><br />
+                <a href="/img/LP-2014-GUIDELINES.pdf" target="_blank" class="white">Permit Fee Schedules</a><br />
+                <a href="#" class="white">Online Permit Printing Guide</a><br />
+                <a href="/activation/resend/" class="white">Resend Activation Email</a><br />
+                <a href="/validate/" class="white">Validating a Permit</a><br />
+                <a href="/page/faq/" class="white">FAQ</a><br />
+            </div>
+        </div>
+        <div class="col-md-4 howto">
+            <div class="icon">
+                <img src="~/OldDepotStyle/Content/Images/icon-lg2.png" />
+            </div>
+            <div class="padd">
+                <h3><a href="/registration/" class="white">Company Account Creation</a></h3>
+                <p>
+                    Create account to use resources on this portal. Note that Account creation
+                    is not required to validate a permit.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4 howto">
+            <div class="icon">
+                <img src="~/OldDepotStyle/Content/Images/icon-lg3.png" />
+            </div>
+            <div class="padd">
+                <h3><a href="/login/" class="white">Manage Permit</a></h3>
+                <p>Login to apply for a new license, renew or manage your Depot account</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>*@
+

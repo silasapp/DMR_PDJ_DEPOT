@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "StaffProcessingRate";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    Layout = null;
+}
+
+<div class="col-md-12 home-graph">
+    <div class="gHeader">
+        <div class="lefty">
+            <h4><i class="icon-bar-chart"></i>Applications Processing Rate</h4>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="gBody">
+        <div class="col-md-8">@ViewBag.ProcessRate</div>
+        <div class="col-md-4">@ViewBag.PieChart</div>
+        <div class="clear"></div>
+    </div>
+
+</div>

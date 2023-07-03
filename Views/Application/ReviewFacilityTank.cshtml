@@ -1,0 +1,337 @@
+﻿@using NewDepot.Models;
+
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Facility, Tanks and Pumps Information";
+    var fac = (Facilities)ViewBag.facility;
+    var Pumps = (List<Pumps>)ViewBag.pumps;
+    var tnks = (List<Tanks>)ViewBag.tanks;
+    var pds = (List<Products>)ViewBag.products;
+    var readonlyy = "readonly";
+    var phase = ViewBag.phaseName;
+}
+
+
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title For @phase </h3>
+        <hr />
+    </div>
+</div>
+<div class="marg25"></div>
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+
+<div class="widget-content" style="margin-top:20px">
+
+    <form action="/Application/ReviewFacilityTank" id="AddForm" method="post" class="col-md-12">
+        <div class="widget facilityDiv">
+            @if(phase == "Regularization")
+            {
+                readonlyy = " ";
+            }
+            
+            @if (fac != null)
+            {
+                <div class="col-sm-12">
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+
+                            <div class="">
+                                <h4> Facility Information </h4>
+                            </div>
+
+                            <hr />
+
+
+                            <div class="form-group">
+                                <label><b> PDJ Depot (Facility) Name</b></label>
+                                <input class="form-control col-sm-12" id="txtFacilityName" @readonlyy name="FacilityName" value="@fac.Name" />
+
+                            </div>
+
+                            <div class="form-group">
+                                <label><b> Facility Address</b></label>
+
+                                <input class="form-control" id="txtFacilityAddress" @readonlyy name="FacilityAddress" value="@ViewBag.FacilityAddress" />
+                            </div>
+
+
+                            <div class="form-group">
+                                <label><b> Contact Person </b></label>
+                                <input type="text" class="form-control" id="txtContactName" @readonlyy name="ContactName" value="@fac.ContactName" />
+                            </div>
+
+                            <div class="form-group">
+                                <label><b> Contact Phone </b></label>
+                                <input type="number" class="form-control" id="txtContactPhone" @readonlyy name="ContactNumber" value="@fac.ContactNumber" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <div class="">
+                                <h4> Land Information </h4>
+                            </div>
+
+                            <hr />
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label><b> Size of Land (Hecters) ? </b></label>
+                                        <input class="form-control" type="number" id="txtMeters" @readonlyy name="SizeOfLand" value="@ViewBag.landsize" />
+
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label><b> Site along pipe-line ? </b></label>
+                                        <input class="form-control" type="text" value="@ViewBag.ispipeline" @readonlyy /> <br />
+
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label><b> Site under high tension cable ? </b></label>
+                                        <input class="form-control" type="text" value="@ViewBag.IsUnderHighTension" readonlyy /> <br />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label><b> Site on high-way ? </b></label>
+                                        <input class="form-control" type="text" value="@ViewBag.isonhighway" @readonlyy /> <br />
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <br />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            }
+        </div>
+        <hr />
+        <div class="widget TankDiv">
+
+            <div class="row">
+
+                <input type="hidden" id="facilityId" name="facilityId" value="@fac.Id" />
+                <input type="hidden" id="phaseId" name="phaseId" value="@ViewBag.phaseId" />
+                <input type="hidden" id="AppType" name="AppType" value="@ViewBag.AppType" />
+                <input type="hidden" id="PermitNo" name="PermitNo" value="@ViewBag.PermitNumber" />
+                <input type="hidden" id="AppType" name="category" value="@ViewBag.category" />
+                <input type="hidden" id="AppType" name="frmLegacy" value="@ViewBag.frmLegacy" />
+
+                <div class="col-md-12">
+                    <h4>Depot Tanks</h4>
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tank Name</th>
+                                <th>Max. Capacity</th>
+                                <th>Product</th>
+                                <th>Diameter(m)</th>
+                                <th>Height(m)</th>
+
+
+                            </tr>
+                        </thead>
+
+                        <tbody id="tankContainer" class="special-control">
+
+                            @if (tnks.Count > 0)
+                            {
+                                for (int i = 0; i < tnks.Count; i++)
+                                {
+
+                                    var did = "document" + i;
+                                    var id = "tnks[" + i + "].id";
+                                    var Name = "tnks[" + i + "].Name";
+                                    var Height = "tnks[" + i + "].Height";
+                                    var MaxCapacity = "tnks[" + i + "].MaxCapacity";
+                                    var ProductId = "tnks[" + i + "].ProductId";
+                                    var Diameter = "tnks[" + i + "].Diameter";
+                                    var ModifyType = "tnks[" + i + "].ModifyType";
+                                    var Recalibrate = "tnks[" + i + "].Recalibrate";
+                                    var AppTank = "tnks[" + i + "].AppTank";
+
+                                    var pd = pds.Where(a => a.Id == tnks[i].ProductId).FirstOrDefault();
+                                    var indx = i + 1;
+                                    <tr id="@did" class="tnks">
+                                        <td style="display: table-cell; vertical-align: middle">@indx</td>
+                                        <td>
+                                            <input type="hidden" name="@id" value="@tnks[i].Id" />
+                                            <input type="text" @readonlyy name="@Name" class="form-control" value="@tnks[i].Name" />
+                                        </td>
+                                        <td>
+
+                                            <input type="number" @readonlyy name="@MaxCapacity" class="form-control" value="@tnks[i].MaxCapacity" />
+
+
+                                        </td>
+                                        <td>
+                                            <input type="text" @readonlyy name="@Name" class="form-control" value="@pd?.Name" />
+
+                                        </td>
+                                        <td>
+                                            <input type="text" @readonlyy name="@Diameter" class="form-control" value="@tnks[i].Diameter" />
+
+                                        </td>
+                                        <td>
+                                            <input type="text" @readonlyy name="@Height" class="form-control" value="@tnks[i].Height" />
+
+                                        </td>
+                                     
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+
+                                <tr>
+                                    <td colspan="6">
+                                        <p class="text-danger">You do not have any tank associated with your facility. Kindly apply for ATC to construct tanks for your depot.</p>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+        <hr />
+        <div class="widget LoadingArm">
+
+            <h4>Loading Arms</h4>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Loading Arm Name</th>
+                        @*<th>Manufacturer</th>*@
+                        <th>Source Tank</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody id="pumpContainer">
+                    @if (Pumps.Count() > 0)
+                    {
+                        for (int i = 0; i < Pumps.Count(); i++)
+                        {
+                            var indx = i + 1;
+                            var id = "Pumps[" + i + "].id";
+                            var did = "document" + i;
+                            var Name = "Pumps[" + i + "].Name";
+                            //var Manufacturer = "Pumps[" + i + "].Manufacturer";
+                            var TankId = "Pumps[" + i + "].TankId";
+                            var SourceTnk = tnks.Where(x => x.Id == Pumps[i].TankId).FirstOrDefault();
+                            var SourceTank = SourceTnk == null ? "" : SourceTnk.Name;
+
+                            <tr id="@did" class="pmps">
+                                <td>@indx</td>
+                                <td>
+                                    <input type="hidden" name="@id" value="@Pumps[i].Id" />
+                                    <input type="text" @readonlyy name="@Name" class="form-control" value="@Pumps[i].Name" />
+                                </td>
+                                @*<td>
+                                        <input type="text" @readonlyy name="@Manufacturer" class="form-control" value="@Pumps[i].Manufacturer" placeholder="" />
+                                    </td>*@
+                                <td>
+                                    <input type="text" @readonlyy name="@TankId" class="form-control" value="@SourceTank" />
+
+                                </td>
+
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+
+            <hr />
+            <div class="form-group row">
+                <div class="col-sm-5"></div>
+                <input type="button" id="btnSubmitInfo" class="btn btn-primary col-sm-2 btn-success btn-block" value="NEXT" />
+            </div>
+
+        </div>
+    </form>
+</div>
+<div style="clear:both"></div>
+@section Scripts {
+    <script src="~/OldDepotStyle/Scripts/LTO.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $(document).on("click", "#btnSubmitInfo", function (e) {
+
+                e.preventDefault();
+                var frm = $("#AddForm");
+              
+
+
+                console.log(frm);
+                $.confirm({
+                    text: "Are you sure you want to continue this application ?",
+                    confirm: function () {
+                        $("#AddForm").addClass('Submitloader');
+                        $(frm).submit();
+
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+
+            });
+
+
+            $(document.body).on("change", '#stateId', function () {
+                var stt = $(this).val();
+
+                $.get("/Helpers/getlga/" + stt, function (data) {
+                    $("#lga").empty();
+                    $('#lga').append($('<option/>', { Value: "", text: "Select Local Government" }));
+                    $.each(data, function (i, obj) {
+                        $('#lga').append($('<option>').text(obj.Name).attr('value', obj.Id));
+                    });
+                });
+            });
+
+        });
+    </script>
+
+}

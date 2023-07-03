@@ -1,0 +1,87 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Models;
+@model MyApps
+
+
+@{
+    GeneralClass generalClass = new GeneralClass();
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ViewBag.Title = "Application Payment";
+}
+<div class="marg25">
+
+    <p class="text-success">Regeneration of payment was successful and new application payment details are as follow;</p><br/>
+    <h4 class="text-left"><b>Application Payment Details</b></h4>
+
+    <div class="">
+        <div class="mypanel-2leaf-h">
+            <div class="left-sde">
+                <div class="padd">
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <td class="text-left">
+                                <b>Reference No</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.reference
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b> Application Type</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.cat.name -  @Model.phs.name (  @Model.app.type.ToUpper()))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b> Payment Due</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.fee_payable.Value.ToString("₦ #,###,##.00")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b>  Service Charge</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.service_charge.Value.ToString("₦ #,###,##.00")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b>  Total Amount Due</b>
+                            </td>
+                            <td class="text-left">
+
+                                @{var ad = Model.app.fee_payable + @Model.app.service_charge;}
+                                @ad.Value.ToString("₦ #,###,##.00")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b>  Payment Description</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.PaymentDescription
+                            </td>
+                        </tr>
+
+                    </table>
+                    <div class="row">
+                        <div class="col-md-6 offset-3 btn-group">
+                            <a class="btn btn-default" href="/Application/UploadApplicationDocument/@generalClass.Encrypt(Model.app.id.ToString())"><i class="fa fa-backward"></i>Go Back</a>
+
+                            <a class="btn btn-success" href="/Application/SubmitPayment/?apid=@generalClass.Encrypt(Model.app.id.ToString())&refCode=@generalClass.Encrypt(Model.app.reference)">Make Payment<i class="fa fa-paypal"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+﻿@using NewDepot.Models
+@model MyApps
+
+@{
+    Layout = null;
+    //var app = (applications)ViewBag.Application;
+}
+
+@using (Html.BeginForm("Reject", "Process", FormMethod.Post, new { @id = "mRejFrm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.appHistory.id)
+    @Html.HiddenFor(model => model.appHistory.application_id)
+
+
+    <div class="modal-body">
+     
+        <input hidden value="@Model.appID" name="application_id" />
+        <div class="alert alert-info">
+            <div>
+                <h5><b>Reference NO </b>: @Model.Reference </h5>
+            </div>
+            <br />
+            <div>
+                <h5><b>Company Name </b>: @Model.CompanyName </h5>
+            </div>
+            <br />
+            <div>
+                <h5><b>Facility Name </b>: @Model.FacilityName </h5>
+            </div>
+            <br />
+            <div>
+                <h5><b>Phase</b> : @Model.PhaseName</h5>
+            </div>
+            <br />
+            <div class="text-sm-left">
+                <h5><b>Status :</b> <b class="text-primary"> @Model.Status</b> </h5>
+            </div>
+            <br />
+            <div>
+                <h5> <b>Date Applied </b>: @Model.Date_Added </h5>
+            </div>
+        </div>
+        <h5><b>Comment:</b></h5>
+        <textarea class="" id="rejComment" name="comment" style="width:100%" rows="5" cols="68" placeholder="Some comment here..." required></textarea>
+
+    </div>
+    <div class="clear"></div>
+
+    <div class="row">
+        <div class="col-md-5"></div>
+        <input type="button" id="btnMReject" value="Reject" class="btn btn-danger" />
+    </div>
+    <p></p>
+
+    <div id="MRejectModalInfo"> </div>
+
+}

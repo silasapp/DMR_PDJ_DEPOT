@@ -1,0 +1,87 @@
+﻿@model MyApps
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    Layout = null;
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var PhaseName = Model.category_id == 1 ? Model.CategoryName + "(" + Model.PhaseName + ")" : Model.CategoryName;
+}
+
+<form action="/Process/Approve" method="post" id="apprvFrm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="selectedApps" id="selectedApps" value="@Model.appID" />
+
+    <div class="modal-body">
+        @if (userRole.Contains("OOD"))
+        {
+            <h5>
+                Approval will Generate License/Approval for this Application
+            </h5>
+        }
+        else
+        {
+            @*<h5>Are you sure you want to Pass this Application for Approval by your Supervisor?</h5>*@
+        }
+
+        @if (ViewBag.AppForms != null)
+        {
+            <div class="alert alert-info alert-dismissable">
+                <h4>@ViewBag.AppForms</h4>
+            </div>
+        }
+        <br /><hr />
+        <div class="alert alert-info">
+            <div>
+                <h5><b>Reference NO </b>: @Model.Reference </h5>
+            </div>
+            <br />
+            <div>
+                <h5><b>Company Name </b>: @Model.CompanyName </h5>
+            </div>
+            <br />
+            <div>
+                <h5><b>Facility Name </b>: @Model.FacilityName </h5>
+            </div>
+            <br />
+            <div>
+                <h5><b>Phase</b> : @PhaseName</h5>
+            </div>
+            <br />
+            <div class="text-sm-left">
+                <h5><b>Status :</b> <b class="text-primary"> @Model.Status</b> </h5>
+            </div>
+            <br />
+            <div>
+                <h5> <b>Date Applied </b>: @Model.Date_Added </h5>
+            </div>
+        </div>
+        <h5><b>Comment:</b></h5>
+        <textarea class="form-control" id="comment" name="comment" style="width:100%" rows="5" cols="68" placeholder="Some comment here...Max(100)" required></textarea></>
+
+    </div>
+
+
+    <div class="clear"></div>
+    <div class="modal-footer">
+        @{ var cont = userRole == GeneralClass.OOD ? "Generate License/Approval" : "Approve & Continue";}
+        <button class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+</form>
+
+@section Scripts{
+
+    <script src="~/OldDepotStyle/Scripts/js/moment/moment.min.js"></script>
+    <script src="~/OldDepotStyle/Scripts/bootstrap-datetimepicker.js"></script>
+    <script src="~/OldDepotStyle/Scripts/Checker.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //section for button actions confirmation
+
+        });
+    </script>
+}

@@ -1,0 +1,348 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@model NewDepot.Models.StaffDashBoardModel
+@{
+    ViewBag.Title = "Admin DashBoard";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+
+}
+<style>
+    .smenu {
+        font-style: normal;
+        color: white;
+        font-weight: bold;
+    }
+
+    .ref:hover {
+        color: forestgreen;
+    }
+
+    .media {
+        height: 130px !important;
+    }
+
+    .count {
+        margin-left: 130px;
+        text-align: center;
+        background-color: black;
+        color: white;
+        font-family: Candara;
+        font-size: 24px !important;
+        font: bolder;
+        padding: 3px 1px;
+        color: #ffffff;
+        border-radius: 4px;
+        font-size: 75%;
+        width: auto;
+        float: right;
+    }
+
+    .left-sidebar, .scroll-sidebar {
+        overflow-y: auto !important;
+    }
+
+    .clear {
+        color: whitesmoke;
+    }
+</style>
+<div class="contentt">
+
+
+
+    @if (!(Model.StaffRole.Contains("Admin")) && !(Model.StaffRole.Contains("Support")))
+    {
+        <h2>Staff DashBoard</h2>
+        <hr class="clear" />
+        <div class="row">
+            <!-- top tiles -->
+
+            <div class="col-md-3">
+                <div class="card p-20 bg-primary-dark" @*style="background-color: #7daecb"*@>
+                    <div class="media widget-ten">
+                        <div class="media-left meida media-middle">
+                            <span><i class="fa fa-briefcase"></i></span>
+                        </div>
+                        <div class="media-body media-text-right">
+
+                            <div class="count">@Model.OnMyDesk</div>
+                            @if (userRole.ToUpper() == GeneralClass.ED_STA.ToUpper())
+                            
+                                {
+
+                                    <h4>Applications on ED's Desk</h4>
+                                    <p>
+                                        <a href="/Process/MyDesk" class="clear">
+                                            Goto Desk <i class="fa fa-chevron-right"></i>
+                                        </a>
+                                     </p>
+                                }
+                                else if (userRole.ToUpper() == GeneralClass.ACE_STA.ToUpper())
+                                {
+
+                                    <h4>Applications on ACE's Desk</h4>
+                                    <p>
+                                        <a href="/Process/MyDesk" class="clear">
+                                            Goto Desk <i class="fa fa-chevron-right"></i>
+                                        </a>
+                                    </p>
+                                }
+                                        else
+                                {
+                                    <h4>Applications on my Desk</h4>
+                                    <p>
+                                        <a href="/Process/MyDesk" class="clear">
+                                            Goto My Desk <i class="fa fa-chevron-right"></i>
+                                        </a>
+                                    </p>
+
+                                }
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success-dark p-20" style="background-color:forestgreen">
+                    <div class="media widget-ten">
+                        <div class="media-left meida media-middle">
+                            <span><i class="fa fa-check"></i></span>
+                        </div>
+                        <div class="media-body media-text-right">
+
+                            <div class="count">@Model.Approved</div>
+                            <h4>Total Applications Approved</h4>
+                            <p>
+                                <a href="/Staffs/CSApplications?status=Approved" class="clear">
+                                    See Approved Applications <i class="fa fa-chevron-right"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger-dark p-20">
+                    <div class="media widget-ten">
+                        <div class="media-left meida media-middle">
+                            <span><i class="fa fa-times"></i></span>
+                        </div>
+                        <div class="media-body media-text-right">
+
+                            <div class="count">@Model.AdRejected</div>
+                            <h4>Total Applications Rejected</h4>
+                            <p>
+                                <a href="/Staffs/CSApplications?status=Rejected" class="clear">
+                                    See Rejected Applications <i class="fa fa-chevron-right"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-primary-dark p-20">
+                    <div class="media widget-ten">
+                        <div class="media-left meida media-middle">
+                            <span><i class="fa fa-briefcase"></i></span>
+                        </div>
+                        <div class="media-body media-text-right">
+
+                            <div class="count">@Model.TotalApplications</div>
+                            <h4>Total Applications Worked on</h4>
+                            <p>
+                                <a href="/Staffs/CSApplications?workedon=yes" class="clear">
+                                    See All <i class="fa fa-chevron-right"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    }
+</div>
+
+
+
+@if ((Model.StaffRole.Contains("Admin")) || (Model.StaffRole.Contains("Support")))
+
+{
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card p-20 bg-primary-dark" style="background-color: #0d2747">
+                <div class="media widget-ten">
+                    <div class="media-left media media-middle">
+                        <span><i class="fa fa-briefcase"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+
+                        <div class="count">@Model.TodayApplications</div>
+                        <h4 style="color: #f1c131; font-weight:bold">Applications Today</h4>
+                        <p>
+
+                            <a href="/Application/AllApplicationss?apptoday=today" class="clear ref">
+                                See More <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-20 bg-primary-dark" style="background-color: #0d2747">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <span><i class="fa fa-check"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+
+                        <div class="count">@Model.AdTotalApplications</div>
+                        <h4 style="color: #f1c131; font-weight:bold">Total Applications</h4>
+                        <p>
+                            <a href="/Reports/Applications" class="clear ref">
+                                See More <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-20 bg-primary-dark" style="background-color: #0d2747">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <span><i class="fa fa-check"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+                        <div style="height:100px;font-size:10px">
+                            <h3 class="text-warning">Processing: <i class="smenu">@Model.Processing</i></h3>
+                            <h3 class="text-danger">Rejected: <i class="smenu">@Model.AdRejected</i></h3>
+                            <h3 class="text-success">Approved: <i class="smenu">@Model.AdApproved</i></h3>
+
+                            <p>
+
+                                <a href="/Reports/Applications" class="clear ref">
+                                    See All <i class="fa fa-chevron-right"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-20 bg-primary-dark" style="background-color: #0d2747">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <span><i class="fa fa-times"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+
+                        <div class="count">@Model.TotalPermits</div>
+                        <h4 style="color: #f1c131; font-weight:bold">Total Permits</h4>
+
+                        <p>
+                            <a href="/Application/Licenses" class="clear ref">
+                                See All <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (Model.StaffRole.Contains("Opscon") || Model.StaffRole.Contains("AdOps"))
+{
+    @*<div class="row xrow">
+            <div class="col-md-12 home-graph">
+                <div class="gHeader">
+                    <h4 class="text-info"><i class="icon-bar-chart"></i> Staff Application Processing Summary</h4>
+                </div>
+                <div id="StaffMetrics">
+                </div>
+            </div>
+        </div>*@
+}
+
+
+
+<div class="marg" style="margin-top:25px"></div>
+<div class="row">
+    <div class="col-lg-8">
+        <h4 class="text-info text-center">
+            <i class="fa fa-line-chart"></i> Application Status Bar Chart ( Last 90 Days )
+        </h4>
+        <div id="GetSevenDaysApplications" style="width:100%; height:500px"></div>
+
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card-black">
+            <div class="card-body">
+                <div class="year-calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<hr />
+<!--<div class="row">
+    <div class="col-md-6">
+
+        <h4 class="text-info text-center">
+            <i class="fa fa-pie-chart"></i>Application Pie Chart According To Category
+        </h4>
+        <div id="PieAppReport" style="width:100%; height:500px"></div>
+    </div>-->
+@*<div class="col-md-6">
+
+        <h4 class="text-info text-center">
+            <i class="fa fa-bar-chart"></i>Application Bar Chart According To Status
+        </h4>
+
+        <div id="DashboardGraph" style="width:100%; height:400px"></div>
+
+    </div>*@
+<!--</div>-->
+<br />
+
+
+@*<div class="row">
+        <div class="col-md-12">
+
+            <h4 class="text-info text-center">
+                <i class="fa fa-pie-chart"></i>Application Pie Chart According To State
+            </h4>
+            <div id="PieStateAppReport" style="width:100%; height:500px"></div>
+        </div>
+    </div>*@
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(function () {
+            $("#lnk-Dashboard > a").addClass("selected").find(".act").addClass("selected");
+        });
+
+    </script>
+
+}
+
+
+@*<h4 class="text-info text-center">
+        <i class="fa fa-line-chart"></i>Application Line Chart According To Category
+    </h4>
+    <div id="GetApplicationPerDay" style="width:100%; height:500px"></div>*@

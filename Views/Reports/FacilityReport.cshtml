@@ -1,0 +1,110 @@
+﻿@model IEnumerable<NewDepot.Models.SearchList>;
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+@{
+    ViewData["Title"] = "Facility Reports";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<br />
+
+
+<div class="card-black">
+
+
+    <div class="row">
+
+        <div class="col-md-2" style="background-color: green; color:white; margin-left: 10px;height:100px; padding: 5px; text-align:center !important; font-weight: bold; border-radius: 5px;">
+            <div style="padding-top: 20px;">Total Facilities</div>
+            <div style="font-size: large; "> @ViewBag.FacilityCount</div>
+        </div>
+        <div class="col-sm-4">
+            <label>Select States</label>
+            <div class="">
+                <select style="width:100%" multiple placeholder="Select" name="txtSelStates[]" id="txtSelStates">
+                    @foreach (var a in Model.FirstOrDefault().states.Where(x => x.Country_id == 156))
+                    {
+                        <option value="@a.StateName.ToUpper()">@a.StateName</option>
+                    }
+
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-2">
+            <label for="comment">Date From :</label>
+            <br />
+            <input type="text" style="border: 1px solid black; border-radius: 3px; height:30px;" class="form-control" id="FtxtApplicationReportFrom" value="" />
+        </div>
+
+        <div class="col-sm-2">
+            <label for="comment">Date To :</label>
+            <br />
+            <input type="text" style="border: 1px solid black; border-radius: 3px; height:30px;" class="form-control" id="FtxtApplicationReportTo" value="" />
+        </div>
+
+
+        <div class="col-sm-1">
+            <label><br /></label>
+            <button class="btn btn-outline-primary" id="btnFacilityReportSearch"><i class="fas fa-search"> </i> Search</button>
+        </div>
+
+    </div>
+
+    <h2 class="">Search Results </h2>
+    <hr />
+    <br />
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover" id="SearchFacilityTabless" style="font-size:12px">
+
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>Company</th>
+                    <th>Facility Name</th>
+                    <th>Address</th>
+                    <th>Contact Person</th>
+                    <th>State</th>
+                    <th>No of Tanks </th>
+                    <th>Total Capacity  </th>
+                    <th>Products</th>
+                    <th>Created At </th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+            <tfoot>
+                <tr style="color:crimson">
+                    <th colspan="6" class="text-center" style="text-align:right">Total :</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+
+                </tr>
+
+            </tfoot>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+@section Scripts{
+
+    <script src="~/js/NewDepot Scripts/Reportings.js"></script>
+
+
+}

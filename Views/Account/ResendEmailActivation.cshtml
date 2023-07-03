@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Resend Activation Link";
+}
+
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">Resend Activation Link</h2>
+        <div class="righty">
+            @*<ul>
+                    <li><a href="/">Home</a></li>
+                    <li>Verify Permit</li>
+                </ul>*@
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+
+<div class="col-md-8 col-md-offset-2">
+    <div class="well">
+        @using (Html.BeginForm("ResendEmailActivation", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <h4>Enter your email</h4>
+            <hr />
+            <p>
+                Your Account is not activated yet, Please Check your mail for the Activation mail from Depot portal or enter your email below to resend the activation Link.
+            </p>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class = "col-md-2 control-label">Email</label>
+                    <div class="col-md-10">
+                        <input type="email" name="Email" value="" />
+                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" class="btn btn-default" value="Resend Link" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

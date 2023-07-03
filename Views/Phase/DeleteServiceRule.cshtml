@@ -1,0 +1,49 @@
+﻿@model NewDepot.Models.vInspection_Rule
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = null;
+}
+
+@if (Model != null)
+{
+
+    <div class="modal-body">
+        <div class="extForm">
+            <h4>Are you sure you want to delete this Service Rule? </h4>
+            <p>
+                <dl class="dl-horizontal lt">
+                    <dt>Rule</dt>
+                    <dd>@Model.Display</dd>
+                </dl>
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            <input type="hidden" name="ServId" value="@ViewBag.ServId" />
+            <div class="">
+                <a role="button" href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                <input type="submit" value="Confirm & Delete" class="btn btn-danger" />
+            </div>
+        }
+
+    </div>
+
+}
+else
+{
+    <div class="modal-body">
+        <div class="extForm">
+            <h4>No rule is selected or The selected rule could not be found. Please select a rule to delete</h4>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="">
+            <a role="button" href="#" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
+        </div>
+    </div>
+}

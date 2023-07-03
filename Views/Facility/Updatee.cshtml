@@ -1,0 +1,128 @@
+﻿@using NewDepot.Helpers;
+@{
+    ViewData["Title"] = "Update Facility with Identification Code";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass genClass = new GeneralClass();
+    var appFac = genClass.FacWithApplication();
+}
+
+
+<div class="card-black">
+
+    <h3>@ViewData["Title"]</h3>
+
+    <br />
+
+
+
+    <table class="table table-bordered" id="FacTablee">
+        <thead></thead>
+        <tr>
+            <th>
+                Name
+            </th>
+
+            <th>
+                City
+            </th>
+            <th>
+                Contact Name
+            </th>
+            <th>
+                Facility Identification
+            </th>
+            <th>
+                Category Code/Year of Operation
+            </th>
+            <th></th>
+        </tr>
+        <tbody></tbody>
+        @foreach (var item in appFac)
+        {
+            string style = "background-color:light-blue";
+            if (string.IsNullOrEmpty(item.fac.IdentificationCode))
+            {
+                style = "";
+            }
+            <tr style="@style">
+                <td>
+                    @Html.DisplayFor(modelItem => item.fac.Name)
+                </td>
+
+                <td>
+                    @item.Address_1, @item.LGA, @item.StateName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fac.ContactName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fac.IdentificationCode)
+                </td>
+                <td>
+                    @item.fac.CategoryCode / @item.fac.FirstOperationYear
+                </td>
+                <td>               
+                     <td> <a class="btn btn-sm btn-primary" href="/Facility/UpdateForm/@item.fac.Id">Edit <i class="fa fa-pen"></i></a>
+                  
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#FacTablee").dataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                    'copyHtml5',
+                    {
+                        extend: 'csvHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        footer: true,
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed two-column'
+                    }
+
+                ],
+
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 50,
+                columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                "order": [[5, "desc"]]
+            });
+        })
+
+    </script>
+}

@@ -1,0 +1,217 @@
+﻿@model NewDepot.Models.AdminDashBoardModel
+@{
+    ViewBag.Title = "Admin DashBoard";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Admin DashBoard</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <hr class="" style="margin: 0 0 15px;" />
+
+    <!-- top tiles -->
+    <div class="row top_tiles">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-briefcase"></i></div>
+                <div class="count">@Model.ApplicationToday</div>
+                <h3>Applications Today</h3>
+                <p>
+                    <a href="/Application?bycat=today" class="clear">
+                        See Applications... <i class="fa fa-chevron-right"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-cog"></i></div>
+                <div class="count">@Model.Processing</div>
+                <h3>Processing</h3>
+                <p>
+                    <a href="/Application?bycat=processing" class="clear">
+                        See Applications... <i class="fa fa-chevron-right"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-pie-chart"></i></div>
+                <div class="count">@Model.TotalApplications</div>
+                <h3>Total Applications</h3>
+                <p>
+                    <a href="/Application" class="clear">
+                        See Applications... <i class="fa fa-chevron-right"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-check-square-o"></i></div>
+                <div class="count">@Model.Permits</div>
+                <h3>Permits</h3>
+                <p>
+                    <a href="/Application/Permits" class="clear">
+                        See Applications... <i class="fa fa-chevron-right"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- /top tiles -->
+
+    <div class="row" id="Chart">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Customer's Application Rate</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="demo-container" style="height:280px">
+                        <div id="placeholder33x" class="demo-placeholder"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="col-md-12">
+                @Model.SummaryChart
+            </div>*@
+    </div>
+
+    @*<div class="row xrow">
+        <div class="col-md-12 home-graph">
+            <div class="gHeader">
+                <h4><i class="icon-bar-chart"></i> Staff Application Processing Summary</h4>
+            </div>
+            <div class="gBody">
+              @Html.Action("StaffMetrics", "Reports")
+            </div>
+        </div>
+    </div>*@
+
+    <div class="marg25">&nbsp;</div>
+
+    <div class="row xrow">
+        @*<div class="col-md-12 home-graph">
+            <div class="gHeader">
+                <div class="lefty">
+                    <h4><i class="icon-bar-chart"></i>Applications Payment Distribution</h4>
+                </div>
+               <div id="dvcharttype" class="righty row xrow">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary btn-sm active">
+                                <input type="radio" name="options" id="rdoBarChart" autocomplete="off" value="Bar"> Bar Chart
+                            </label>
+                            <label class="btn btn-primary btn-sm">
+                                <input type="radio" name="options" id="rdoPointChart" autocomplete="off" value="Point"> Point Chart
+                            </label>
+                        </div>
+                    </div>
+                <div class="clear"></div>
+            </div>
+            <div class="gBody">
+                <div class="col-md-4">@Html.Action("PaymentSummaryDashboard", "Reports")</div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4"></div>
+                <div class="clear"></div>
+            </div>
+
+        </div>*@
+    </div>
+
+    @*<div class="row xrow">
+            <div class="col-md-12 home-graph">
+                <div class="gHeader">
+                    <div class="lefty">
+                        <h4><i class="icon-bar-chart"></i> Applications in the last 7 days</h4>
+                    </div>
+                    <div id="dvcharttype" class="righty">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary btn-sm active">
+                                <input type="radio" name="options" id="rdoBarChart" autocomplete="off" value="Bar"> Bar Chart
+                            </label>
+                            <label class="btn btn-primary btn-sm">
+                                <input type="radio" name="options" id="rdoPointChart" autocomplete="off" value="Point"> Point Chart
+                            </label>
+                        </div>
+                        <!--<input type="radio" id="rdoBarChart" name="chart" value="Bar Chart" /> Bar Chart<br />
+                <input type="radio" id="rdoPointChart" name="chart" value="Point Chart" /> Point Chart-->
+                    </div>
+                    <hr class="clear" />
+                </div>
+                <div class="gBody">
+                    <div id="site_activities_content" class="display-none" style="display: block;">
+                        <div id="site_activities" style="height: 228px; padding: 0px; position: relative;">
+
+                        </div>
+                    </div>
+                    <div id="dvcontainer">
+                        <svg id="svgcontainer" style="height: 350px; width: 100%"></svg>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+</div>
+
+
+
+
+@section scripts{
+    <!-- bootstrap-daterangepicker -->
+    <script src="@Url.Content("/Scripts/js/moment/moment.min.js")"></script>
+    <script src="@Url.Content("/Scripts/js/datepicker/daterangepicker.js")"></script>
+
+    flot")
+    flotplugin")
+
+    <script src="@Url.Content("/Scripts/ChartPlotter.js")"></script>
+    <script src="~/Scripts/Highcharts-4.1.9/js/highcharts.js"></script>
+
+    <!-- Flot -->
+    <script>
+        $(document).ready(function () {
+
+            $("#placeholder33x").html(Loading());
+            //here we generate data for chart
+            /*for (var i = 0; i < 30; i++) {
+                var m = moment().add(i, 'days');
+                var r = randNum() + i + i + 10;
+                //DD/MM/YY
+                d1.push([m, r]);
+                //d1.push([new Date(Date.today().add(i).days()).getTime(), randNum() + i + i + 10]);
+                //    d2.push([new Date(Date.today().add(i).days()).getTime(), randNum()]);
+            }*/
+
+            var chartData;
+            $.get('@Url.Action("GetLast30DaysApplicationRate", "Dashboard")', function(data){
+                chartData = data;
+                PlotLineChart($("#placeholder33x"), "Application Rate", chartData);
+            });
+
+
+        });
+    </script>
+    <!-- /Flot -->
+    <script type="text/javascript">
+
+        $(function () {
+            $("#lnk-Dashboard > a").addClass("selected").find(".act").addClass("selected");
+        });
+
+    </script>
+
+    @*<script type="text/javascript" src="@Url.Content("/Scripts/LocalChart.js")"></script>*@
+}

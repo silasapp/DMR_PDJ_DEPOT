@@ -1,0 +1,85 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "Resend Email Activation Link";
+}
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">Depot Resend Email Activation Link</h2>
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+        <div style="background-color: #ece8d4; padding:30px; margin-top:10px;">
+            @if (ViewBag.userId != null)
+            {
+            <p>
+                Your Account is not activated yet, Please Check your mail for the Activation mail from Depot portal or use the Link below to resent the activation Link.
+            </p>
+                <p>
+                    Please <a href="/Account/ResendEmailActivation/@ViewBag.userId">Click here to resend the Activation Link</a>
+                </p>
+            }
+            else if (ViewBag.UserNotExist != null)
+            {
+                <div class="alert alert-warning">
+                    <p>
+                        @ViewBag.UserNotExist
+                    </p>
+                </div>
+
+            }
+            else if (ViewBag.report != null)
+            {
+
+                <p>
+                    @ViewBag.report
+                </p>
+                <p>
+                    @Html.ActionLink("Log In", "Login", "Account") | <a href="/Account/ForgotPassword">Forgot Password</a>
+                </p>
+
+
+            }
+            else
+            {
+
+                <p>
+                    Your activation link have been recreated and an email has been sent to your email <a href="#">@ViewBag.Email</a> for account activation. Kindly check your email inbox and/or junk mail folder to confirm that the email was received.
+                </p>
+
+                <p>
+                    <strong>Next steps</strong>
+                    <ul style="margin: 0; padding: 0; padding-left: 20px;">
+                        <li>Activate your account by following the activation link therein</li>
+                        <li>Login to the Depot portal to submit your Permit Application</li>
+                    </ul>
+                </p>
+            }
+            <p>
+                <strong>Learn more</strong>
+                <ul style="margin: 0; padding: 0; padding-left: 20px;">
+                    <li>Read our FAQ</li>
+                    <li>Browse through our Video tutorials</li>
+                    <li>Contact us for help or enquiry</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+@*<p class="text-info">
+        Please check your email and confirm your email address.
+    </p>
+    <p class="text-danger">
+        For DEMO only: You can click this link to confirm the email: <a href="@ViewBag.Link">link</a>
+        Please change this code to register an email service in IdentityConfig to send an email.
+    </p>*@
+
+

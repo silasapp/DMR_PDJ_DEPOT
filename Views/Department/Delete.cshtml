@@ -1,0 +1,28 @@
+﻿@model NewDepot.Models.Departments
+
+@{
+    Layout = null;
+}
+
+<div class="modal-body">
+    <div class="extForm">
+        <h4>Are you sure you want to delete this Division &amp; Units? </h4>
+        <p>
+            <dl class="dl-horizontal lt">
+                <dt>Division &amp; Units Name</dt>
+                <dd><strong>@Model.Name</strong></dd>
+            </dl>
+        </p>
+    </div>
+</div>
+<div class="modal-footer">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <div class="">
+            <a role="button" href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    }
+</div>

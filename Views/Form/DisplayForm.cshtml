@@ -1,0 +1,70 @@
+﻿@model NewDepot.Controllers.Form
+
+@{
+    ViewBag.Title = "DisplayForm";
+    Layout = null;
+}
+<section style="padding: 3px 0 0 0;">
+    <div class="wrap-c">
+        <div class="xrow">
+            <div id="ctrlSidebar">
+                <div class="clear"></div>
+            </div>
+            <div id="ctrlContent">
+                <div class="holder">
+                    <h3 class="wkt lefty">Display Form Entries for '@ViewBag.FormName'</h3>
+                    <p class="righty marg25">
+                        @Html.ActionLink("Back to Forms", "FilledForm", null, new { @class = "mybutton" })
+                    </p>
+                    <hr class="clear" />
+                    @if (Model.Headers.Count>0)
+                    {
+                       
+                    <h5 class="wkt">@(Model.Values.Count / Model.Headers.Count) Entries</h5>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                @foreach (var item in Model.Headers)
+                                {
+                                    <th>@item</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int j = 0; j < Model.Values.Count / Model.Headers.Count; j++)
+                            {
+                                <tr>
+                                    <td>@(j + 1)</td>
+                                    @for (int i = 0; i < Model.HeaderCount; i++)
+                                    {
+                                        int number = (j * Model.HeaderCount) + i;
+                                        <td> @Model.Values[number] </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table> 
+                    }
+                    else
+                    {
+                        <h4>No entry yet</h4>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(function () {
+            $("#mainCtrl").addClass("collapse");
+            $("#subCtrl").removeClass("close");
+            $("#forms").addClass("selected");
+            $("#lnkFilledForm").addClass("selected");
+        });
+    </script>
+}

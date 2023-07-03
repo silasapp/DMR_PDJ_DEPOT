@@ -1,0 +1,321 @@
+﻿@using NewDepot.Models;
+@model FacilityModel;
+@{
+    Layout = null;
+}
+
+<div class="offset-12">
+    <h4 class="text-center">Facility Information</h4>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+
+        <div id="suitWrapper">
+            <div class="Facility">
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>Depot (Facility) Name</b></label>
+                    <div class="col-md-8">
+                        <input type="text" required name="FacilityName" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>Contact Name</b></label>
+                    <div class="col-md-8">
+                        <input type="text" required name="ContactName" placeholder="Facility Contact Person" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>Contact Number</b></label>
+                    <div class="col-md-8">
+                        <input type="number" required name="ContactNumber" placeholder="Contact Person Phone Number" class="form-control" value="" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>Facility Address</b></label>
+                    <div class="col-md-8">
+                        <input type="text" required name="Address_1" class="form-control" placeholder="Enter the Facility location address" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>City</b></label>
+                    <div class="col-md-8">
+                        <input type="text" required name="City" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>State</b></label>
+                    <div class="col-md-8">
+                        <select required name="StateId" id="stateId" class="form-control">
+                            <option value="">Select State Located</option>
+                            @foreach (var item in ViewBag.stats)
+                            {
+                                <option value="@item.State_id">@item.StateName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>LGA</b></label>
+                    <div class="col-md-8">
+                        <select required name="LgaId" id="lga" class="form-control">
+                            <option value="">Select Local Government</option>
+                            <option value="1">Oshodi/Isolo</option>
+                            <option value="2">Ikeja</option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-offset-4">
+            <hr />
+            <div class="suitability ">
+                <div class="form-group row">
+                    <label class="col-md-4 control-label"><b>Size of the Land</b></label>
+                    <div class="col-md-7">
+                        <div class="input-group">
+                            <input type="number" required name="SizeOfLand" class="form-control" placeholder="100" />
+                            <span class="input-group-addon" style="font-size: 14px;">Square Meters</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-5 control-label"><b>Site is Along Pipe Line</b></label>
+                    <div class="col-md-3">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" readonly name="ISAlongPipeLine" id="pipeLineYes" value="yes" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" readonly name="ISAlongPipeLine" id="pipeLineNo" value="No" class="" /><label for="pipeLineYes"><b>NO</b></label>
+                            </label>
+                           
+                        </div>
+                    </div>
+                 
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-5 control-label"><b>Site is Under High Tension</b></label>
+                    <div class="col-md-3">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" readonly name="IsUnderHighTension" id="highTensionYes" value="yes" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" readonly name="IsUnderHighTension" id="highTensionNo" value="No" class="" /><label for="pipeLineYes"><b>NO</b></label>
+                            </label>
+                        </div>
+                    </div>
+              
+                </div>
+                <input type="hidden" name="StationsWithin2KM" id="StationsWithin2KM" value="0" />
+                <input type="hidden" name="DistanceFromExistingStation" id="DistanceFromExistingStation" value="More than 800 Meters" />
+                @*<div class="form-group row">
+                        <label class="col-md-5 control-label">Number of Stations Within 2Km</b></label>
+                        <div class="col-md-7">
+                            <input type="number" name="StationsWithin2KM" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-5 control-label">Distance From Existing Station</b></label>
+                        <div class="col-md-7">
+                            <select name="DistanceFromExistingStation" class="form-control" required>
+                                <option value="">Select a Distance</option>
+                                <option value="Less than 399 Meters">Less than 399 Meters</option>
+                                <option value="400 - 799 Meters">400 - 799 Meters</option>
+                                <option value="More than 800 Meters">More than 800 Meters</option>
+                            </select>
+                        </div>
+                    </div>*@
+
+                <div class="form-group row">
+                    <label class="col-md-5 control-label"><b>Site is on HighWay</b></label>
+                    <div class="col-md-3">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" readonly name="IsOnHighWay" id="IsOnHighWayYes" value="yes" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" readonly name="IsOnHighWay" id="IsOnHighWayNo" value="No" class="" /><label for="pipeLineYes"><b>NO</b></label>
+                            </label>
+                        </div>
+                    </div>
+                    @*<div class="col-md-7">
+                            <div class="radio">
+                                <input type="radio" name="IsOnHighWay" id="IsOnHighWayYes" value="yes" class="radio form-control" /><label class="radioLabel" for="IsOnHighWayYes">YES</b></label>
+                                <input type="radio" name="IsOnHighWay" id="IsOnHighWayNo" value="no" class="radio form-control" /><label class="radioLabel" for="IsOnHighWayNo">NO</b></label>
+                            </div>
+                        </div>*@
+                </div>
+
+
+                @*<div class="form-group row">
+                        <label class="col-md-5 control-label">Has EIA</b></label>
+                        <div class="col-md-7">
+                            <div class="radio">
+                                <input type="radio" name="HasEIA" id="HasEIAYes" value="yes" /><label for="HasEIAYes">YES</b></label>
+                                <input type="radio" name="HasEIA" id="HasEIANo" value="no" /><label for="HasEIANo">NO</b></label>
+                            </div>
+                            @ * <input id="HasEIA" type="checkbox" name="HasEIA" class="form-control" value="HasEIA" />* @
+                        </div>
+                    </div>*@
+
+                @*<div id="HasEIADiv" style="display:none" class="form-group">
+                        <label class="col-md-5 control-label">Name Of NMDPRA</b></label>
+                        <div class="col-md-7">
+                            <input type="text" name="EIANMDPRAStaff" class="form-control" value="" />
+                        </div>
+                    </div>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="confirmSuit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview Application</h4>
+            </div>
+            <div class="modal-body">
+                <div class="padd-t">
+                    <p>
+                        Please preview your Facility information for the Suitability Inspection Application before submitting.
+                        You will not be able to modify the Information supplied after submission.
+                    </p>
+                    <hr />
+                    <div id="prevDiv">
+                        <div class="">
+                            <div class="Facility">
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Depot (Facility) Name</b></label>
+                                    <div class="col-md-7">
+                                        <input type="text" data-name="FacilityName" class="form-control" readonly value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Contact Name</b></label>
+                                    <div class="col-md-7">
+                                        <input type="text" data-name="ContactName" class="form-control" readonly value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Contact Number</b></label>
+                                    <div class="col-md-7">
+                                        <input type="text" data-name="ContactNumber" class="form-control" readonly value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Facility Address</b></label>
+                                    <div class="col-md-7">
+                                        <input type="text" data-name="Address_1" class="form-control" readonly value="" placeholder="Enter the Facility location address" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>City</b></label>
+                                    <div class="col-md-7">
+                                        <input type="text" data-name="City" class="form-control" readonly value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>State</b></label>
+                                    <div class="col-md-7">
+                                        <input type="text" data-name="StateId" id="stateId" class="form-control" readonly />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>LGA</b></label>
+                                    <div class="col-md-7">
+                                        <input type="text" data-name="LgaId" id="lga" class="form-control" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <hr />
+                            <div class="suitability special-control">
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Size of the Land</b></label>
+                                    <div class="col-md-7">
+                                        <div class="input-group">
+                                            <input type="number" data-name="SizeOfLand" class="form-control" readonly value="" placeholder="100" />
+                                            <span class="input-group-addon" style="font-size: 14px;">Square Meters</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Site is Along Pipe Line</b></label>
+                                    <div class="col-md-7">
+                                        <div class="">
+                                            <input type="text" data-name="ISAlongPipeLine" id="alongpl" readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Site is Under High Tension</b></label>
+                                    <div class="col-md-7">
+                                        <div class="">
+                                            <input type="text" data-name="IsUnderHighTension" id="undt" readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group row">
+                                        <label class="col-md-5 control-label">Number of Stations Within 2Km</b></label>
+                                        <div class="col-md-7">
+                                            <input type="number" data-name="StationsWithin2KM" class="form-control" readonly value="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-5 control-label">Distance From Existing Station</b></label>
+                                        <div class="col-md-7">
+                                            <input type="text" data-name="DistanceFromExistingStation" class="form-control" readonly />
+                                        </div>
+                                    </div>*@
+
+                                <div class="form-group row">
+                                    <label class="col-md-5 control-label"><b>Site is on HighWay</b></label>
+                                    <div class="col-md-7">
+                                        <div class="radio">
+                                            <input type="text" data-name="IsOnHighWay" id="onhw" readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Modify <i class="fa fa-edit"></i></button>
+                <button type="button" id="btnConfirmSubmit2" class="btn btn-success">Submit <i class="fa fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,220 @@
+﻿@using NewDepot.Helpers
+@using NewDepot.Models
+
+@model IEnumerable<MeetingSchedulesModel>
+
+
+@{
+   // ViewBag.Title = "My Presentation Schedules";
+    ViewBag.Title = "My Schedules";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    int counter = 0;
+    var data = Model != null ? Model.OrderByDescending(a => a.Date) : Model;
+
+}
+
+<style type="text/css">
+    tr th {
+        width: 14.28571428571429%;
+    }
+</style>
+
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+    <div class="righty">
+        <div class="btn-group" data-toggle="buttons">
+            <a href="/Process" class="btn btn-default"><i class="fa fa-arrow-left"></i> Back to My Desk</a>
+            <label class="btn btn-primary active">
+                <input type="radio" name="options" id="calView" autocomplete="off" checked><i class="fa fa-calendar"></i> Calendar View
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="options" id="listView" autocomplete="off"><i class="fa fa-bars"></i> List View
+            </label>
+        </div>
+
+    </div>
+    <hr class="clear" />
+    <div class="row" id="CalBox">
+        @Html.ActionLink("CalendarView", "Process", new { fromWhere = DateTime.Now })
+    </div>
+    <div class="row hide" id="ListBox">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-hover table-bordered dataTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>
+                                    Company Name
+                                </th>
+                                <th>Scheduled Date</th>
+                                <th>
+                                    Reference No.
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Message)
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Manager Approved
+                                </th>
+                                @*<th>
+                                        Client Accepted
+                                    </th>*@
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in data)
+                        {
+                            counter++;
+                            <tr id="tr_@counter">
+                                <td>@counter</td>
+                                <td id="coy_@counter">
+                                    @Html.DisplayFor(modelItem => item.CompanyName)
+                                </td>
+                                <td id="mdate_@counter">
+                                    @if (item.WaiverRequest.GetValueOrDefault() == true)
+                                    {
+                                        <span class="label label-info">WAIVER REQUEST</span>
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.MeetingDate)
+                                    }
+                                </td>
+                                <td id="ref_@counter">
+                                    @item.Reference
+                                </td>
+                                <td id="msg_@counter">
+                                    @Html.DisplayFor(modelItem => item.Message)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td id="app_@counter" data-val="@item.Approved.GetValueOrDefault()" data-appDate="@item.ApprovedDate">
+                                    @if (item.Approved.GetValueOrDefault() == true)
+                                    {
+                                        <span class="label label-success">YES</span>
+                                    }
+                                    else if (item.Approved.GetValueOrDefault() == false)
+                                    {
+                                        <span class="label label-danger">NO</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-info">WAITING</span>
+                                    }
+                                </td>
+                                @*@if (item.WaiverRequest.GetValueOrDefault() == true)
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td id="acc_@counter" data-val="@item.Accepted.GetValueOrDefault()" data-accDate="@item.AcceptanceDate">
+                                            @if (item.Accepted.GetValueOrDefault() == true)
+                                            {
+                                                <span class="label label-success">YES</span>
+                                            }
+                                            else if (item.Accepted.GetValueOrDefault() == false)
+                                            {
+                                                <span class="label label-danger">NO</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-info">WAITING</span>
+                                            }
+                                        </td>
+                                    }*@
+                                <td>
+                                    <a href="#myModal" class="btn btn-primary btn-xs" data-toggle="modal" role="button" data-index="@counter">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="myModalBody">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="h-thin" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Schedules > a").addClass("selected").find(".act").addClass("selected");
+            //$(".sidebar > ul > li > ul li a[href='/Process']").addClass("selected");
+
+            $('a[href="#myModal"]').on("click", function () {
+                var id = $(this).data("index");
+
+                var title = "Meeting Schedule for \"" + $("#tr_" + id).find("td#coy_" + id).text().trim() + "\"";
+                console.log(id + "; " + $("#tr_" + id).find("td#coy_" + id).text().trim());
+                $("#myModalLabel").text(title);
+                var line1 = "<b>Application Reference: </b>" + $("#tr_" + id).find("td#ref_" + id).text().trim() + "<br />";
+                var line2 = "<b>Scheduled Date: </b>" + $("#tr_" + id).find("td#mdate_" + id).text().trim() + "<br />";
+                var apprv = $("#tr_" + id).find("td#app_" + id).data("val");
+                var dtApp = $("#tr_" + id).find("td#app_" + id).data("appdate");
+                var line3 = "<b>Manager Approved: </b>" + apprv + (apprv.toLowerCase() === "true" ? "&nbsp; (Date Approved: " + dtApp + ")" : "") + "<br />";
+                var accrv = $("#tr_" + id).find("td#acc_" + id).data("val");
+                var dtAcc = $("#tr_" + id).find("td#acc_" + id).attr("data-accdate");
+                var line4 = "<b>Client Accepted: </b>" + accrv + (accrv.toLowerCase() === "true" ? "&nbsp; (Date Accepted: " + dtAcc + ")" : "") + "<br />";// +$("#tr_" + id).find("td#acc_" + id).data("val") + "</b><br />";
+                var line5 = '<b>Message:</b><br /><div class="well well-sm">' + $("#tr_" + id).find("td#msg_" + id).text().trim() + "</div>";
+
+                $("#modalBody").html(line1 + line2 + line3 + line4 + line5);
+            });
+
+            $("#calView").parent("label").on("click", function () {
+                $("#ListBox").removeClass("hide").addClass("hide");
+                $("#CalBox").removeClass("hide");
+            });
+            $("#listView").parent("label").on("click", function () {
+                $("#CalBox").removeClass("hide").addClass("hide");
+                $("#ListBox").removeClass("hide");
+            });
+
+            $(document).on("click", ".btnNext", function (e) {
+                e.preventDefault();
+                $("#CalBox").html(Loading());
+                var param = $(this).data("nextmonth");
+                var url = '@Url.Action("CalendarView", "Process")';
+                $.get(url, { fromWhere: param }, function (data) {
+                    $("#CalBox").html(data);
+                });
+            });
+
+            $(document).on("click", ".btnPrev", function (e) {
+                e.preventDefault();
+                $("#CalBox").html(Loading());
+                var param = $(this).data("prevmonth");
+                var url = '@Url.Action("CalendarView", "Process")';
+                $.get(url, { fromWhere: param }, function (data) {
+                    $("#CalBox").html(data);
+                });
+            });
+        });
+    </script>
+
+}

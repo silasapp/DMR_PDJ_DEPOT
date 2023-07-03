@@ -1,0 +1,208 @@
+﻿<!-- All Jquery -->
+<script src="~/ela/js/lib/jquery/jquery.min.js"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="~/ela/js/lib/bootstrap/js/popper.min.js"></script>
+<script src="~/ela/js/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/js/jquery.confirm.js"></script>
+
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="~/ela/js/jquery.slimscroll.js"></script>
+<!--Menu sidebar -->
+<script src="~/ela/js/sidebarmenu.js"></script>
+<!--stickey kit -->
+<script src="~/ela/js/lib/sticky-kit-master/dist/sticky-kit.min.js"></script>
+<!--Custom JavaScript -->
+
+<link href="~/ela/css/lib/select2/select2.min.css" rel="stylesheet" />
+<script src="~/ela/js/lib/calendar-2/moment.latest.min.js"></script>
+<!-- scripit init-->
+@*<script src="~/ela/js/lib/calendar-2/semantic.ui.min.js"></script>*@
+<!-- scripit init-->
+<script src="~/ela/js/lib/calendar-2/prism.min.js"></script>
+<!-- scripit init-->
+<script src="~/ela/js/lib/calendar-2/pignose.calendar.min.js"></script>
+<!-- scripit init-->
+<script src="~/ela/js/lib/calendar-2/pignose.init.js"></script>
+
+<script src="~/ela/js/lib/owl-carousel/owl.carousel.min.js"></script>
+<script src="~/ela/js/lib/owl-carousel/owl.carousel-init.js"></script>
+
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@* Jquery data table scripts *@
+
+<script src="~/js/dataTables.min.js"></script>
+<script src="~/js/dataTables.rowGroup.min.js"></script>
+<script src="~/js/Plugins/datatables.net-responsive/js/sum().js"></script>
+<script src="~/js/dataTables.buttons.min.js"></script>
+<script src="~/js/buttons.flash.min.js"></script>
+<script src="~/js/jszip.min.js"></script>
+@*<script src="~/js/pdfmake.min.js"></script>*@
+<script src="~/js/vfs_fonts.js"></script>
+<script src="~/js/buttons.html5.min.js"></script>
+<script src="~/js/buttons.print.min.js"></script>
+<script src="~/js/buttons.colVis.min.js"></script>
+<script src="~/js/dataTables.select.min.js"></script>
+<script src="~/js/dataTables.checkboxes.min.js"></script>
+<script src="~/packagess/Tipped/tipped.js"></script>
+<script src="~/js/FunctionScript.js"></script>
+<script src="~/js/jquery.ui.widget.js"></script>
+<script src="~/js/jquery.iframe-transport.js"></script>
+<script src="~/js/jquery.fileupload.js"></script>
+<script src="~/js/jquery.datetimepicker.full.min.js"></script>
+<script src="~/ela/js/lib/form-validation/jquery.validate.min.js"></script>
+<script src="~/ela/js/lib/select2/select2.full.min.js"></script>
+
+<div class="modal adminPopup modal-md" id="modalPopup">
+    <div class="modal-dialog">
+        <div class="modal-content" id="Loadder">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="btn btn-danger"><i class="fa fa-times"></i></span>
+            </button>
+            <div class="modal-header">
+                <h3 class="modal-title">Modal header</h3>
+
+
+            </div>
+            <div id="modal-body">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/ela/js/scripts.js"></script>
+
+@* Local Application Application script *@
+<script src="~/js/NewDepot Scripts/CompanyApplications.js"></script>
+<script src="~/js/NewDepot Scripts/Legacy.js"></script>
+<script src="~/OldDepotStyle/Scripts/mainscript.js"></script>
+<script src="~/js/NewDepot Scripts/StaffApplication.js"></script>
+<script src="~/js/NewDepot Scripts/Charts.js"></script>
+
+@*<script src="~/js/NewDepot Scripts/Configurations/ApplicationProcess.js"></script>
+*@
+@*<script src="~/js/NewDepot Scripts/DashboardCharts.js"></script>*@
+@*<script src="~/js/NewDepot Scripts/Configurations/Countries.js"></script>
+<script src="~/js/NewDepot Scripts/Configurations/States.js"></script>*@
+
+<footer class="efooter">Copyright &copy; @DateTime.UtcNow.AddHours(1).Year All Rights Reserved - Nigerian Midstream and Downstream Petroleum Regulatory Authority. </footer>
+
+
+<script>
+    $(document).ready(function () {
+
+        //application
+        $('#txtSelYear').select2(); $('#txtSelType').select2();
+        $('#txtSelStates').select2(); $('#txtSelAppStatus').select2();
+        $('#txtSelIssue').select2();
+        $('#txtSelCategory').select2();
+        $('#txtSelStatus').select2();
+        $('#txtSelOffice').select2();
+        $('#txtSelZone').select2();
+        $('#txtSelCategory').select2();
+
+        //transaction
+        $('#TtxtSelYear').select2();
+        $('#txtSelState').select2();
+        $('#txtSelAppStatus').select2();
+        $('#TtxtSelCategory').select2();
+        $('#TtxtSelStatus').select2();
+        $('#TtxtSelOffice').select2();
+        $('#TtxtSelZone').select2();
+
+        //permit
+        $('#PtxtSelYear').select2();
+        $('#PtxtSelType').select2();
+        $('#PtxtSelCategory').select2();
+
+
+
+
+
+
+
+        $(".sideFirstLi").addClass("active");
+        $(document).on("click", "#btnMReject", function (e) {
+
+            e.preventDefault();
+            var txtComment = $("#rejComment").val();
+
+            if (txtComment === "") {
+                ErrorMessage("#MRejectModalInfo", "Please enter a rejection comment.");
+                $("#rejComment").focus();
+            }
+            else {
+                var frm = $("#mRejFrm");
+                console.log(frm);
+                $.confirm({
+                    text: "Are you sure you want to reject this application back to previous staff ?",
+                    confirm: function () {
+                        $("#AppRejectionLoadder").addClass('Submitloader');
+                        $(frm).submit();
+
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+            }
+        });
+
+        $("#txtApplicationReportFrom").datetimepicker({
+            defaultDate: new Date().setDate(new Date().getDate() + 1),
+           
+        }); 
+        $("#txtApplicationReportTo").datetimepicker({
+
+            defaultDate: new Date().setDate(new Date().getDate() + 1),
+           
+        });
+        $("#txtEditSchduleDate").datetimepicker({
+
+            minDate: new Date().setDate(new Date().getDate() + 1), //- this is tomorrow;  use 0 for toady
+            defaultDate: new Date().setDate(new Date().getDate() + 1),
+            onGenerate: function (ct) {
+                $(this).find('.xdsoft_date.xdsoft_weekend')
+                    .addClass('xdsoft_disabled');
+            }
+        });
+    })
+
+</script>
+<script>
+    function SearchApp() {
+
+        var content = $("#txtSearchContent").val();
+
+        if (content === null || content === "") {
+            return false;
+        }
+        else {
+            var location = window.location.origin + "/Search/Index?q=" + content;
+            window.location.href = location;
+        }
+    }
+
+    //Success and error messages
+    function ErrorMessage(error_id, error_message) {
+        $(error_id).fadeIn('fast')
+            .html("<i class=\"fa fa-warning text-danger\"> </i> <span class=\"text-danger\"> " + error_message + " </span>")
+            .delay(9000)
+            .fadeOut('fast');
+        return;
+    }
+
+    // success message
+    function SuccessMessage(success_id, success_message) {
+        $(success_id).fadeIn('fast')
+            .html("<i class=\"fa fa-check-circle text-success\"> </i> <span class=\"text-success\">" + success_message + " </span>")
+            .delay(10000)
+            .fadeOut('fast');
+        return;
+    }
+
+</script>

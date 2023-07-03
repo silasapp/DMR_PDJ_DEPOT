@@ -1,0 +1,136 @@
+﻿@using NewDepot.Models;
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<MeetingSchedulesModel>
+
+
+@{
+
+    Layout = null;
+    int counter = 0;
+    var data = Model != null ? Model.OrderByDescending(a => a.Date) : Model;
+
+    var dtCounter = 0;
+    var pickDate = ViewBag.CurrentMonth;
+    var start = DateTime.Parse(pickDate.Month + "/" + pickDate.Year);
+    var daysInMonth = DateTime.DaysInMonth(start.Year, start.Month);
+    var month = start.Month;
+    List<MeetingCalModel> dateList = new List<MeetingCalModel>();
+    GeneralClass generalClass = new GeneralClass();
+    var me = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionEmail));
+
+
+    #region CreateCalendar
+    for (int i = 1; i <= daysInMonth; i++)
+    {
+        if (i == 1)
+        {
+            var dayindex =GeneralClass.CalendarHelper.Index(start.DayOfWeek);
+            if (dayindex > 1)
+            {
+                //DO this if first day of the week is not sunday
+                for (int di = 1; di < dayindex; di++)
+                {
+                    dateList.Add(null);
+                }
+                var mine = data.Where(a => a.MeetingDate.ToShortDateString() == start.ToShortDateString() && a.StaffUserName.ToLower() == me.ToLower()).ToList();
+                var others = data.Where(a => a.MeetingDate.ToShortDateString() == start.ToShortDateString() && a.StaffUserName.ToLower() != me.ToLower()).ToList();
+                dateList.Add(new MeetingCalModel() { Day = start.Day, MyMeetings = mine, ColleagueMeeting = others });
+            }
+            else
+            {
+                var mine = data.Where(a => a.MeetingDate.ToShortDateString() == start.ToShortDateString() && a.StaffUserName.ToLower() == me.ToLower()).ToList();
+                var others = data.Where(a => a.MeetingDate.ToShortDateString() == start.ToShortDateString() && a.StaffUserName.ToLower() != me.ToLower()).ToList();
+                dateList.Add(new MeetingCalModel() { Day = start.Day, MyMeetings = mine, ColleagueMeeting = others });
+            
+            }
+        }
+        else
+        {
+            var mine = data.Where(a => a.MeetingDate.ToShortDateString() == start.ToShortDateString() && a.StaffUserName.ToLower() == me.ToLower()).ToList();
+            var others = data.Where(a => a.MeetingDate.ToShortDateString() == start.ToShortDateString() && a.StaffUserName.ToLower() != me.ToLower()).ToList();
+            dateList.Add(new MeetingCalModel() { Day = start.Day, MyMeetings = mine, ColleagueMeeting = others });
+          
+        }
+
+        start = start.AddDays(1);
+    }
+    #endregion
+}
+
+<div class="x_panel">
+    <div class="x_content">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="text-left">
+                    <a href="#" class="btn btn-default btn-sm btnPrev" data-prevmonth="@pickDate.AddMonths(-1)"><i class="fa fa-angle-double-left"></i> @GeneralClass.CalendarHelper.PrevMonth(month)</a>
+                </div>
+            </div>
+            <div class="col-md-4"><h3 class="text-center" style="font-weight: 100;">@GeneralClass.CalendarHelper.MonthOfTheYear(month) @pickDate.Year</h3></div>
+            <div class="col-md-4">
+                <div class="text-right">
+                    <a href="#" class="btn btn-default btn-sm btnNext" data-nextmonth="@pickDate.AddMonths(1)">@GeneralClass.CalendarHelper.NextMonth(month) <i class="fa fa-angle-double-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped cal-table">
+            <thead>
+                <tr>
+                    <th>SUNDAY</th>
+                    <th>MONDAY</th>
+                    <th>TUESDAY</th>
+                    <th>WEDNESDAY</th>
+                    <th>THURSDAY</th>
+                    <th>FRIDAY</th>
+                    <th>SATURDAY</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= 6; i++)
+                {
+                    <tr>
+                        @for (int x = 0; x < 7; x++)
+                        {
+                            if (dtCounter < dateList.Count())
+                            {
+                                var item = dateList.ElementAt(dtCounter);
+                                dtCounter++;
+                                if (item != null)
+                                {
+                                    <td>
+                                        <h5 style="font-weight: 100;">@item.Day</h5>
+                                        @if (item.MyMeetings.Count() > 0)
+                                        {
+                                            <p class="label label-success">@item.MyMeetings.Count() Schedules by Me</p>
+                                        }
+                                        @if (item.ColleagueMeeting.Count() > 0)
+                                        {
+                                            <p class="label label-info">@item.ColleagueMeeting.Count() Schedules by others</p>
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                        }
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+        <hr />
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1">
+                <h4 style="font-weight: 100;">Color Codes</h4>
+                <ul style="list-style: none;">
+                    <li style="padding-bottom: 7px;"><label class="label label-success">Green</label> My Schedules</li>
+                    <li style="padding-bottom: 7px;"><label class="label label-info">Blue</label> Schedules by Colleagues</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

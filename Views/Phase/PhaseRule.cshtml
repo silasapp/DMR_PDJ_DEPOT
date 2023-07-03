@@ -1,0 +1,171 @@
+﻿@model IEnumerable<NewDepot.Models.vPhaseRouting>
+
+
+
+@{
+    var phase = (Phase)ViewBag.Phase;
+    ViewBag.Title = "Processing Rules in " + phase.Name;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var phaseRules = Model.ToList();
+
+    var cateRules = (List<vCategoryRouting>)ViewBag.cateogryRule;
+    foreach (var item in cateRules)
+    {
+        phaseRules.Add(new vPhaseRouting()
+        {
+            RoleName = item.RoleName,
+            DepartmentName = item.DepartmentsName,
+            ProcessingLocation = item.ProcessingLocation,
+            SortOrder = item.SortOrder,
+            Deleted = item.Deleted,
+            Inherit = true
+        });
+    }
+
+
+}
+
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+
+    <div class="righty">
+        <a href="/Phase" class="btn btn-default">
+            <i class="fa fa-arrow-left"></i>&nbsp; Back
+        </a>
+        <button class="btn btn-success callModal" data-url="/Phase/CreatePhaseRule?phaseId=@phase.Id"
+                data-toggle="modal" data-target="#modalPopup" data-uid="1">
+            Creat New Phase Rule
+        </button>
+    </div>
+    <hr class="clear" />
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-hover table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Department Name</th>
+                                <th>Role</th>
+                                <th>Processing Location</th>
+                                <th>Sort Order</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count() > 0)
+                            {
+                                int count = 0;
+                                @*foreach (var cat in cateRules.OrderBy(a => a.SortOrder))
+                                    {
+                                        count++;
+                                        <tr class="">
+                                            <td>@count</td>
+                                            <td>@cat.RoleName</td>
+                                            <td>@cat.DepartmentsName</td>
+                                            <td><a href="#" class="">@cat.ProcessingLocation</a></td>
+                                            <td>@cat.SortOrder</td>
+                                            <td class="txtright">Inherited</td>
+                                        </tr>
+                                    }*@
+                            foreach (var item in phaseRules.OrderBy(a => a.SortOrder))
+                            {
+                                count++;
+                                var del = item.Deleted ? "danger" : "";
+                                <tr class="@del">
+                                    <td>@count</td>
+                                    <td>@item.DepartmentsName</td>
+                                    <td>@item.RoleName</td>
+                                    <td><a href="#" class="">@item.ProcessingLocation</a></td>
+                                    <td>@item.SortOrder</td>
+                                    <td class="txtright">
+                                        @if (item.Inherit)
+                                        {
+                                            <span>Inherited</span>
+                                        }
+                                        else
+                                        {
+                                            <div class="btn-group">
+                                                @if (item.Deleted)
+                                                {
+                                                    <a class="btn btn-primary btn-xs callModal" data-url="/Phase/DeletePhaseRule/@item.Id?todo=add"
+                                                       data-toggle="modal" data-target="#modalPopup" data-uid="4" data-itemname="">
+                                                        Re-Add
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-info btn-xs callModal" data-url="/Phase/CreatePhaseRule/@item.Id?phaseId=@phase.Id"
+                                                       data-toggle="modal" data-target="#modalPopup" data-uid="3" data-itemname="">
+                                                        Edit <span class="fa fa-trash"></span>
+                                                    </a>
+                                                        <a class="btn btn-danger btn-xs callModal" data-url="/Phase/DeletePhaseRule/@item.Id?phaseId=@phase.Id&todo=del"
+                                                           data-toggle="modal" data-target="#modalPopup" data-uid="4" data-itemname="">
+                                                            Archive <span class="fa fa-trash"></span>
+                                                        </a>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Categories > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Service']").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            $(document.body).on("click", ".callModal", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-itemname");
+
+                $("#modal-body").html("");
+                if (uid == "1") {
+                    var headTitle = "Create New Phase Rule";
+                } else if (uid == "2") {
+                    var headTitle = "Select required document for " + name + " category";
+                } else if (uid == "3") {
+                    var headTitle = name + " Edit Phase";
+                } else if (uid == "4") {
+                    var headTitle = name + " Archive Phase";
+                }
+
+                $(".modal-title").text(headTitle);        // find title for changr
+                $("#modal-body").html(Loading());
+                //Load the view
+                $.get(url, function (data) {
+                    $("#modal-body").html(data);
+                });
+
+            });
+
+        });
+    </script>
+}

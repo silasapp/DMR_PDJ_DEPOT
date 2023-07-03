@@ -1,0 +1,102 @@
+﻿@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.PresentDocuments>
+
+@{
+    ViewData["Title"] = ViewData["CompanyName"];
+    ViewData["BodyClass"] = "fix-header";
+    GeneralClass generalClass = new GeneralClass();
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+}
+
+<div class="card">
+
+    <br />
+
+    <table class="table table-bordered table-hover" id="MyFacilityTable">
+        <thead>
+            <tr>
+
+                <th> Document Name</th>
+                <th> FileName </th>
+                <th> File </th>
+                <th> Document Type </th>
+                <th> Status </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                var present = a.Present == true ? "Available" : "Not Availabe";
+
+                var file_icon = "";
+                var font_png_icon = "fa-file-image";
+                var font_pdf_icon = "fa-file-pdf text-danger";
+
+                var font_file_icon = "fa-file text-info";
+
+                var imgs = "";
+
+                if (a.Source.Contains("democontent") == true)
+                {
+                    imgs = a.Source.Replace("democontent", "content");
+                }
+                else
+                {
+                    imgs = a.Source;
+                }
+                var img_link = imgs;
+                file_icon = a.Source.EndsWith(".png") == true ? font_png_icon :
+                       a.Source.EndsWith(".PNG") == true ? font_png_icon :
+                       a.Source.EndsWith(".jpg") == true ? font_png_icon :
+                       a.Source.EndsWith(".JPG") == true ? font_png_icon :
+                       a.Source.EndsWith(".jpeg") == true ? font_png_icon :
+                       a.Source.EndsWith(".JPEG") == true ? font_png_icon :
+                       a.Source.EndsWith(".pdf") == true ? font_pdf_icon :
+                       a.Source.EndsWith(".PDF") == true ? font_pdf_icon : font_file_icon;
+
+                <tr>
+                    <td> <small> @a.TypeName</small></td>
+                    <td>@a.FileName</td>
+                    <td>
+                        <a href="@img_link" target="_blank" style="color:black" title="Click to view document">
+                            <i class="fa @file_icon fa-5x"></i>
+                        </a>
+                    </td>
+                    <td>@a.DocType <br> Document</td>
+                    <td>@present</td>
+
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="@img_link" target="_blank"> <i class="fa fa-eye"> </i> View Doc </a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+            $("#MyFacilityTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 50,
+                columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                "order": [[1, "asc"]]
+            });
+        });
+    </script>
+    }

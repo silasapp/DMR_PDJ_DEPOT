@@ -1,0 +1,248 @@
+﻿@using Recaptcha.Web.Mvc;
+
+@model IdentitySample.Models.RegisterViewModel
+
+
+@{
+    ViewBag.Title = "Register";
+    // var x = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["useCaptcher"]);
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-5 form-signin extForm">
+        <div class="padd">
+            <h1 class="form-signin-heading text-center">DPR</h1>
+            <h4 class="txtcenter">Depot Licence and Approval Portal (Depot)</h4>
+
+            <a class="btn btn-lg btn-success btn-block buttonRadius1 textUpper" href="/validate/">Click here to Verify Permit</a>
+            <br />
+            <div class="btn-group width100 marginButtom15">
+                @*<a class="btn btn-lg white labelText textUpper loginTopButtons buttonRadius1 loginLink" href="/Account/login">LOGIN</a>
+                    <a class="btn btn-lg  active textUpper loginTopButtons buttonRadius1 registerLink" href="/Account/register">REGISTER</a>*@
+                @Html.ActionLink("LOGIN", "Login", "Account", null, new { @class = "btn btn-lg white labelText textUpper loginTopButtons buttonRadius1 loginLink" })
+                @Html.ActionLink("REGISTER", "Register", "Account", null, new { @class = "btn btn-lg  active textUpper loginTopButtons buttonRadius1 registerLink" })
+            </div>
+
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                if (TempData["message"] != null && TempData["status"] != null)
+                {
+                    <div class="text-danger validation-summary-errors">
+                        <ul>
+                            <li>@TempData["message"].ToString()</li>
+                        </ul>
+                    </div>
+                }
+
+                <div>
+                    <div class="col-md-12 white loginLabelBox">
+                        <p><strong>Create Company Account</strong></p>
+                    </div>
+                    <div class="col-md-12">
+                        <p><span class="regInfo">All fields are required.<br>Please enter your company name as it appears on your existing DPR Permit or CAC certificate.</span></p>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon covertop"><i class="glyphicon glyphicon-home"></i></span>
+                        @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control covertop", @autofocus = "autofocus", @placeholder = "Company Name" })
+                        @*@Html.ValidationMessageFor(m => m.CompanyName, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+                        @Html.TextBoxFor(m => m.RegistrationNumber, new { @class = "form-control", @placeholder = "Company Registration Number" })
+                        @*@Html.ValidationMessageFor(m => m.RegistrationNumber, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Company Email" })
+                        @*@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Portal Password" })
+                        @*@Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })*@
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Retype Password" })
+                        @*@Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "text-danger" })*@
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @placeholder = "Phone Number" })
+                        @*@Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                        @Html.DropDownListFor(m => m.BusinessType, (SelectList)ViewBag.bizType, "Select Business Type", new { @class = "form-control", @placeholder = "Business Type" })
+                        @*@Html.ValidationMessageFor(m => m.BusinessType, null, new { @class = "text-danger" })*@
+                    </div>
+                    @*@if (x)
+                        {
+                            <div class="">
+
+                                @Html.Recaptcha(theme: Recaptcha.Web.RecaptchaTheme.Clean)
+
+                            </div>
+                        }*@
+                    <br />
+                    <button class="btn btn-lg btn-success btn-block buttonRadius1" type="button" data-toggle="modal" data-target="#disclaimer">Register</button>
+
+                    <div class="modal fade" id="disclaimer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Disclaimer</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="padd-t">
+                                        <ol>
+                                            <li>
+                                                DPR DOES NOT ENCOURAGE THE USE OF TOUTS, AND WILL NOT INDEMNIFY ANY COMPANY OR
+                                                PERSON AGAINST ANY LOSS ARISING THEREFROM.
+                                            </li>
+                                            <li>
+                                                Application Fees Are Non-refundable.
+                                            </li>
+                                            <li>
+                                                FORGED AND/OR FAKE DOCUMENTS RENDERS AN APPLICATION VOID AND STATUTORY FEES
+                                                PAID WILL BE FORFEITED.
+                                            </li>
+                                            <li>
+                                                APPLICATIONS ARE RECEIVED THROUGHOUT THE YEAR: MONDAY - FRIDAY, 10:00 - 1:00 PM;
+                                            </li>
+                                            <li>
+                                                ALL APPLICATIONS IN THE MAJOR AND SPECIALIZED CATEGORIES MAY BE SUBJECT TO FURTHER
+                                                EVALUATION. SUCH APPLICATIONS MAY TAKE LONGER TO PROCESS.
+                                            </li>
+                                            <li>
+                                                COMPANIES REGISTERED AS ENTERPRISES CAN APPLY FOR AND BE ISSUED MAJOR CATEGORY
+                                                PERMIT ONLY IN CERTAIN AREAS OF..CONSULTANCY SERVICES..E.G...LEGAL, ARCHITECTURE,
+                                                QUANTITY..SURVEYING, ESTATE/PROPERTY MGT. ETC THEY WILL NOT BE ACCEPTED FOR
+                                                SPECIAL CATEGORY PERMITS (REFER TO EXEMPTIONS TO THE GENERAL RULE: ENTERPRISES
+                                                ARE ALLOWED TO OFFER TECHNICAL CONSULTANCY (ENVIRONMENT) AS IN SECTION 56 OF
+                                                THE COMPANIES ACT.). PERSONAL INCOME TAX CLEARANCE OF DIRECTORS FOR COMPANIES
+                                                REGISTERED AS ENTERPRISES ARE ACCEPTABLE; ONLY FEDERAL INLAND REVENUE SERVICES
+                                                (FIRS) TAX CERTIFICATES (WHT) ARE ACCEPTABLE FOR LIMITED LIABILITY COMPANIES.
+                                            </li>
+                                            <li>
+                                                SERVICE PROVIDERS (COMPANIES) THAT FAIL TO RENEW THEIR PERMITS FOR MORE THAN THREE
+                                                (3) CONSECUTIVE YEARS WILL HAVE THEIR APPLICATIONS TREATED AS NEW.
+                                            </li>
+                                            <li>
+                                                ALL APPLICATIONS FOR CRITICAL SERVICES (SPECIALIZED CATEGORY) SHALL REQUIRE:
+                                                RELEVANT CERTIFICATIONS; REGISTRATION AND/OR AVAILABILITY OF APPROPRIATE EQUIPMENT
+                                                E.G. DIVING; UNDERWATER INSPECTIONS AND RELATED SERVICES SHALL INCLUDE EVIDENCE OF
+                                                AVAILABILITY OF DIVERS TO THE COMPANY; VALID PROFESSIONAL DIVING QUALIFICATION(S);
+                                                VALID MEDICAL CERTIFICATION BY A HYPERBARIC DOCTOR & RELEVANT EQUIPMENT. COMPANIES
+                                                SEEKING TO OFFER ROPE ACCESS SERVICES MUST HAVE IRATA CERTIFICATION CONFIRMING
+                                                QUALITY, TRAINING & SAFE WORK PRACTICES AT HEIGHTS.
+                                            </li>
+                                            <li>
+                                                ALL OPERATIONS/OPERATORS OFFSHORE MUST INDICATE AVAILABILITY/ POSSESSION OF OFFSHORE
+                                                SAFETY PERMIT (OSP) OBTAINABLE FROM DPR FOR STAFF.
+                                            </li>
+                                            <li>
+                                                SUCCESSFUL PRESENTATION & PROVISIONAL APPROVAL ISSUED FOR INTENDED METHODOLOGY/
+                                                PROCEDURES FOR WASTE MANAGEMENT SHALL PRECEDE THE ISSUANCE OF A PERMIT AN APPROVAL
+                                                TO OPERATE THE WASTE MANAGEMENT FACILITY IS ALSO MANDATORY, WHERE APPLICABLE.
+                                            </li>
+                                            <li>
+                                                THE SERVICES LISTED UNDER THE THREE BROAD CATEGORIES ARE NOT EXHAUSTIVE. SERVICE
+                                                PROVIDERS SHOULD SEEK FOR GUIDANCE BEFORE SUBMISSION.
+                                            </li>
+                                            <li>
+                                                ALL APPLICATIONS FOR A PERMIT MUST BE SPIRAL BOUND, GRANTING OF MULTIPLE JOBS UNDER
+                                                THE COVER OF ONE PERMIT SHALL BE BASED ON COMPANY’S CAPABILITIES AND WILL BE AT THE
+                                                DISCRETION OF THE DIRECTOR OF PETROLEUM RESOURCES.
+                                            </li>
+                                            <li>
+                                                APPLICATION GUIDELINES & PROCEDURES ARE SUBJECT TO REVIEW WITHOUT NOTICE AT THE
+                                                DISCRETION OF THE DIRECTOR OF PETROLEUM RESOURCES.
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">I Agree</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="col-md-7 adv bg1">
+        <div class="col-md-12">
+            <h2 class="txtcenter">Getting Started</h2>
+        </div>
+        <div class="howto">
+            <div class="col-md-5">
+                <div class="icon">
+                    <img src="~/Content/Images/icon-lg1.png" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h3>Step by Step</h3>
+                <a href="https://dpr.gov.ng/index/license-permit/lp-2013-guideline/" target="_blank" class="white">Online Application Guide</a><br />
+                <a href="https://dpr.gov.ng/index/license-permit/lp-2013-guideline/" target="_blank" class="white">Permit Fee Schedules</a><br />
+                <a href="#" class="white">Online Permit Printing Guide</a><br />
+                <a href="/Account/ResendEmailActivation/" class="white">Resend Activation Email</a><br />
+                <a href="/validate/" class="white">Validating a Permit</a><br />
+                <a href="/faq" class="white">FAQ</a><br />
+            </div>
+        </div>
+        <br class="clear" /><br />
+        <div class="howto">
+            <div class="col-md-5">
+                <div class="icon">
+                    <img src="~/Content/Images/icon-lg2.png" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h3><a href="/register" class="white">Company Account Creation</a></h3>
+                <p>
+                    Create account to use resources on this portal. Note that Account creation
+                    is not required to validate a permit.
+                </p>
+            </div>
+        </div>
+        <br class="clear" /><br />
+        <div class="howto">
+            <div class="col-md-5">
+                <div class="icon">
+                    <img src="~/Content/Images/icon-lg3.png" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h3><a href="/login/" class="white">Manage Permit</a></h3>
+                <p>Login to apply for a new license, renew or manage your Depot account</p>
+            </div>
+        </div>
+        <div class="clear"><br /><br /></div>
+
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(function () {
+            //        $(".recaptcha_image_cell").attr("width").text('');
+
+            $("button[type='submit']").click(function () {
+                $("#disclaimer").modal('hide');
+            })
+        })
+    </script>
+}

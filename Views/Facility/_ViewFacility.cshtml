@@ -1,0 +1,531 @@
+﻿
+@using NewDepot.Models
+@model Facilities
+@using NewDepot.Helpers;
+
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewBag.Title = "Facility Information";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    var suit = (SuitabilityInspections)ViewBag.Suitability;
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var i = 0;
+}
+
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+
+<div class="">
+    <div class="row">
+        <div class="col-sm-7">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Facility Information: @Model.Name</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Name of Facility</label>
+                            <div class="col-md-7">
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @readonly = "readonly" })
+                                <input type="hidden" id="facilityID" value="@Model.Id" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Facility Contact</label>
+                            <div class="col-md-7">
+                                <input type="text" name="name" class="form-control" readonly value="@Model.ContactName :: @Model.ContactNumber" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Facility Address</label>
+                            <div class="col-md-7">
+                                <textarea readonly class="form-control" style="height: 80px;">@ViewBag.FacAddress</textarea>
+                            </div>
+                        </div>
+
+                        @if (Model.IdentificationCode != null)
+                        {
+                    <div class="form-group">
+                        <label class="control-label col-md-5">Identification Code</label>
+                        <div class="col-md-7">
+                            <input type="text" name="name" class="form-control" readonly value="@Model.IdentificationCode" />
+                        </div>
+                    </div>
+                        }
+
+                        <hr />
+                        <h4><i class="fa fa-drum"></i> Facility Tanks</h4>
+                        @if (Model.Tanks.Count() > 0)
+                        {
+                            int tCount = 0;
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Capacity</th>
+                                        <th>Product</th>
+                                        <th>Height</th>
+                                        <th>Diameter</th>
+                                        <th>Decommissioned</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Tanks)
+                                    {
+                                        tCount++;
+                                        decimal cap = Convert.ToDecimal(item.MaxCapacity);
+                                        <tr>
+                                            <td>@tCount</td>
+                                            <td>
+                                                @item.Name
+                                            </td>
+                                            <td>@cap.ToString("N2")</td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.Height</td>
+                                            <td>@item.Diameter</td>
+                                            <td>
+                                                @if (item.Decommissioned)
+                                                {
+                                                    <span>YES</span>
+                                                }
+                                                else
+                                                { <span>NO</span>}
+                                            </td>
+                                              @if (userRole == GeneralClass.SUPER_ADMIN || User.IsInRole("Support"))
+                                            {
+
+                                                <td>
+                                                    <button onclick="GetTank('@item.Id', '@item.Name', '@item.ProductName', '@item.MaxCapacity', '@item.Height', '@item.Diameter', '@item.Status')" data-target="#EditTankModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" class="label label-warning edit">Edit <i class="fa fa-edit"> </i></button>
+                                                    <a href="/Facility/DeleteTank/@item.Id" class="label label-danger delete">Delete</a>
+                                                </td>
+                                            }
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <h5>No Tank Configured yet</h5>
+                        }
+                        <hr />
+                        <h4>Loading Arms</h4>
+                        @if (Model.Pumps.Count() > 0)
+                        {
+
+                            <table class="table">
+                                @foreach (var item in Model.Pumps)
+                                {
+                                    var tankName = @Model.Tanks.Where(x => x.Id == item.TankId).FirstOrDefault();
+                                    i++;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td> @item.Name</td>
+                                        <td> @tankName?.Name</td>
+                                                @if (userRole == GeneralClass.SUPER_ADMIN || User.IsInRole("Support"))
+                                        {
+                                            <td>
+                                                 @*@if (User.IsInRole("Admin"))
+                                                    {*@
+                                                    @*}*@
+                                             <button onclick="GetPump('@item.Id', '@item.Name')" data-target="#EditPumpModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" class="label label-warning edit">Edit <i class="fa fa-edit"> </i></button>
+                                                <a href="/Facility/DeletePump/@item.Id" class="label label-danger delete">Delete</a>
+                                            </td>
+                                        }
+                                        
+                                    </tr>
+                                }
+
+
+                            </table>
+                        }
+                        else
+                        {
+                            <h5>No Loading Arm(s) Configured yet</h5>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="x_panel">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h3>Suitabilty Information</h3>
+                    </div>
+                    <div class="x_content form-horizontal">
+                        @if (suit != null)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Land Size</label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" readonly class="form-control" value="@suit.SizeOfLand" />
+                                        <span class="input-group-addon">M<sup>2</sup></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Site Along Pipeline</label>
+                                <div class="col-md-6">
+                                    @if (suit.ISAlongPipeLine == true)
+                                    {
+                                        <input type="text" class="form-control" readonly value="YES" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" readonly value="NO" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Site Under High Tension</label>   <div class="col-md-6">
+                                    @if (suit.IsUnderHighTension == true)
+                                    {
+                                        <input type="text" class="form-control" readonly value="YES" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" readonly value="NO" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Site is on Highway</label><div class="col-md-6">
+                                    @if (suit.IsOnHighWay == true)
+                                    {
+                                        <input type="text" class="form-control" readonly value="YES" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" readonly value="NO" />
+                                    }
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                <label class = "control-label col-md-5" >"Depots within 2km</label>class = "control-label col-md-6" })
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" value="@suit.StationsWithin2KM" />
+                                </div>
+                            </div>*@
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="x_title">
+                <h3>Facility Licenses/Approvals</h3>
+            </div>
+            <div class="x_content">
+                <ul class="list-group">
+                    @if (ViewBag.Luggage != null)
+                    {
+                        var luggage = (List<permits>)ViewBag.Luggage;
+                        @if (luggage.Count() > 0)
+                        {
+
+                            foreach (var lug in luggage)
+                            {
+                                <li class="list-group-item list-group-item-success"> @lug.permit_no</li>
+
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item list-group-item-warning"> No license/Approval is available for this facility.</li>
+
+                        }
+                    }
+
+                    else
+                    {
+                        <li class="list-group-item list-group-item-warning"> No license/Approval is available for this facility.</li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+@* Editing tank *@
+<div class="modal" id="EditTankModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content card-black" id="EditTankLoadder">
+            <div class="modal-header">
+                <h4 class="modal-Name"> Edit Tank </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="txtEditTankID" value="" hidden />
+                <div class="form-group">
+                    <label for="Name">Name:</label>
+                    <br />
+                    <input id="txtEditTankName" class="form-control" required  />
+                </div>   
+                <div class="form-group">
+                    <label for="Name">Product:</label>
+                    <br />
+                    <select id="txtEditTankProduct"  class="form-control" >
+                    </select>
+                </div> 
+                <div class="form-group">
+                    <label for="Name">Capacity:</label>
+                    <br />
+                    <input id="txtEditTankCapacity" class="form-control" required  />
+                </div>
+                <div class="form-group">
+                    <label for="Name">Height:</label>
+                    <br />
+                    <input id="txtEditTankHeight" class="form-control" required  />
+                </div>
+                <div class="form-group">
+                    <label for="Name">Diameter:</label>
+                    <br />
+                    <input id="txtEditTankDiameter" class="form-control" required  />
+                </div>
+                <div class="form-group">
+                    <label for="Name">Status:</label>
+                    <br />
+                    <input id="txtEditTankStatus" class="form-control" required  />
+                </div>
+                
+                <button class="btn btn-info" id="btnEditTank"><i class="fa fa-pencil"> </i> Edit Tank </button>
+                <p></p>
+                <div id="EditTankModalInfo"> </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@* Editing pump *@
+<div class="modal" id="EditPumpModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content card-black" id="EditPumpLoadder">
+            <div class="modal-header">
+                <h4 class="modal-Name"> Edit Pump </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="txtEditPumpID" value="" hidden />
+                <div class="form-group">
+                    <label for="Name">Name:</label>
+                    <br />
+                    <input id="txtEditPumpName" class="form-control" required  />
+                </div>   
+                <div class="form-group">
+                    <label for="Name">Tank:</label>
+                    <br />
+                     <select id="txtEditTank"  class="form-control" >
+                    </select>
+                </div> 
+                
+                <button class="btn btn-info" id="btnEditPump"><i class="fa fa-pencil"> </i> Edit Pump </button>
+                <p></p>
+                <div id="EditPumpModalInfo"> </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div style="clear:both"></div>
+@section Scripts {
+
+    <script>
+
+        function GetTank(ID, Name, Product, Capacity, Height, Diameter, Status) {
+            debugger;
+            $("#txtEditTankID").val(ID);
+            $("#txtEditTankName").val(Name);
+            $("#txtEditTankCapacity").val(Capacity);
+            $("#txtEditTankProduct").val(Product);
+            $("#txtEditTankHeight").val(Height);
+            $("#txtEditTankDiameter").val(Diameter);
+            $("#txtEditTankStatus").val(Status);
+               
+        }
+        function GetPump(ID, Name, Tank) {
+            $("#txtEditPumpID").val(ID);
+            $("#txtEditPumpName").val(Name);
+            $("#txtEditTank").val(Tank);
+        }
+        $(function () {
+
+            $('.delete').click(function (e) {
+                if (confirm("Do you want delete this item from the facility?")) {
+
+                } else {
+                    e.preventDefault();
+                }
+
+            })
+
+            
+    $("#btnEditTank").on('click', function (event) {
+
+        var TankName = $("#txtEditTankName");
+        var Capacity = $("#txtEditTankCapacity");
+        var Product =    $("#txtEditTankProduct");
+        var Height =    $("#txtEditTankHeight");
+        var Diameter =    $("#txtEditTankDiameter");
+        var Status =   $("#txtEditTankStatus");
+           
+
+        if (TankName.val() === "" || $("#txtEditTankID").val() === "" || Capacity.val() === ""|| Product.val() === ""
+        || Height.val() === ""||Diameter.val() === ""|| Status.val() === ""
+        ) {
+            ErrorMessage("#EditTankModalInfo", "Please complete all tank fields.");
+        }
+        else {
+
+            $.confirm({
+                text: 'Are you sure you want to edit this tank?',
+                columnClass: 'medium',
+                closeIcon: true,
+                confirm: function () {
+
+
+                    $("#EditTankLoadder").addClass("Submitloader");
+
+                    $.post("/Facility/EditTank", 
+                        {
+                            "TankID": parseInt($("#txtEditTankID").val()),
+                            "TankName": TankName.val(),
+                            "Capacity": Capacity.val(),
+                            "ProductName": Product.val(),
+                            "Height": Height.val(),
+                            "Diameter": Diameter.val(),
+                            "Status": Status.val(),
+                        },
+                        function (response) {
+                            if ($.trim(response) === "Tank Edited") {
+                                SuccessMessage("#EditTankModalInfo", "Tank successfully edited.");
+                                $("#divTank").load(location.href + " #divTank");
+                                $("#EditTankLoadder").removeClass("Submitloader");
+                            }
+                            else {
+                                ErrorMessage("#EditTankModalInfo", response);
+                                $("#EditTankLoadder").removeClass("Submitloader");
+                            }
+                        });
+                },
+                cancel: function () {
+
+                },
+                confirmButton: "Yes",
+                cancelButton: "No"
+            })
+        }
+    });
+    $("#btnEditPump").on('click', function (event) {
+
+        var txtPumpName = $("#txtEditPumpName");
+        var txtTank = $("#txtEditTank");
+
+        if (txtTank.val() === "" || $("#txtEditPumpID").val() === "" || txtPumpName.val() === "") {
+            ErrorMessage("#EditPumpModalInfo", "Please enter a comment and Name for this Pump");
+        }
+        else {
+
+            $.confirm({
+                text: 'Are you sure you want to edit this Pump to this application?',
+                columnClass: 'medium',
+                closeIcon: true,
+                confirm: function () {
+
+
+                    $("#EditPumpLoadder").addClass("Submitloader");
+
+                    $.post("/Facility/EditPump",
+                        {
+                            "PumpID": $("#txtEditPumpID").val(),
+                            "TankID": txtTank.val(),
+                            "PumpName": txtPumpName.val(),
+                        },
+                        function (response) {
+                            if ($.trim(response) === "Pump Edited") {
+                                SuccessMessage("#EditPumpModalInfo", "Pump successfully edited.");
+                                $("#divPump").load(location.href + " #divPump");
+                                $("#EditPumpLoadder").removeClass("Submitloader");
+                            }
+                            else {
+                                ErrorMessage("#EditPumpModalInfo", response);
+                                $("#EditPumpLoadder").removeClass("Submitloader");
+                            }
+                        });
+                },
+                cancel: function () {
+                    //$("#AppApproveLoadder").removeClass("Submitloader");
+
+                },
+                confirmButton: "Yes",
+                cancelButton: "No"
+            })
+        }
+    });
+
+    $("#txtEditTankProduct").ready(function () {
+        var html = "";
+
+        $.getJSON("/Helpers/GetProducts",
+            function (datas) {
+                $.each(datas,
+                    function (key, val) {
+                        debugger;
+                        html += "<option value=" + val.id + ">" + val.name + "</option>";
+                    });
+                $("#txtEditTankProduct").append(html);
+            });
+    });
+    $("#txtEditTank").ready(function () {
+        var html = "";
+
+        $.getJSON("/Facility/GetFacilityTanks",
+            { id: $("#facilityID").val() },
+            function (datas) {
+
+                $.each(datas,
+                    function (key, val) {
+                        debugger;
+                        html += "<option value=" + val.id + ">" + val.name + "</option>";
+                    });
+                $("#txtEditTank").append(html);
+            });
+    });
+        });
+    </script>
+}

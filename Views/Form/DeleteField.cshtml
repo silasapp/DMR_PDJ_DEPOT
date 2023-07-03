@@ -1,0 +1,32 @@
+﻿@model NewDepot.Models.Forms
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <h3 id="modal-title">Delete FOrm</h3>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        @Html.HiddenFor(c => c.Id)
+        <h5>
+            Are you sure you want to delete this Form?
+        </h5>
+        <p>
+            This form will not be usable again for reporting Inspections.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <div class="txtcenter">
+            <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <input type="submit" value="Confirm Delete" class="btn btn-warning" />
+        </div>
+    </div>
+}

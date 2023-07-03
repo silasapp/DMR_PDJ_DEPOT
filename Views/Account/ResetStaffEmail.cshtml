@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Reset Staff Email";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <h2 class="lefty">Change Staff Email</h2>
+    <hr class="clear" />
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="well">
+                @using (Html.BeginForm("ResetStaffEmail", "Account", FormMethod.Post, htmlAttributes: new { @id = "frmChangeEmail" }))
+                {
+                    <label for="txtLookFor" class="col-md-5">String to Look for</label>
+                    <input type="text" class="col-md-7 " name="txtLookFor" id="txtLookFor" />
+                    <br />
+                    <label for="txtLookFor" class="col-md-5">String to Replace with</label>
+                    <input type="text" class="col-md-7" name="txtReplaceWith" id="txtReplaceWith" />
+                    <br />
+                    <input type="submit" name="btnStart" id="btnStart" value="Start" class="btn btn-primary" />
+                }
+                <hr />
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#frmChangeEmail").submit(function () {
+                //alert("Wanna Submit");
+                $("#result").html(LoadingSmall());
+                var url = $(this).attr("action");
+                var lookfor = $("#txtLookFor").val();
+                var replacewith = $("#txtReplaceWith").val();
+                if(lookfor.length > 0 && replacewith.length > 0){
+                    var resp = confirm("Are you sure you want to continue with this operation?");
+                    if(resp == true){
+                        $.post(url, { find: lookfor, replace: replacewith }, function (data) {
+                            $("#result").html(data);
+                        });
+                    }
+                    else{
+                        $("#result").text("You pressed CANCEL");
+                    }
+                }
+                else {
+                    $("#result").text("Please Enter the email domain to change and what to change it to.");
+                }
+                
+                return false;
+            });
+        });
+    </script>
+}

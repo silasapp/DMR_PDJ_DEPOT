@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Remita Status";
+}
+
+<div class="page-header">Enter the RRR Number</div>
+
+<div class=" well">
+    <form action="/Application/RemitaStatus" method="post">
+
+        <div class="form-group">
+            <label for="rrr" class="col-md-5">RRR Number</label>
+            <input type="text"  name="RRR" id="rrr" class="form-control" value=" " />
+        </div>
+
+        <div class="form-group">
+            
+            <input type="submit"  class="btn btn-primary" value="Submit" />
+        </div>
+    </form>
+
+
+    @if (ViewBag.response!=null)
+    {
+        var resp = (RemitaResponse)ViewBag.response;
+        
+        <div class="col-md-6">
+            <ul>
+                <li>RRR : @resp.RRR</li>
+                <li>Response Code : @resp.status</li>
+                <li>Response message : @resp.statusmessage</li>
+            </ul>
+        </div>
+    }
+</div>

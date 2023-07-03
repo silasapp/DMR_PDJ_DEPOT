@@ -1,0 +1,147 @@
+﻿@model IEnumerable<NewDepot.Models.faqs>
+
+@{
+    ViewBag.Title = "Admin FAQs List";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<div class="content">
+    <h2>Admin: FAQ List</h2>
+    <hr />
+    @if (ViewBag.Msg != null)
+    {
+        string alerttype = (ViewBag.Type.ToLower() == "fail" ? "alert-danger"
+        : (ViewBag.Type.ToLower() == "warn" ? "alert-warning"
+        : (ViewBag.Type.ToLower() == "info" ? "alert-info" : "alert-success")));
+
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Alert!</strong> @ViewBag.Msg
+            </div>
+        </div>
+    }
+    <div class="mypanel-2leaf-h">
+        <div class="left-side2 col-sm-12 col-md-4">
+            <div class="pad-s">
+                <p>
+                    @*@Html.ActionLink("Add New Category", "Create", null, new { @class = "btn btn-success", @role = "button" })*@
+                    <a href="#modalPopup" role="button" class="addnew btn btn-success" data-url="/Faq/Create" data-toggle="modal" data-uid="1">
+                        Add New Category
+                    </a>
+                </p>
+                <table class="table table-hover dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                FAQ Category
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @*@Html.ActionLink(item.Name, "AdminList", "Faq", new { id = item.Id }, null)*@
+                                    <a href="#" data-url="/FAQ/AdminList/@item.id" class="loadFaq">@item.name</a>
+                                </td>
+                                <td class="txtright">
+                                    <div class="btn-group">
+                                        @*@Html.ActionLink("Edit", "Edit", new { id = item.Id })*@
+                                        <a href="#modalPopup" role="button" class="addnew btn btn-warning btn-xs" data-url="/Faq/Edit?id=@item.id" 
+                                           data-toggle="modal" data-uid="3" data-name="@item.name">Edit</a>
+                                        @*@Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                                        <a href="#modalPopup" role="button" class="addnew btn btn-danger btn-xs" data-url="/Faq/Delete?id=@item.id" 
+                                           data-toggle="modal" data-uid="4"data-name="@item.name">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="right-side2 col-sm-12 col-md-8">
+            <div class="pad-s">
+                <div id="faqDesc">
+                    <div class="well">
+                        <p>Select a FAQ category to display all FAQs under it here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+
+@section scripts{
+    jqueryval")
+
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-faq > a").addClass("selected").find(".act").addClass("selected");
+            //$(".sidebar > ul > li > ul li a[href='/Service']").addClass("selected");
+
+
+            $("a.addnew").click(function (e) {
+                //e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                if (uid == "1") {
+                    $(".modal-title").text("Add new FAQ Category");
+                } else if (uid == "2") {
+                    $(".modal-title").text("Add new FAQ");
+                }
+                else if (uid == "3") {
+                    var name = $(this).data("name");
+                    $(".modal-title").text("Edit FAQ category '" + name + "'");
+                } else if (uid == "4") {
+                    var name = $(this).data("name");
+                    $(".modal-title").text("Delete FAQ category '" + name + "'");
+                }
+
+                //alert("UID: " + uid + "; URL: " + url);
+                $("#modal-body").html(Loading());
+                $.get(url, function (data) {
+                    $("#modal-body").html(data);
+                })
+            });
+
+            $(document.body).on("click", "a.addFAQ", function (e) {
+                e.preventDefault();
+                //alert("FAQ outside");
+                var url = $(this).attr("data-url");
+                var uid = $(this).data("uid");
+                if (uid == "1") {
+                    $(".modal-title").text("Create FAQ description");
+                } else if (uid == "2") {
+                    $(".modal-title").text("Edit FAQ Description");
+                } else if (uid == "3") {
+                    $(".modal-title").text("Delete FAQ Description");
+                }
+
+                $("#modal-body").html(Loading());
+                $.get(url, function (data) {
+                    $("#modal-body").html(data);
+                });
+            });
+
+            $("[rel='tooltip']").tooltip();
+
+            $("a.loadFaq").click(function (e) {
+                e.preventDefault();
+                $("#faqDesc").html(Loading());
+                var url = $(this).attr("data-url");
+
+                $.get(url, function (data) {
+                    $("#faqDesc").html(data);
+                });
+            });
+
+
+        });
+    </script>
+}

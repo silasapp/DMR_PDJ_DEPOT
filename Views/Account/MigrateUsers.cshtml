@@ -1,0 +1,10 @@
+﻿
+@{
+    ViewBag.Title = "MigrateUsers";
+    Layout = null;
+}
+
+<h2>Migrate Users</h2>
+
+@Html.ActionLink("Generate next set", "migrateusers", new { Id = ViewBag.CurrentPosition })
+

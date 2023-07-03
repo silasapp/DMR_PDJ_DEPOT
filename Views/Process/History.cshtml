@@ -1,0 +1,155 @@
+﻿
+@using NewDepot.Models;
+
+@model IEnumerable<ApplicationDeskHistoryModel>
+
+
+@{
+    ViewBag.Title = "Application History";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+@if (Model == null || Model.Count() <= 0)
+{
+    <div class="content">
+        <h2>Sorry, there is no application history for this application.</h2>
+        <hr />
+        <h4>@ViewBag.Message</h4>
+    </div>
+}
+else
+{
+    <div class="">
+
+        <p>@ViewBag.Message</p>
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>@ViewBag.Header</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <dl class="dl-horizontal">
+                            @if (ViewBag.CurrentStaffDesk != null)
+                            {
+                                <dt>Current Desk Details</dt>
+                                <dd>
+                                    <b>Staff Email:</b>  @ViewBag.CurrentStaffDesk
+                                    <b>Role Name:</b>    @ViewBag.RoleName
+                                    <b>Office:</b> @ViewBag.FieldOffice
+                                </dd>
+                            }
+                            <dt>Company's Name:</dt>
+                            <dd>@Model.FirstOrDefault().CompanyName</dd>
+                            <dt>Application Category:</dt>
+                            <dd>
+                                @Model.FirstOrDefault().CategoryName
+                            </dd>
+                            <dt>Date:</dt>
+                            <dd>
+                                <b> Applied:</b> @Model.FirstOrDefault().ApplicationDate
+                                <b> Submitted:</b>@Model.FirstOrDefault().DateSubmitted
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2></h2>
+                    </div>
+                    <div class="x_content">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Date Processed
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Comment
+                                    </th>
+                                    <th>
+                                       ActionBy
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (Model.Count() > 0)
+                                {
+                                    int firstID = Model.OrderBy(a => a.id).FirstOrDefault().id;
+
+                                    foreach (var item in Model.OrderByDescending(a => a.id))
+                                    {
+                                        string trcolor = (item.Status.ToLower().Contains("rejected") ? "danger" : "");
+                                        <tr class="@trcolor">
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Date)
+                                            </td>
+                                            <td>
+                                                @if (item.Status.ToLower() == "approved")
+                                                {
+                                                    <span class="label label-success">@item.Status</span>
+                                                }
+                                                else if (item.Status.ToLower() == "rejected")
+                                                {
+                                                    <span class="label label-danger">@item.Status</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-info">@item.Status</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Comment)
+                                            </td>
+                                            <td>
+                                             
+                                                    @Html.DisplayFor(modelItem => item.UserName)
+                                                
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                    <tr class="">
+
+                                        <td>
+                                            @Model.FirstOrDefault().ApplicationDate
+                                        </td>
+                                        <td>
+                                         
+                                                <span class="label label-info">Submission</span>
+                                            
+                                        </td>
+                                        <td>
+                                            Application Submitted
+                                        </td>
+                                        <td>
+                                            @Model.FirstOrDefault().CompanyName
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

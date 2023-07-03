@@ -1,0 +1,71 @@
+﻿@model NewDepot.Models.Forms
+
+@{
+    ViewBag.Title = "Create Form";
+    Layout = null;
+
+    string btnLabel = (Model.Id > 0 ? "Edit Form" : "Save Form");
+}
+<style>
+    .control-label{
+        font-weight:bold; color:black;
+    }
+</style>
+<div id="loadder">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header ">
+
+            <button type="button" class="close col-md-2" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></span>
+            </button>
+            <h3 id="myModalLabel">Create New Application Form</h3>
+        </div>
+        <div class="modal-body">
+            @Html.ValidationSummary(true)
+
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label class="control-label">Application Phase</label>
+
+                <div class="col-md-12">
+                    <select class="form-control" id="phase">
+                        <option></option>
+
+                        @foreach (var ph in ViewBag.Phases)
+                        {
+                            <option value="@ph.id">@ph.name</option>
+                        }
+
+                    </select>
+                </div>
+                @Html.LabelFor(model => model.FriendlyName, "Form Name", new { @class = "control-label" })
+                <div class="col-md-12">
+                    @Html.TextBoxFor(model => model.FriendlyName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.FriendlyName)
+                </div>
+
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        <input type="button" id="btnsubmitFM" value="@btnLabel" class="btn btn-success" />
+
+        <div class="clear"></div>
+        <div class="modal-footer">
+
+        </div>
+    }
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(function () {
+           
+
+        });
+    </script>
+}

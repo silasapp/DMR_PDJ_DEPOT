@@ -1,0 +1,56 @@
+﻿@model IEnumerable<NewDepot.Models.messages>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = @Model.FirstOrDefault().company_id })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.subject)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.read)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.company_id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.sender_id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.subject)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.read)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.company_id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.sender_id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.date)
+        </td>
+        <td>            
+            @Html.ActionLink("Details", "SenderMsgView", new { id = item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>

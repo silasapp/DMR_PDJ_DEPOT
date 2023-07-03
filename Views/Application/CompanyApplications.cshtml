@@ -1,0 +1,90 @@
+﻿@model IEnumerable<NewDepot.Models.MyApps>
+
+@{
+
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    var i = 0;
+}
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+  
+    <hr class="clear" />
+
+    <table class="table table-striped table-hover dataTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>
+                   Reference
+                </th>
+                <th>Facility Name (Address)</th>
+                <th>Category</th>
+                <th>Year</th>
+                <th>Status</th>
+                <th>Date Applied</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string alertx = string.Empty;
+                if (item.Status.ToLower() == "approved") { alertx = "alert-success"; }
+                else if (item.Status.ToLower() == "processing") { alertx = "alert-info"; }
+                else if ((item.Status.ToLower() == "pending") || (item.Status.ToLower() == "payment pending")) { alertx = "alert-warning"; }
+                else { alertx = "alert-danger"; }
+                i++;
+            <tr>
+                <td>@i</td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reference)
+                </td>
+                <td>
+                    @item.FacilityName ( @item.Address_1 )
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhaseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    <div class="alert alert-mini @alertx">
+                        <strong>@Html.DisplayFor(model => item.Status)</strong>
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateSubmitted)
+                </td>
+                <td>
+                    <a href="/Application/ViewApplication/@item.appID" class="btn btn-xs btn-info">View <i class="icon-eye"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 50,
+                columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                "order": [[1, "asc"]]
+            });
+        });
+    </script>
+}

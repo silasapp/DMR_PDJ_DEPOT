@@ -1,0 +1,304 @@
+﻿@model IEnumerable<NewDepot.Models.SearchList>;
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+
+
+@{ ViewData["Title"] = "Transaction Reports";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+}
+
+<style>
+    .labell {
+        color: darkblue;
+        font-weight: bolder;
+        font-size: 10px;
+        width: 50px;
+    }
+
+    .title {
+        font-size: 12px;
+        color: black;
+    }
+</style>
+<h2>@ViewData["Title"]</h2>
+
+<br />
+
+
+<div class="card-black" style="">
+
+
+ @*   <div>
+        <div class="" style="float:left; background-color: green; color:white; margin-left: 10px;height:80px; padding: 5px; text-align:center !important; font-weight: bold; border-radius: 5px;">
+            <div style="padding-top: 20px;">Total Amount Paid</div>
+            <div style="font-size: large; ">
+               @ViewBag.PaidSum.ToString("₦ #,###,##.00")
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-1"><h3>Payment Status</h3></div>
+            <div class="col-md-2">
+         
+                <div class="col-md-1">
+                    <div> <h6>Paid</h6></div>
+                    <div class="labell megna label-sm text-md-center" style="width:40px">
+                        @ViewBag.PaidSum.ToString("#,###,##.00")
+
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div><h6>Unpaid</h6></div>
+                    <div class="labell danger label-sm text-md-center" style="width:40px">
+                        @ViewBag.UnpaidSum.ToString("#,###,##.00")
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rowy" style="float: right; border-left:1px solid blue; margin-top:-60px; height:30%;">
+            <table class="tably table-bordered table-sm" style="padding:1px; width:200px; ">
+                <tr>
+                    <th><b>Category</b></th>
+                    <th><b>Amount</b></th>
+                </tr>
+                <tr>
+                    <td>Suitability</td>
+                    <td> @ViewBag.SuitabilitySum.ToString("#,###,##.00")</td>
+                </tr>
+                <tr>
+                    <td>Approval To Construct</td>
+                    <td> @ViewBag.ATCSum.ToString("#,###,##.00")</td>
+                </tr>
+                <tr>
+                    <td>Regularization</td>
+                    <td>
+                        @ViewBag.RegularizationSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+                <tr>
+                    <td>Calibration</td>
+                    <td>
+                        @ViewBag.CalibrationSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+                <tr>
+                    <td>Re-Calibration</td>
+                    <td>
+                        @ViewBag.RecalibrationSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+                <tr>
+                    <td>License To Operate</td>
+                    <td>
+                        @ViewBag.LTOSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+                <tr>
+                    <td>Depot Modification</td>
+                    <td>
+                        @ViewBag.ModificationSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+                <tr>
+                    <td>License Renewal</td>
+                    <td>
+                        @ViewBag.LRSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+                <tr>
+                    <td>Take Over</td>
+                    <td>
+                        @ViewBag.TakeOverSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sanction Payment</td>
+                    <td>
+                        @ViewBag.SanctionSum.ToString("#,###,##.00")
+                    </td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>*@
+
+    <hr />
+
+    <h4>Filter Search</h4>
+    <div @*style="float:left; width:100%; margin-top:-150px"*@>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+
+                    <div class="col-sm-2">
+                        <label><b>Year</b></label><br />
+                        <select style="font-size:14px; width:100%" multiple placeholder="Select" name="txtSelYear[]" id="TtxtSelYear">
+                            @foreach (var item in @ViewBag.Year)
+                            {
+                                <option value="@item">@item</option>
+                            }
+
+                        </select>
+                        <br />
+                    </div>
+                    <div class="col-sm-2">
+                        <label><b>Payment Status</b></label><br />
+                        <select style="font-size:14px; width:100%" multiple placeholder="Select" name="txtSelAppStatus[]" id="txtSelAppStatus">
+                            <option value="Unpaid">@GeneralClass.PaymentPending</option>
+                            <option value="Paid">@GeneralClass.PaymentCompleted</option>
+                        </select>
+                        <br />
+                    </div>
+                    <div class="col-sm-2">
+                        <label><b>Application Category</b></label><br />
+                        <select style="font-size: 14px; width: 100%;" multiple placeholder="Select" name="txtSelCategory[]" id="TtxtSelCategory">
+                            @foreach (var a in Model.FirstOrDefault().phases)
+                            {
+                                <option value="@a.name">@a.name</option>
+}
+
+                        </select>
+
+                        <br />
+                    </div>
+
+                    <div class="col-sm-2">
+                        <label><b>Field Office</b></label><br />
+                        <select style="font-size:14px; width:100%" multiple placeholder="Select" name="txtSelOffice[]" id="TtxtSelOffice">
+                            @foreach (var a in Model.FirstOrDefault().offices)
+                            {
+                                <option value="@a.OfficeName">@a.OfficeName</option>
+                            }
+                        </select>
+                        <br />
+                    </div>
+
+
+                    <div class="col-sm-2">
+                        <label><b>Zonal Office</b></label><br />
+                        <select style="font-size:14px; width:70%" multiple placeholder="Select" name="txtSelZone[]" id="TtxtSelZone">
+                            @foreach (var a in Model.FirstOrDefault().zonalOffices)
+                            {
+                                <option value="@a.ZoneName">@a.ZoneName</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="row">
+        @*    <div class="col-sm-2" >
+                <label><b>Channel</b></label>    <br />
+                <select style="width: 100%;" multiple placeholder="Select" name="txtSelType[]" id="txtSelType">
+                    <option value="offline">Offline</option>
+                    <option value="online">Online</option>
+                </select>
+            </div>*@
+
+            <div class="col-sm-2">
+                <label for="comment"><b>Date From</b></label>
+                <br />
+                <input type="text" style="border: 1px solid black; border-radius: 3px; height:30px;" class="form-control" id="TtxtApplicationReportFrom" value="" />
+            </div>
+            <div class="col-sm-2">
+
+                <label for="comment"><b>Date To </b></label>
+                <br />
+                <input type="text" style="border: 1px solid black; border-radius: 3px; height:30px;" class="form-control" id="TtxtApplicationReportTo" value="" />
+            </div>
+            <div class="col-sm-2">
+                <label><b>State</b></label><br />
+                <select style="width:100%" multiple placeholder="Select" name="txtSelState[]" id="txtSelState">
+                    @foreach (var a in Model.FirstOrDefault().states)
+                    {
+                        <option value="@a.StateName">@a.StateName.ToUpper()</option>
+                    }
+                </select>
+                <br />
+            </div>
+            <div class="col-sm-2">
+
+                <div style="margin-top: 15px">
+                    <button class="btn btn-outline-primary" id="btnTransactionReportSearch"><i class="fas fa-search"> </i> Search</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<h2 class="">Search Results </h2>
+<hr />
+<br />
+
+<div class="table-responsive">
+
+
+    <table class="table table-bordered table-hover" id="SearchTransactionTabless" style="font-size:12px">
+
+        <thead>
+            <tr>
+                <th>SN</th>
+                <th>Reference NO</th>
+                <th>RRR</th>
+                <th>Company</th>
+                <th>Facility</th>
+                <th>Facility Address</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Channel</th>
+                <th>Status</th>
+                <th>State</th>
+                <th>LGA</th>
+                <th>Amount</th>
+                <th>Extra Payment Amount</th>
+                <th>Service Charge</th>
+                <th>Total Amount</th>
+                <th>Field Office</th>
+                <th>Zonal Office</th>
+                <th>Date</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+        </tbody>
+
+        <tfoot>
+            <tr style="color:crimson">
+                <th colspan="12" class="text-center" style="text-align:right">Total :</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+
+        </tfoot>
+
+    </table>
+
+</div>
+
+
+
+@section Scripts{
+
+    <script src="~/js/NewDepot Scripts/Reportings.js"></script>
+
+
+}

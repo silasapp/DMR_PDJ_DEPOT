@@ -1,0 +1,130 @@
+﻿@using NewDepot.Models;
+@using NewDepot.Controllers;
+@using NewDepot.Helpers;
+@model IEnumerable<Facilities>
+
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ViewBag.Title = "Company Facilities (" + ViewBag.CompanyName + ")";
+    int counter = 0;
+    var Companies = new List<companies>();
+    GeneralClass generalClass = new GeneralClass();
+
+}
+
+@section styles{
+    <link href="@Url.Content("~/Plugins/datatables.net-bs/css/dataTables.bootstrap.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Plugins/datatables.net-responsive-bs/css/responsive.bootstrap.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Plugins/datatables.net-scroller-bs/css/scroller.bootstrap.min.css")" rel="stylesheet">
+}
+
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Company Facilities</h3>
+        </div>
+        <div class="title_right">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+
+                    <table class="table table-hover table-striped table-bordered dataTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>
+                                    Date Added
+                                </th>
+                                @*<th>
+                                        Drive In/Out
+                                    </th>*@
+                                <th>
+                                    Contact Information
+                                </th>
+                                <th>
+                                    Depot Address
+                                </th>
+                                <th>
+                                    Loading Arms
+                                </th>
+                                <th>
+                                    Tanks
+                                </th>
+                                <th>Depot Throughput</th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in Model)
+                        {
+                            var address = item.address_1 + ", " + item.city + ", " + item.StateName;
+                            var compName = Companies.Where(x => x.id == item.CompanyId).FirstOrDefault().name;
+
+                            counter++;
+                            <tr>
+                                <td>@counter</td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @item.Date.ToShortDateString()
+                                </td>
+                                @*<td>
+                                        @item.NoofDriveIn/@item.NoofDriveOut
+                                    </td>*@
+                            <td>
+                                @compName<br />
+                                @item.ContactNumber
+                            </td>
+                                <td>
+                                    @address
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NoOfPumps)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NoOfTanks)
+                                </td>
+                                <td><span style="cursor: pointer;" title="@GeneralClass.NumberToWords(item.MaxCapacity.GetValueOrDefault())">@item.MaxCapacity.GetValueOrDefault().ToString("###,###,##0.00")</span></td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <!-- Datatables -->
+    <script src="@Url.Content("~/Plugins/datatables.net/js/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables.net-bs/js/dataTables.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables.net-responsive/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables.net-responsive-bs/js/responsive.bootstrap.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables.net-scroller/js/datatables.scroller.min.js")"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".dataTable").dataTable({
+                "aLengthMenu": [50, 100, 150, 200, 250],
+                'iDisplayLength': 200,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+        });
+    </script>
+}

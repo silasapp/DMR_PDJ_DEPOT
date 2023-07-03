@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - NMDPRA DEPOT</title>
+
+
+    <link href="~/OldDepotStyle/Content/custom.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/lib/semantic ui/dist/semantic.css" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/coa.png">
+
+
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+          asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+          asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/semantic ui/dist/semantic.css" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/coa.png">
+    <style>
+
+        /*Bootstrap overwritten start*/
+        .navbar-inverse {
+            background-color: #222222;
+            border: none;
+            color: #fff;
+            /*background-image: url('../img/nav-bg.png');*/
+            background-repeat: repeat-x;
+            /*   max-width: 1024px;
+        margin: auto;*/
+        }
+
+            .navbar-inverse .navbar-nav > li > a {
+                color: #fff;
+            }
+
+        .navbar-brand {
+            padding: 0;
+        }
+
+            .navbar-brand img {
+                position: relative;
+                height: 100%;
+                float: left;
+                margin-right: 10px;
+            }
+
+            .navbar-brand .img-title {
+                float: left;
+                display: block;
+                margin-top: 18px;
+            }
+
+        .navbar-nav > li > a {
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        .navbar-right > li > a {
+            padding-bottom: 14px;
+            padding-top: 14px;
+        }
+
+        .navbar-right .glyphicon {
+            font-size: 24px;
+        }
+
+
+        .bg1 {
+            background: url('/OldDepotStyle/Content/Images/index-bg2.png')left bottom;
+            color: #FFF;
+        }
+
+            .bg1 h2 {
+                font-weight: 100;
+                font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+                margin: 20px 0;
+            }
+
+            .bg1 a {
+                text-decoration: underline;
+            }
+
+                .bg1 a:hover {
+                    text-decoration: none;
+                    color: #d1d1d1;
+                }
+    </style>
+</head>
+<body>
+
+    
+        <div class="">
+            @RenderBody()
+
+            <br />
+            
+            <footer class="container"></footer>
+        </div>
+    
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/semantic ui/dist/semantic.js"></script>
+
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+            asp-fallback-test="window.jQuery"
+            crossorigin="anonymous"
+            integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+            crossorigin="anonymous"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/semantic ui/dist/semantic.js"></script>
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

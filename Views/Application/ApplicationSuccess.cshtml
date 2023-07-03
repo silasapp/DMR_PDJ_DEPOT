@@ -1,0 +1,89 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers
+@model MyApps
+
+@{
+
+    ViewData["Title"] = "Application Success";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+
+    GeneralClass generalClass = new GeneralClass();
+}
+
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName"> @ViewData["Title"] </h3>
+        <hr />
+    </div>
+
+    <br />
+
+    <p class="marg50"></p>
+    @if (ViewBag.Err != null)
+    {
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Application Error!</strong> @ViewBag.Err
+            </div>
+        </div>
+    }
+
+    <center>
+
+        <div style="max-width:700px; padding:20px" class="text-left card" id="PaymentDiv">
+
+
+            <div style="background:seagreen; padding:20px;">
+                <big class="" style="color:white"><b>Application Submission</b></big>
+            </div>
+
+            <p>
+                You have submitted a<b> @Model.PhaseName </b> application for your facility on NMDPRA DEPOT portal for processing, see details below.
+                <br />
+               Go to <a href="@Url.Action("Dashboard", "Companies")" class="btn btn-warning btn-sm text-right">Dashboard</a>
+
+            </p>
+            <div id="DivPaymentInfo"> </div>
+            <hr />
+         
+
+                <div class="alert" style="line-height:40px">
+
+                    <div class="alert alert-primary">
+                        <div class="text-sm-left">
+                            <span>Reference No : <b> @Model.Reference</b> </span>
+                        </div> 
+                        <div class="text-sm-left">
+                            <span>Application Type : <b> @Model.PhaseName</b> </span>
+                        </div>
+
+                                <div class="text-sm-left">
+                                    <span>Facility Name : <b> @Model.FacilityDetails</b> </span>
+                                </div>
+
+                        <div class="text-sm-left">
+                            <span>Facility Location : <b>@Model.FacilityAddress()</b>  </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span>Application Status : <b class="text-success"> @GeneralClass.Processing</b> </span>
+                    </div>
+                 
+                </div>
+
+
+               
+
+        </div>
+
+    </center>
+
+</div>
+
+

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[Tanks] (
+    [Id]             INT           IDENTITY (1, 1) NOT NULL,
+    [FacilityId]     INT           NOT NULL,
+    [CompanyId]      INT           NOT NULL,
+    [Name]           NVARCHAR (50) NOT NULL,
+    [HasATG]         BIT           NOT NULL,
+    [MaxCapacity]    NVARCHAR (50) NULL,
+    [ProductId]      INT           NULL,
+    [ProductName]    NVARCHAR (20) NULL,
+    [Position]       NVARCHAR (20) NULL,
+    [Height]         FLOAT (53)    NOT NULL,
+    [Diameter]       FLOAT (53)    NOT NULL,
+    [Decommissioned] BIT           NOT NULL,
+    [FriendlyName]   VARCHAR (10)  NULL,
+    [ModifyType]     VARCHAR (30)  NULL,
+    [AppTank]        VARCHAR (15)  NULL,
+    [Status]         VARCHAR (20)  NULL,
+    [NewTankDetails] VARCHAR (100) NULL,
+    [UpdatedAt]      DATETIME      NULL,
+    [CreatedAt]      DATETIME      NULL,
+    [DeletedStatus]  BIT           NULL,
+    [DeletedBy]      INT           NULL,
+    [DeletedAt]      DATETIME      NULL,
+    CONSTRAINT [PK_Tanks] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+

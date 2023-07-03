@@ -1,0 +1,74 @@
+﻿@model NewDepot.Models.RemitaResponse
+@using NewDepot.Helpers
+@{
+    ViewBag.Title = "Payment Status";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<section class="content-header">
+    <div class="row">
+        <div class="col-md-10 col-xs-10">
+            <h1 class="">@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="content">
+    @if (ViewBag.Alert != null)
+    {
+        var alert = (AlertBox)ViewBag.Alert;
+        string alerttype = alert.ButtonType == AlertType.Failure ? "alert-danger" : alert.ButtonType == AlertType.Warning ? "alert-warning" : "alert-success";
+        //string head = (ViewBag.MsgType.ToLower() == "fail" ? "Application Error!" : (ViewBag.MsgType.ToLower() == "warn" ? "Alert!" : "Success"));
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert @alerttype" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <strong>@alert.Title</strong> @alert.Message
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="box-warning">
+        <div class="box-header">
+            <h4>Check the payment status of an Application </h4>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-4">
+                    @using (Html.BeginForm(FormMethod.Post))
+                    {
+                        <div class="input-group">
+                            <input type="text" name="orderid" id="orderid" class="form-control" />
+                            <span class="input-group-btn">
+                                <button type="submit" id="btnSearch" class="btn btn-info">Search <i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (Model != null)
+            {
+                <div id="searchResult" class="row">
+                    <br /><br />
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="well well-sm">
+                            <dl class="dl-horizontal">
+                                <dt>Application Ref:</dt>
+                                <dd>@Model.orderId</dd>
+                                <dt>Payment RRR:</dt>
+                                <dd>@Model.RRR</dd>
+                                <dt>Total Amount:</dt>
+                                <dd>@Model.Amount</dd>
+                                <dt>Payment Status:</dt>
+                                <dd>@Model.statusmessage</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

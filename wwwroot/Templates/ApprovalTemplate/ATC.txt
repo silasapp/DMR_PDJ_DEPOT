@@ -1,0 +1,78 @@
+﻿<p><u>RE: APPLICATION FOR APPROVAL TO CONSTRUCT PETROLEUM PRODUCTS STORAGE DEPOT</u></p>
+<p style="text-align: justify; line-height: 1.4em;">
+   We refer to your application of {1} for approval to construct a bulk storage depot facility at {0} and the subsequent site inspection visit carried out on {2}.
+</p>
+
+<p style="text-align: justify; line-height: 1.4em;">		 
+
+	In view of the satisfactory report from the visit and the consent obtained from other appropriate 
+	Government Agencies, I am pleased to inform you that you are hereby Granted &nbsp;<b> Approval to Construct</b> a 
+	Bulk Storage Depot Facility with the following Capacities:
+
+</p>
+ <table style="width: 100%; border-spacing: 0; margin-top: 25px; ">
+        <tr>
+            <th>S/N</th>
+            <th>PRODUCT</th>
+            <th>DIAMETER (meters) </th>
+            <th>HEIGHT (meters)</th>
+            <th>CAPACITY (litres)</th>
+        </tr>
+        <tbody>
+            {3}
+        </tbody>
+    </table>
+	<div>
+<p>The construction of the facility shall be carried out under the following conditions; </p>
+  <table cellpadding="4"><tr style="page-break-inside:avoid">
+        <td><p>	1.The construction shall be in line with the approved drawings submitted to 
+			   the Nigerian Midstream and Downstream Petroleum Regulatory Authority and in accordance with relevant provisions of Petroleum 
+			   Regulations.
+	</p></td></tr>
+	<tr style="page-break-inside:avoid">
+            <td><p>
+			   2. All impact mitigation/monitoring in the Environmental Evaluation Report (E.E.R) as indicated in the Environmental Management Plan are to be comprehensively implemented during the 
+			   construction and operation phases. 
+</p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+			3. You shall officially inform the Department of each milestone, particularly pipeline laying, tank/pipeline hydro-tests,
+			and calibration exercises.
+</p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+		4. The PMS storage tank MUST be fitted with internal floating blanket.
+	</p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+			5. All ATK tanks MUST be filled with an internal floating suction system.
+	  </p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+			6. The ATK Storage tanks and piping network MUST be expoxy coated internally.	   
+	 </p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+			7. All ATK receipt and discharge points MUST have comprehensive filtration systems.
+		</p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+			8. The Bitumen storage tanks MUST be properly lagged.	   
+	  </p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+			9. All Bitumen pipelines MUST be insulated with appropriate thermal insulating materials.
+
+	</p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+			10. All cargo pipelines MUST be fitted with adequate Pressure and flow monitoring devices. 
+	 </p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+		 11.  At the completion of the project, a detailed operational safety case shall be carried out by a NMDPRA-Accredited Consultant.
+	 </p></td></tr> <tr style="page-break-inside:avoid">
+            <td><p>
+	    12. You shall inform the Department on completion of the construction work for the pre-commissioning inspection prior to the issuance of operating license.
+</p></td></tr> 
+<tr style="page-break-inside:avoid">
+            <td><p>
+   In addition to the above, NMDPRA representatives wiil be nominated to monitor the construction work and to ensure that all
+   standards are maintained. </p></td></tr>  <tr style="page-break-inside:avoid">
+            <td><p>You are therefore requested to strictly adhere to the above as the issuance of an operating
+   license for the facility will be dependent on total compliance.
+ </p></td> </tr>
+  </tabe>
+  </div>
+</div>

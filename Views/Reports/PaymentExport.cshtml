@@ -1,0 +1,229 @@
+﻿@model IEnumerable<NewDepot.Models.PaymentReportModel>
+
+
+@{
+    ViewBag.Title = "PaymentExport";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    bool spread = (ViewBag.ReturnType != null && ViewBag.ReturnType.ToLower() == "combined" ? true : false);
+    int counter = 0;
+
+    var t = string.IsNullOrEmpty(ViewBag.ReturnType) || ViewBag.ReturnType.ToLower() == "combined" ? "Total Paid" : ViewBag.ReturnType + " Fee";
+}
+
+<link href="@Url.Content("/OldDepotStyle/Content/css/dataTables.tableTools.min.css")" rel="stylesheet" />
+
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3 class="">Payment Receipts</h3>
+            <h5 class="" style="margin:8px 0;">@ViewBag.Header (<span style="text-transform: capitalize;">@t</span>)</h5>
+        </div>
+        <div class="title_right">
+            @using (Html.BeginForm("PaymentExport", "Reports", FormMethod.Get))
+            {
+            <input type="hidden" name="startDate" id="startDate" value="@ViewBag.StartDate" />
+            <input type="hidden" name="endDate" id="endDate" value="@ViewBag.EndDate" />
+
+            <div class="clear"></div>
+            <div class="col-sm-12">
+                <input type="submit" value="Filter" class="pull-right btn btn-success input-append" />
+                <div class="row">
+                    <div class="col-md-2"></div>
+                        <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 7px 10px 6px; border: 1px solid #ccc">
+                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                            <span></span> <b class="caret"></b>
+                        </div>
+                </div>
+                    <select class="pull-right form-control" name="t" id="t" style="width:190px;">
+                        <option value="">Select Payment Type</option>
+                        <option value="application">Application Fee</option>
+                        <option value="statutory">Service Charge</option>
+                        <option value="combined">Total Paid</option>
+                    </select>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <hr class="clear" />
+
+
+    <div class="row xrow">
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered table-hover table-responsive dataTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Receipt Number</th>
+                        <th>Company Name</th>
+                        <th>Reference Number</th>
+                        <th>Payment Reference</th>
+                        <th>Permit Category</th>
+                        @if (spread)
+                        {
+                            <th>Statutory Fee</th>
+                            <th>Service Charge</th>
+                        }
+                        <th>Amount Paid</th>
+                        <th>Date Paid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        counter++;
+                    <tr>
+                        <td>@counter</td>
+                        <td>@item.ReceiptNo</td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.ReferenceNo</td>
+                        <td>@item.PaymentRef</td>
+                        <td>@item.Category</td>
+                        @if (spread)
+                            {
+                            <td class="txtright">@item.Fee.Value.ToString("###,###,##0.00")</td>
+                            <td class="txtright">@item.Charge.Value.ToString("###,###,##0.00")</td>
+                            }
+                        @if (ViewBag.ReturnType.ToLower() == "combined")
+                            {
+                            <td class="txtright">@item.Amount.ToString("###,###,##0.00")</td>
+                            }
+                            else if (ViewBag.ReturnType.ToLower() == "application")
+                            {
+                            <td class="txtright">@item.Fee.Value.ToString("###,###,##0.00")</td>
+                            }
+                            else
+                            {
+                            <td class="txtright">@item.Charge.Value.ToString("###,###,##0.00")</td>
+                            }
+                        <td>@item.Date</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    @*<script src="@Url.Content("/Scripts/js/dataTables.tableTools.min.js")"></script>
+    <script src="@Url.Content("/Scripts/js/dataTables.tableTools.js")"></script>*@
+
+    <!-- bootstrap-daterangepicker -->
+    <script src="@Url.Content("/Scripts/js/moment/moment.min.js")"></script>
+    <script src="@Url.Content("/Scripts/js/datepicker/daterangepicker.js")"></script>
+
+    <!-- DatePicker Controller -->
+    <script>
+        $(document).ready(function () {
+            var cb = function (start, end, label) {
+                //console.log("SIGAB: " + start.toISOString(), end.toISOString(), label);
+                // Sets the Label with the selected Date range
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+                $("#startDate").val(start.format('MM/DD/YYYY')); // dd/mm/yy
+                $("#endDate").val(end.format('MM/DD/YYYY')); // dd/mm/yy
+            };
+
+            var d = new Date();
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+            var mDate = (month < 10 ? '0' : '') + month + '/' + (day < 10 ? '0' : '') + day + '/' + d.getFullYear();
+            var optionSet1 = {
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment(),
+                minDate: '01/01/2016',
+                maxDate: mDate, //'12/31/2015',
+                dateLimit: {
+                    days: 60
+                },
+                showDropdowns: true,
+                showWeekNumbers: true,
+                timePicker: false,
+                timePickerIncrement: 1,
+                timePicker12Hour: true,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                opens: 'left',
+                buttonClasses: ['btn btn-default'],
+                applyClass: 'btn-sm btn-primary',
+                cancelClass: 'btn-sm',
+                format: 'MM/DD/YYYY',
+                separator: ' to ',
+                locale: {
+                    applyLabel: 'Submit',
+                    cancelLabel: 'Clear',
+                    fromLabel: 'From',
+                    toLabel: 'To',
+                    customRangeLabel: 'Custom',
+                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    firstDay: 1
+                }
+            };
+
+            //Sets the Date range label witht the default values
+            if ($("#startDate").val().length > 0 && $("#endDate").val().length > 0) {
+                var mSDate = moment($("#startDate").val()).format('MMMM DD, YYYY');
+                var mEDate = moment($("#endDate").val()).format('MMMM DD, YYYY');
+                $('#reportrange span').html(mSDate + ' - ' + mEDate);
+            }
+            else {
+                $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+            }
+            
+            $('#reportrange').daterangepicker(optionSet1, cb);
+            //$('#reportrange').on('show.daterangepicker', function() {
+            //    console.log("show event fired");
+            //});
+            //$('#reportrange').on('hide.daterangepicker', function() {
+            //    console.log("hide event fired");
+            //});
+            //$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+            //    console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
+            //});
+            //$('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
+            //    console.log("cancel event fired");
+            //});
+            $('#options1').click(function () {
+                $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
+            });
+            $('#options2').click(function () {
+                $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
+            });
+            $('#destroy').click(function () {
+                $('#reportrange').data('daterangepicker').remove();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Reports > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Reports/PaymentSummary']").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                //columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "/Scripts/swf/copy_csv_xls.swf"
+                },
+            });
+        });
+    </script>
+}

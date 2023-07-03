@@ -1,0 +1,38 @@
+﻿
+
+<p style="font-family:Candara; font-size:18px; "><u><b>RE: APPLICATION FOR TANK CONVERSION AT: {0}</b></u></p>
+
+<div style="font-family:Candara; font-size:18px; ">
+<p style="text-align:justify; padding-top:-5px!important;">
+	Your letter dated {1} on the above subject refers.<br/>
+	In view of the satisfactory tank cleaning exercise carried out by your company under
+	the supervision of our representative from the {2}, this is to convey to &nbsp;&nbsp;&nbsp;&nbsp; <strong> {3} </strong>&nbsp;&nbsp;&nbsp;&nbsp; the approval to convert
+	to the following product(s) storage as shown in the table below.
+
+</p>
+ <table style="width: 100%; border-collapse: collapse; margin-top: -10px;"  class="table table-sm table-bordered">
+	<tr style="border: 1px solid black;">
+	<th colspan="5" style="border: 1px solid black;padding: 5px;height: 10px;">
+	<h4><b>APPROVED NEW TANK CONFIGURATION</b></h4>
+	</th>
+	</tr>
+	 <tr style="border: 1px solid black;">
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">S/No.</th>
+	 	<th style="border: 1px solid black; padding:2px;height: 20px;">Tank No. </th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">PRODUCT</th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">CAPACITY (litres)</th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">REMARK</th>
+	 </tr style="border: 1px solid black;">
+        <tbody>
+            {5}
+        </tbody>
+    </table>
+	<p style="font-family:Candara; font-size:18px; text-align:justify; margin-bottom:2px!important; margin-top:-1px!important">
+		Consequently, you are to ensure next renewal application for storage and sales licence for the year {6} reflect this current configuration and there shall be no reversal 
+		of the converted tank within this licencing year.
+
+	</p>
+
+	<p>
+	
+	</div>

@@ -1,0 +1,14 @@
+﻿<p>Dear Sir</p>
+<p><u>WITNESSING OF UNDERGROUND STORAGE TANK LEAK TEST</u></p>
+<p>
+    We write to confirm the witnessing of underground storage tank leak test at your petrol station located along 
+	<strong>{0}</strong> by our staff.
+</p>
+
+<p>
+    Consequent upon the satisfactory conduct of the exercise which took place on {1}, approval is hereby granted to 
+	your company to proceed to the next phase of your application. Details of the petroleum storage tanks is as follows.
+</p>
+<p>
+	
+</p>

@@ -1,0 +1,73 @@
+﻿
+@model NewDepot.Models.Service
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = null;
+    var action = ViewBag.Action;
+
+}
+
+@if (Model != null)
+{
+    bool del = (!string.IsNullOrEmpty(action) && action.ToLower() == "del" ? true : false);
+
+    <div class="modal-body">
+        <div class="extForm">
+            @if (del)
+            {
+                <h4>Are you sure you want to Archive this Service? </h4>
+            }
+            else
+            {
+                <h4>Are you sure you want to Re-Add this Service? </h4>
+            }
+            <p>
+                <dl class="dl-horizontal lt">
+                    <dt>Service Name</dt>
+                    <dd>@Model.Name</dd>
+                </dl>
+            </p>
+            <br />
+            @if (del)
+            {
+                <p>
+                    On Archiving this Service, it will no longer be available for clients to select on applying for a Permit.
+                </p>
+            }
+            else
+            {
+                <p>
+                    On Re-Adding this Service, it now be available for clients to select on applying for a Permit.
+                </p>
+            }
+        </div>
+    </div>
+    <div class="modal-footer">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            <input type="hidden" name="todo" id="todo" value="@action.ToLower()" />
+            <div class="">
+                <a role="button" href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                <input type="submit" value="Confirm & Continue" class="btn btn-danger" />
+            </div>
+        }
+
+    </div>
+
+}
+else
+{
+    <div class="modal-body">
+        <div class="extForm">
+            <h4>The Service selected for deletion could not be found. Please try again</h4>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="">
+            <a role="button" href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</a>
+        </div>
+    </div>
+}

@@ -1,0 +1,292 @@
+﻿@model LPGDepot.Models.InspectionForm
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<h4>InspectionForm</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="InsId" />
+            <div class="form-group">
+                <label asp-for="AppId" class="control-label"></label>
+                <input asp-for="AppId" class="form-control" />
+                <span asp-validation-for="AppId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PipeWorks" class="control-label"></label>
+                <input asp-for="PipeWorks" class="form-control" />
+                <span asp-validation-for="PipeWorks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TestRunObservation" class="control-label"></label>
+                <input asp-for="TestRunObservation" class="form-control" />
+                <span asp-validation-for="TestRunObservation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsGasLeak" class="control-label"></label>
+                <input asp-for="IsGasLeak" class="form-control" />
+                <span asp-validation-for="IsGasLeak" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsGasLeakComment" class="control-label"></label>
+                <input asp-for="IsGasLeakComment" class="form-control" />
+                <span asp-validation-for="IsGasLeakComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsEmergency" class="control-label"></label>
+                <input asp-for="IsEmergency" class="form-control" />
+                <span asp-validation-for="IsEmergency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsEmergencyComment" class="control-label"></label>
+                <input asp-for="IsEmergencyComment" class="form-control" />
+                <span asp-validation-for="IsEmergencyComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsFireExtinguisher" class="control-label"></label>
+                <input asp-for="IsFireExtinguisher" class="form-control" />
+                <span asp-validation-for="IsFireExtinguisher" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsFireExtinguisherComment" class="control-label"></label>
+                <input asp-for="IsFireExtinguisherComment" class="form-control" />
+                <span asp-validation-for="IsFireExtinguisherComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsChemicalFoam" class="control-label"></label>
+                <input asp-for="IsChemicalFoam" class="form-control" />
+                <span asp-validation-for="IsChemicalFoam" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsChemicalFoamComment" class="control-label"></label>
+                <input asp-for="IsChemicalFoamComment" class="form-control" />
+                <span asp-validation-for="IsChemicalFoamComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsLighteningProtective" class="control-label"></label>
+                <input asp-for="IsLighteningProtective" class="form-control" />
+                <span asp-validation-for="IsLighteningProtective" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsLighteningProtectiveComment" class="control-label"></label>
+                <input asp-for="IsLighteningProtectiveComment" class="form-control" />
+                <span asp-validation-for="IsLighteningProtectiveComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsMechanicalLeak" class="control-label"></label>
+                <input asp-for="IsMechanicalLeak" class="form-control" />
+                <span asp-validation-for="IsMechanicalLeak" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsMechanicalLeakComment" class="control-label"></label>
+                <input asp-for="IsMechanicalLeakComment" class="form-control" />
+                <span asp-validation-for="IsMechanicalLeakComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsNoNakedLight" class="control-label"></label>
+                <input asp-for="IsNoNakedLight" class="form-control" />
+                <span asp-validation-for="IsNoNakedLight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsNoNakedLightComment" class="control-label"></label>
+                <input asp-for="IsNoNakedLightComment" class="form-control" />
+                <span asp-validation-for="IsNoNakedLightComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsNoSmoking" class="control-label"></label>
+                <input asp-for="IsNoSmoking" class="form-control" />
+                <span asp-validation-for="IsNoSmoking" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsNoSmokingComment" class="control-label"></label>
+                <input asp-for="IsNoSmokingComment" class="form-control" />
+                <span asp-validation-for="IsNoSmokingComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsDecantingSystem" class="control-label"></label>
+                <input asp-for="IsDecantingSystem" class="form-control" />
+                <span asp-validation-for="IsDecantingSystem" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsDecantingSystemComment" class="control-label"></label>
+                <input asp-for="IsDecantingSystemComment" class="form-control" />
+                <span asp-validation-for="IsDecantingSystemComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsSmfillingHead" class="control-label"></label>
+                <input asp-for="IsSmfillingHead" class="form-control" />
+                <span asp-validation-for="IsSmfillingHead" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsWeighingBridge" class="control-label"></label>
+                <input asp-for="IsWeighingBridge" class="form-control" />
+                <span asp-validation-for="IsWeighingBridge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsWeighingBridgeComment" class="control-label"></label>
+                <input asp-for="IsWeighingBridgeComment" class="form-control" />
+                <span asp-validation-for="IsWeighingBridgeComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsCounterWeighingBridge" class="control-label"></label>
+                <input asp-for="IsCounterWeighingBridge" class="form-control" />
+                <span asp-validation-for="IsCounterWeighingBridge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsCounterWeighingBridgeComment" class="control-label"></label>
+                <input asp-for="IsCounterWeighingBridgeComment" class="form-control" />
+                <span asp-validation-for="IsCounterWeighingBridgeComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsFillingHead" class="control-label"></label>
+                <input asp-for="IsFillingHead" class="form-control" />
+                <span asp-validation-for="IsFillingHead" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsConnectingHose" class="control-label"></label>
+                <input asp-for="IsConnectingHose" class="form-control" />
+                <span asp-validation-for="IsConnectingHose" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsGasSupplyLine" class="control-label"></label>
+                <input asp-for="IsGasSupplyLine" class="form-control" />
+                <span asp-validation-for="IsGasSupplyLine" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsCathodicProtection" class="control-label"></label>
+                <input asp-for="IsCathodicProtection" class="form-control" />
+                <span asp-validation-for="IsCathodicProtection" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsUltraSonic" class="control-label"></label>
+                <input asp-for="IsUltraSonic" class="form-control" />
+                <span asp-validation-for="IsUltraSonic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsCorrosionInhibitor" class="control-label"></label>
+                <input asp-for="IsCorrosionInhibitor" class="form-control" />
+                <span asp-validation-for="IsCorrosionInhibitor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsHandGloves" class="control-label"></label>
+                <input asp-for="IsHandGloves" class="form-control" />
+                <span asp-validation-for="IsHandGloves" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsHandGlovesComment" class="control-label"></label>
+                <input asp-for="IsHandGlovesComment" class="form-control" />
+                <span asp-validation-for="IsHandGlovesComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsGasMask" class="control-label"></label>
+                <input asp-for="IsGasMask" class="form-control" />
+                <span asp-validation-for="IsGasMask" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsGasMaskComment" class="control-label"></label>
+                <input asp-for="IsGasMaskComment" class="form-control" />
+                <span asp-validation-for="IsGasMaskComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsSafetyShoes" class="control-label"></label>
+                <input asp-for="IsSafetyShoes" class="form-control" />
+                <span asp-validation-for="IsSafetyShoes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsSafetyShoesComment" class="control-label"></label>
+                <input asp-for="IsSafetyShoesComment" class="form-control" />
+                <span asp-validation-for="IsSafetyShoesComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsOverallJacket" class="control-label"></label>
+                <input asp-for="IsOverallJacket" class="form-control" />
+                <span asp-validation-for="IsOverallJacket" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsOverallJacketComment" class="control-label"></label>
+                <input asp-for="IsOverallJacketComment" class="form-control" />
+                <span asp-validation-for="IsOverallJacketComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SafteyOthers" class="control-label"></label>
+                <input asp-for="SafteyOthers" class="form-control" />
+                <span asp-validation-for="SafteyOthers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HousingType" class="control-label"></label>
+                <input asp-for="HousingType" class="form-control" />
+                <span asp-validation-for="HousingType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PumpNumber" class="control-label"></label>
+                <input asp-for="PumpNumber" class="form-control" />
+                <span asp-validation-for="PumpNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompressorsNumber" class="control-label"></label>
+                <input asp-for="CompressorsNumber" class="form-control" />
+                <span asp-validation-for="CompressorsNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsWaterSupply" class="control-label"></label>
+                <input asp-for="IsWaterSupply" class="form-control" />
+                <span asp-validation-for="IsWaterSupply" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsWaterHydrant" class="control-label"></label>
+                <input asp-for="IsWaterHydrant" class="form-control" />
+                <span asp-validation-for="IsWaterHydrant" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PowerSupply" class="control-label"></label>
+                <input asp-for="PowerSupply" class="form-control" />
+                <span asp-validation-for="PowerSupply" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label"></label>
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedAt" class="control-label"></label>
+                <input asp-for="UpdatedAt" class="form-control" />
+                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedStatus" class="control-label"></label>
+                <input asp-for="DeletedStatus" class="form-control" />
+                <span asp-validation-for="DeletedStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedBy" class="control-label"></label>
+                <input asp-for="DeletedBy" class="form-control" />
+                <span asp-validation-for="DeletedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedAt" class="control-label"></label>
+                <input asp-for="DeletedAt" class="form-control" />
+                <span asp-validation-for="DeletedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

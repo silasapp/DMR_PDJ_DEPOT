@@ -1,0 +1,37 @@
+﻿CREATE TABLE [dbo].[applications] (
+    [id]                  INT              IDENTITY (1, 1) NOT NULL,
+    [company_id]          INT              NOT NULL,
+    [category_id]         INT              NOT NULL,
+    [PhaseId]             INT              NOT NULL,
+    [type]                VARCHAR (5)      NOT NULL,
+    [year]                INT              NOT NULL,
+    [fee_payable]         DECIMAL (18, 2)  NULL,
+    [service_charge]      DECIMAL (18, 2)  NULL,
+    [TransferCost]        DECIMAL (18, 2)  NULL,
+    [payment_id]          INT              NULL,
+    [status]              NVARCHAR (25)    NOT NULL,
+    [reference]           VARCHAR (50)     NOT NULL,
+    [current_desk]        INT              NULL,
+    [date_added]          DATETIME         NOT NULL,
+    [date_modified]       DATETIME         NULL,
+    [submitted]           BIT              NULL,
+    [current_Permit]      NVARCHAR (50)    NULL,
+    [Migrated]            BIT              NULL,
+    [FacilityId]          INT              NULL,
+    [AllowPush]           BIT              NULL,
+    [ValGroupId]          UNIQUEIDENTIFIER NULL,
+    [PaymentDescription]  NVARCHAR (500)   NULL,
+    [AppProcessed]        BIT              NULL,
+    [SupervisorProcessed] BIT              NULL,
+    [CreatedAt]           DATETIME         NULL,
+    [UpdatedAt]           DATETIME         NULL,
+    [DeletedBy]           INT              NULL,
+    [DeleteStatus]        BIT              NULL,
+    [DeletedAt]           DATETIME         NULL,
+    [LastAssignedUser]    VARCHAR (80)     NULL,
+    [isLegacy]            BIT              NULL,
+    CONSTRAINT [PK_applications_id] PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+
+

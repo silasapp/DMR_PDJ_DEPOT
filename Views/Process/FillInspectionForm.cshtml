@@ -1,0 +1,690 @@
+﻿@model IEnumerable<NewDepot.Models.Fields>
+@using System.Configuration;
+@using NewDepot.Helpers
+
+@{
+    ViewBag.Title = "Application Inspection Form";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    List<FieldValues> formData = (List<FieldValues>)ViewBag.FormData;
+
+}
+<style>
+    input {
+        width: 500px !important;
+    }
+</style>
+<div class="content">
+    @using (Html.BeginForm("FillForm", "Process", FormMethod.Post, new { @Id = "DynamicForm", @encType= "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        if (Model.Count() > 0)
+        {
+
+            <h2> @ViewBag.FormTitle for @ViewBag.FacilityName</h2>
+            @if(ViewBag.Scheduler != null)
+                    {
+<small>Scheduled By: @ViewBag.Scheduler</small>
+                    }
+        }
+        <div class="row">
+            <div class="col-md-10 offset-1">
+                <div class="well">
+                    <hr />
+                    <input type="hidden" name="companyName" id="companyName" value="@ViewBag.CompanyName" />
+                    <input type="hidden" name="appProcId" value="@ViewBag.appProcId" />
+                    <input type="hidden" name="appFormId" value="@ViewBag.AppFormId" />
+                    <input type="hidden" name="FormId" value="@ViewBag.FormId" />
+
+
+                    @foreach (var item in Model)
+                    {
+                        <div class="form-group">
+                            <div class="row xrow">
+                                @if (item.DataType == "hidden")
+                                {
+                                    <input type="hidden" name="@item.Label" id="@item.Label" value="@item.hiddenValue" />
+                                }
+                                @if (item.Label != "ApplicationId" && item.Label != "CompanyId")
+                                {
+                                    if (item.DataType.ToLower() == "header")
+                                    {
+                                        <div class="col-md-12"><h4>@item.Label</h4></div>
+                                    }
+                                    else if (item.DataType.ToLower() != "description")
+                                    {
+                                        if (!string.IsNullOrEmpty(item.DisplayLabel))
+                                        {
+                                            <label class="control-label col-md-4"><b>@item.DisplayLabel</b></label>
+                                        }
+                                        else
+                                        {
+                                            if (item.IsRequired == true)
+                                            {
+                                                <label class="control-label col-md-4"><b><small class="text-danger fa-sm fa fa-asterisk"></small>@item.Label</b></label>
+
+                                            }
+                                            else
+                                            {
+                                                <label class="control-label col-md-4"><b>@item.Label</b></label>
+                                            }
+                                        }
+                                    }
+                                }
+
+                                <div class="col-md-8">
+                                    @if (formData.Count > 0)
+                                    {
+                                        var values = formData.Where(x => x.FieldId == item.Id).FirstOrDefault();
+                                        var itemValue = values == null ? " " : values.Value;
+                                        @if (item.DataType == "One line Text")
+                                        {
+
+                                            if (item.Label.Contains("tude") || item.Label.Contains("Picture"))
+                                            {
+
+                                                <input type="text" id="@item.Label" class="form-control" name="@item.Label" readonly value="@itemValue" placeholder="@item.Description" />
+
+                                            }
+                                            else
+                                            {
+                                                if (item.IsRequired == true)
+                                                {
+                                                    <input type="text" id="@item.Label" class="form-control" name="@item.Label" required value="@itemValue" placeholder="@item.Description" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="@item.Label" class="form-control" name="@item.Label" value="@itemValue" placeholder="@item.Description" />
+                                                }
+                                            }
+                                        }
+                                        else if (item.DataType == "MultiLine Text")
+                                        {
+                                            if (item.IsRequired == true)
+                                            {
+                                                <textarea id="@item.Label" class="" name="@item.Label" rows="5" cols="70" required placeholder="@item.Description">@itemValue</textarea>
+                                            }
+                                            else
+                                            {
+                                                <textarea id="@item.Label" class="" rows="5" cols="70" name="@item.Label" placeholder="@item.Description">@itemValue</textarea>
+                                            }
+                                        }
+                                        else if (item.DataType == "Number")
+                                        {
+                                            if (item.IsRequired == true)
+                                            {
+
+                                                <input type="text" class="form-control" id="@item.Label" name="@item.Label" required value="@itemValue" />
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control" id="@item.Label" name="@item.Label" value="@itemValue" />
+                                            }
+                                        }
+                                        else if (item.DataType == "Date")
+                                        {
+                                            if (item.IsRequired == true)
+                                            {
+                                                <input type="date" class="form-control" id="@item.Label" name="@item.Label" required value="@itemValue" />
+                                            }
+                                            else
+                                            {
+                                                <input type="date" class="form-control" id="@item.Label" name="@item.Label" value="@itemValue" />
+                                            }
+                                        }
+
+                                        else if (item.DataType == "Options")
+                                        {
+                                            if (!string.IsNullOrEmpty(item.OptionValue))
+                                            {
+                                                List<string> options = item.OptionValue.Split(',').ToList();
+                                                if (item.IsRequired)
+                                                {
+                                                    <select name="@item.Label" class="form-control" required>
+                                                        @if (string.IsNullOrEmpty(item.hiddenValue))
+                                                        {
+                                                            <option>@itemValue</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@itemValue">@itemValue</option>
+                                                        }
+
+
+                                                        @foreach (var option in options)
+                                                        {
+                                                            <option value="@option">@option</option>
+                                                        }
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select name="@item.Label" class="form-control">
+                                                        @if (string.IsNullOrEmpty(item.hiddenValue))
+                                                        {
+                                                            <option>@itemValue</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@itemValue">@itemValue</option>
+                                                        }
+                                                        @foreach (var option in options)
+                                                        {
+                                                            <option value="@option">@option</option>
+                                                        }
+                                                    </select>
+                                                }
+                                            }
+                                        }
+                                        else if (item.DataType == "CheckBox")
+                                        {
+                                            if (!string.IsNullOrEmpty(item.OptionValue))
+                                            {
+                                                List<string> options = item.OptionValue.Split(',').ToList();
+
+                                                var hidnVals = new List<string>();
+                                                if (!string.IsNullOrEmpty(item.hiddenValue))
+                                                {
+
+                                                    hidnVals = item.hiddenValue.Split(',').ToList();
+
+
+                                                }
+
+                                                foreach (var option in options)
+                                                {
+
+                                                    if (hidnVals.Contains(option))
+                                                    {
+                                                        <input type="checkbox" checked name="@item.Label" value="@itemValue" /> @itemValue <br>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="@item.Label" value="@option" /> @option <br>
+
+                                                    }
+
+                                                }
+
+
+                                            }
+                                        }
+                                        else if (item.DataType == "Image")
+                                        {
+                                            var fname = "file_" + item.Id;
+                                            var labelN = item.Label.Replace(" ", "");
+                                            if (itemValue != " ")
+                                            {
+                                                <img src="@Url.Content(itemValue)" width=50 height=50 />
+                                            }
+                                            if (item.IsRequired == true)
+                                            {
+
+
+                                                <input type="file" id="" class="form-control" name="@fname" required />
+                                            }
+                                            else
+                                            {
+
+                                                <input type="file" id="" class="form-control" name="@fname" />
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @if (item.DataType == "Image")
+                                        {
+                                            var fname = "file_" + item.Id;
+                                            var labelN = item.Label.Replace(" ", "");
+                                            if (item.IsRequired == true)
+                                            {
+                                                <input type="file" id="" class="form-control" name="@fname" required />
+                                            }
+                                            else
+                                            {
+                                                <input type="file" id="" class="form-control" name="@fname" />
+                                            }
+                                        }
+                                        @if (item.DataType == "One line Text")
+                                        {
+                                            if (item.Label.Contains("tude") || item.Label.Contains("Picture"))
+                                            {
+
+                                                <input type="text" id="@item.Label" class="form-control" name="@item.Label" readonly value="" placeholder="@item.Description" />
+
+                                            }
+                                            else
+                                            {
+                                                if (item.IsRequired == true)
+                                                {
+                                                    <input type="text" id="@item.Label" class="form-control" name="@item.Label" required value="@item.hiddenValue" placeholder="@item.Description" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="@item.Label" class="form-control" name="@item.Label" value="@item.hiddenValue" placeholder="@item.Description" />
+                                                }
+                                            }
+                                        }
+                                        else if (item.DataType == "MultiLine Text")
+                                        {
+                                            if (item.IsRequired == true)
+                                            {
+                                                <textarea id="@item.Label" class="" name="@item.Label" rows="5" cols="70" required placeholder="@item.Description">@item.hiddenValue</textarea>
+                                            }
+                                            else
+                                            {
+                                                <textarea id="@item.Label" class="" rows="5" cols="70" name="@item.Label" placeholder="@item.Description">@item.hiddenValue</textarea>
+                                            }
+                                        }
+                                        else if (item.DataType == "Number")
+                                        {
+                                            if (item.IsRequired == true)
+                                            {
+                                                <input type="text" class="form-control" id="@item.Label" name="@item.Label" required value="@item.hiddenValue" />
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control" id="@item.Label" name="@item.Label" value="@item.hiddenValue" />
+                                            }
+                                        }
+
+                                        else if (item.DataType == "Date")
+                                        {
+                                            if (item.IsRequired == true)
+                                            {
+                                                <input type="date" class="form-control" id="@item.Label" name="@item.Label" required value="@item.hiddenValue" />
+                                            }
+                                            else
+                                            {
+                                                <input type="date" class="form-control" id="@item.Label" name="@item.Label" value="@item.hiddenValue" />
+                                            }
+                                        }
+
+                                        else if (item.DataType == "Options")
+                                        {
+                                            if (!string.IsNullOrEmpty(item.OptionValue))
+                                            {
+                                                List<string> options = item.OptionValue.Split(',').ToList();
+                                                if (item.IsRequired)
+                                                {
+                                                    <select name="@item.Label" class="form-control" required>
+                                                        @if (string.IsNullOrEmpty(item.hiddenValue))
+                                                        {
+                                                            <option>Select @item.Label</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.hiddenValue">@item.hiddenValue</option>
+                                                        }
+
+
+                                                        @foreach (var option in options)
+                                                        {
+                                                            <option value="@option">@option</option>
+                                                        }
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select name="@item.Label" class="form-control">
+                                                        @if (string.IsNullOrEmpty(item.hiddenValue))
+                                                        {
+                                                            <option>Select @item.Label</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.hiddenValue">@item.hiddenValue</option>
+                                                        }
+
+                                                        @foreach (var option in options)
+                                                        {
+                                                            <option value="@option">@option</option>
+                                                        }
+                                                    </select>
+                                                }
+                                            }
+                                        }
+                                        else if (item.DataType == "CheckBox")
+                                        {
+                                            if (!string.IsNullOrEmpty(item.OptionValue))
+                                            {
+                                                List<string> options = item.OptionValue.Split(',').ToList();
+
+                                                var hidnVals = new List<string>();
+                                                if (!string.IsNullOrEmpty(item.hiddenValue))
+                                                {
+
+                                                    hidnVals = item.hiddenValue.Split(',').ToList();
+
+
+                                                }
+
+                                                foreach (var option in options)
+                                                {
+
+                                                    if (hidnVals.Contains(option))
+                                                    {
+                                                        <input type="checkbox" checked name="@item.Label" value="@option" /> @option <br>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="@item.Label" value="@option" /> @option <br>
+
+                                                    }
+
+                                                }
+
+
+                                            }
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <hr />
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4"><b>Inspector's Recommendation</b></label>
+                            <div class="col-md-8">
+                                @if (ViewBag.Recommend != null)
+                                {
+                                    if ((bool)ViewBag.Recommend == true)
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" value="yes" required checked /> Recommend
+
+                                            <input type="radio" name="recommend" value="no" required /> Not Recommended
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" value="yes" required /> Recommend
+
+                                            <input type="radio" name="recommend" value="no" required checked /> Not Recommended
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>
+                                        <input type="radio" name="recommend" value="yes" required /> Recommend
+
+                                        <input type="radio" name="recommend" value="no" required /> Not Recommended
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">
+                                <b>Inspector's Comment and Recommendation</b>
+                            </label>
+                            <div class="col-md-8">
+                                <textarea name="reason" class="form-controll" rows="5" cols="60" required>@ViewBag.Reasons</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row xrow">
+                            @{
+                                var baseDocUpload = ElpsServices._elpsBaseUrl + "api/Company/UploadFile";
+                            }
+                            <div class="col-md-4">
+                                <div><b> Upload other Report</b> <br />(Only PDF Files and JPG Images)</div>
+
+                                <div><b>Upload other Report</b> <br />(Only PDF Files and JPG Images)</div>
+                            </div>
+                            <div class="col-md-8">
+                                <table class="table">
+                                    <tr>
+                                        <td width="50%">
+                                            <input type="hidden" id="extraReport1" name="extraReport1" value="" />
+                                            <input type="file" name="extraReportFile_1" id="extraReportFile1" class="docUpload form-control" accept="image/png, image/jpeg, application/pdf"
+                                                   data-i="1" data-location="@baseDocUpload" />
+                                            <div id="extFileName-1" class="files">
+                                         @if (ViewBag.ReportFile1 != null && ViewBag.ReportFile1 !="")
+
+                                        {
+
+                                            var source = ViewBag.ReportFile1.Contains("|") ? ViewBag.ReportFile1.Split("|")[0] : ViewBag.ReportFile1;
+                                            var fileID = ViewBag.ReportFile1.Split("|")[1];
+                                            var file_icon = "";
+                                            var font_png_icon = "fa-file-image";
+                                            var font_pdf_icon = "fa-file-pdf text-danger";
+
+                                            var font_file_icon = "fa-file text-info";
+
+                                            var img_link =source;
+
+                                            file_icon = source.EndsWith(".png") == true ? font_png_icon :
+                                                   source.EndsWith(".PNG") == true ? font_png_icon :
+                                                   source.EndsWith(".jpg") == true ? font_png_icon :
+                                                   source.EndsWith(".JPG") == true ? font_png_icon :
+                                                   source.EndsWith(".jpeg") == true ? font_png_icon :
+                                                   source.EndsWith(".JPEG") == true ? font_png_icon :
+                                                   source.EndsWith(".pdf") == true ? font_pdf_icon :
+                                                   source.EndsWith(".PDF") == true ? font_pdf_icon : font_file_icon;
+                                        <div style="float: left; width: 48%;">
+                                            <a href="@img_link" target="_blank" style="color:black" title="Click to view document">
+                                                <i class="fa @file_icon fa-5x"></i>
+                                            </a>
+                                               @if (ViewBag.Scheduler == true )
+                                       {
+                                            <a href="#" class="btn btn-xs btn-danger delFile" data-fileid="@fileID"><i class="fa fa-times"></i> Delete</a>
+                                                                        <div class="clearfix"></div>
+                                       }
+                                        </div><br />
+
+                                            <div class="clearfix"></div>
+                                        }
+
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <div id="extProgress-1" class="progress col-md-12">
+                                                <div class="progress-bar progress-bar-success progress-bar-striped"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" id="extraReport2" name="extraReport2" value="" />
+                                            <input type="file" name="extraReportFile_2" id="extraReportFile2" class="docUpload form-control" accept="image/png, image/jpeg, application/pdf"
+                                                   data-i="2" data-location="@baseDocUpload" />
+                                            <div id="extFileName-2" class="files">
+                                                 <div id="extFileName-1" class="files">
+
+                                                @if (ViewBag.ReportFile2 != null && ViewBag.ReportFile2 !="")
+
+                                        {
+
+                                            var source = ViewBag.ReportFile2.Contains("|") ? ViewBag.ReportFile2.Split("|")[0] : ViewBag.ReportFile2;
+                                            var fileID = ViewBag.ReportFile2.Split("|")[1];
+                                            var file_icon = "";
+                                            var font_png_icon = "fa-file-image";
+                                            var font_pdf_icon = "fa-file-pdf text-danger";
+
+                                            var font_file_icon = "fa-file text-info";
+
+                                            var img_link =source;
+
+                                            file_icon = source.EndsWith(".png") == true ? font_png_icon :
+                                                   source.EndsWith(".PNG") == true ? font_png_icon :
+                                                   source.EndsWith(".jpg") == true ? font_png_icon :
+                                                   source.EndsWith(".JPG") == true ? font_png_icon :
+                                                   source.EndsWith(".jpeg") == true ? font_png_icon :
+                                                   source.EndsWith(".JPEG") == true ? font_png_icon :
+                                                   source.EndsWith(".pdf") == true ? font_pdf_icon :
+                                                   source.EndsWith(".PDF") == true ? font_pdf_icon : font_file_icon;
+                                        <div style="float: left; width: 48%;">
+                                            <a href="@img_link" target="_blank" style="color:black" title="Click to view document">
+                                                <i class="fa @file_icon fa-5x"></i>
+                                            </a>
+                                               @if (ViewBag.Scheduler == true )
+                                       {
+                                            <a href="#" class="btn btn-xs btn-danger delFile" data-fileid="@fileID"><i class="fa fa-times"></i> Delete</a>
+                                                                        <div class="clearfix"></div>
+                                       }
+                                        </div><br />
+
+                                            <div class="clearfix"></div>
+                                        }
+
+                                           </div>
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <div id="extProgress-2" class="progress col-md-12">
+                                                <div class="progress-bar progress-bar-success progress-bar-striped">.</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   @if (ViewBag.Scheduler == true )
+                   {
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <button type="reset" class="btn btn-default">Reset </button>
+                        <input type="button" id="btnSaveInspectionForm" value="Save" class="btn btn-success" />
+                    </div>
+                   } 
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+@section Scripts{
+
+
+    <script src="@Url.Content("~/OldDepotStyle/Scripts/js/vendor/jquery.ui.widget.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/OldDepotStyle/Scripts/js/jquery.iframe-transport.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/OldDepotStyle/Scripts/js/jquery.fileupload.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var valid = $("#DynamicForm").valid();
+            if (valid === true) {
+
+            }
+
+
+            $("#btnSaveInspectionForm").on("click", function (e) {
+                e.preventDefault();
+              
+                var valid = $("#DynamicForm").valid();
+                if (valid != true) {
+                    alert("Please, fill all required fields.");
+                }
+                else {
+                $.confirm({
+                    text: "Are you sure you want to save this inspection form report ?",
+                    confirm: function () {
+                        $(".content").addClass('Submitloader');
+                        $("#DynamicForm").submit();
+
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+            }
+            });
+
+
+
+            $(document.body).on("click", '.docUpload', function () {
+                var me = $(this);
+                var i = $(this).attr("data-i");
+                $('#extFileName-' + i).html('');
+                debugger;
+                var loc = $(this).attr("data-location");
+
+                $(this).fileupload({
+                    dataType: 'json',
+                    url: loc,
+                    done: function (e, data) {
+                           debugger;
+
+                        var file = data.result
+                        $('#extraReport' + i).val(file.source + "|" + file.FileId);
+                        $(this).css("display", "none");
+                        var str = file.source.replace("~", "");
+                        var src = str.match('.pdf$') ? '/OldDepotStyle/Content/Images/pdf-icon.png' : str;
+                        var respContent = '<div style="float: left; width: 48%;"><img src="' + src + '" class="thumbnail" style="height: 80px;" />';
+                        respContent += '</div><br />';
+                        respContent += '<a href="#" class="btn btn-xs btn-danger delFile" data-i="' + i + '"  data-fileid="' + file.FileId + '"><i class="fa fa-times"></i> Delete</a>';
+                        respContent += '</div><div class="clearfix"></div>';
+                        $("#extFileName-" + i).html(respContent);
+                    },
+                    fail: function (e, data) {
+                        $(this).css("display", "block");
+                        $.each(data.messages, function (index, error) {
+                            console.log(error);
+                              alert(error);
+
+                            if (error && error.toLowerCase().indexOf('bytes exceed file size' > -1)) {
+                                $('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                                    .appendTo('#extFileName-' + i);
+                            }
+                            else {
+                                $('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: ' + error + '<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                                    .appendTo('#extFileName-' + i);
+                            }
+                        });
+                        var progBox = '#extProgress-' + $(this).attr("data-i") + ' .progress-bar';
+                        $(progBox).css(
+                            'width',
+                            0 + '%'
+                        ).text("");
+                    },
+                    progressall: function (e, data) {
+                        //alert(uid);
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        var progBox = '#extProgress-' + i + ' .progress-bar';
+
+                        $(progBox).css(
+                            'width',
+                            progress + '%'
+                        ).text(progress + '%');
+                    }
+                }).prop('disabled', !$.support.fileInput)
+                    .parent().addClass($.support.fileInput ? undefined : 'disabled')
+            }).bind('fileuploadadded', function (e, data) {
+                //alert("File Upload complete");
+            });
+
+            $(document).on("click", ".delFile", function () {
+                var i = $(this).attr("data-i");
+                $("#extFileName-" + i).html("");
+                $('#extraReport' + i).val('');
+                $('#extraReportFile' + i).css("display", "block");
+                var progBox = '#extProgress-' + i + ' .progress-bar';
+                $(progBox).css(
+                    'width',
+                    0 + '%'
+                ).text("");
+            });
+
+        });
+    </script>
+}
+

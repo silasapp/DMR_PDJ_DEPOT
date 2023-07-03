@@ -1,0 +1,140 @@
+﻿
+
+@{
+    ViewBag.Title = "Configure Facility Pumps";
+    var fac = (Facilities)ViewBag.facility;
+    var Pumps = (List<Pumps>)ViewBag.pumps;
+}
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">   @ViewBag.Title </h3>
+        <hr />
+    </div>
+</div>
+<div class="marg50"></div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>@fac.Name Pump Setup</h3>
+    </div>
+    <form action="/LTO/AddPumps" method="post">
+        <div class="col-md-12">
+            <input type="hidden" id="facilityId" name="facilityId" value="@fac.Id" />
+            <input type="hidden" id="phaseId" name="phaseId" value="@ViewBag.phaseId" />
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Pump Name</th>
+                        <th>Pump Manufacturer</th>
+                        <th>Source Tank</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody id="pumpContainer">
+                    @if (Pumps.Count() > 0)
+                    {
+                        for (int i = 0; i < Pumps.Count(); i++)
+                        {
+                            var indx = i + 1;
+                            var id = "Pumps[" + i + "].id";
+                            var did = "document" + i;
+                            var Name = "Pumps[" + i + "].Name";
+                            var Manufacturer = "Pumps[" + i + "].Manufacturer";
+                            var TankId = "Pumps[" + i + "].TankId";
+
+
+                            <tr id="@did" class="pmps">
+                                <td>@indx</td>
+                                <td>
+                                    <input type="hidden" name="@id" value="@Pumps[i].Id" />
+                                    <input type="text" required name="@Name" class="form-control" value="@Pumps[i].Name" placeholder="e.g. PMS Loading Arm 1" />
+                                </td>
+                                <td>
+                                    <input type="text" required name="@Manufacturer" class="form-control" value="@Pumps[i].Manufacturer" placeholder="" />
+                                </td>
+                                <td>
+                                    <select required name="@TankId" class="form-control">
+                                        <option value="">Select Tank</option>
+                                        @foreach (var item in ViewBag.tanks)
+                                        {
+                                            if (Pumps[i].TankId == item.Id)
+                                            {
+                                                <option value="@item.Id" selected>@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                    @for (int i = 0; i < 3 - Pumps.Count; i++)
+                    {
+                        var indx = i + 1;
+                        var did = "document" + i;
+                        var Name = "Pumps[" + i + "].Name";
+                        var Manufacturer = "Pumps[" + i + "].Manufacturer";
+                        var TankId = "Pumps[" + i + "].TankId";
+
+
+                        <tr id="@did" class="pmps">
+                            <td>@indx</td>
+                            <td>
+                                <input type="text" required name="@Name" class="form-control" value="" placeholder="e.g. PMS Loading Arm 1" />
+                            </td>
+                            <td>
+                                <input type="text" required name="@Manufacturer" class="form-control" value="" placeholder="" />
+                            </td>
+                            <td>
+                                <select required name="@TankId" class="form-control">
+                                    <option value="">Select Tank</option>
+                                    @foreach (var item in ViewBag.tanks)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="5"><a id="addPump" href="" class="btn btn-xs btn-warning">Add More Pump</a></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+        <hr />
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-4 col-sm-offset-4">
+                    <input type="submit" class="btn btn-primary btn-success btn-block" value="NEXT" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div style="clear:both"></div>
+@section Scripts {
+    jqueryval")
+
+    <script src="~/Scripts/LTO.js"></script>
+    <script>
+
+    </script>
+}

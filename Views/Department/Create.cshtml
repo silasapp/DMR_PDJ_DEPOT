@@ -1,0 +1,36 @@
+﻿@model NewDepot.Models.Departments
+
+@{
+    ViewBag.Title = "Add Department";
+    Layout = null;
+    string btnLabel = (Model.Id > 0 ? "Edit Department" : "Save Department");
+}
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="modal-body">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>*@
+    </div>
+    
+    <div class="clear"></div>
+    <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" value="@btnLabel" class="btn btn-success" />
+    </div>
+}

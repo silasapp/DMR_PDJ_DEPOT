@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewData["Title"] = "LGAs Configuration";
+    ViewData["BodyClass"] = "fix-header fix-sidebar";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+}
+
+<div class="row">
+
+    <div class="col-sm-4">
+
+        <div class="card">
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Create LGA
+                </span>
+            </div>
+
+            <form action="#" id="FormCreateLGA">
+
+                <div class="form-group">
+                    <select class="form-control" id="txtLGAState">
+                        <option>Select State--</option>
+                    </select>
+                    <input name="txtLGAName" id="txtLGAName" class="form-control" placeholder="LGA Name ..." required />
+                    <input name="txtLGACode" id="txtLGACode" class="form-control" placeholder="LGA Code ..." required />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create LGA" class="btn btn-sm ui yellow button" />
+                </div>
+
+                <div id="CreateLGAInfo"> </div>
+            </form>
+
+
+        </div>
+
+        <br />
+
+        <div class="ui yellow segment">
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Edit User LGAs
+                </span>
+            </div>
+
+            <form asp-action="Edit" id="FormEditLGA">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" id="txtEditLGAID" />
+                <div class="form-group">
+                     <select class="form-control" id="txtEditLGAStateName">
+                        <option>Select State--</option>
+                    </select>
+                    <input class="form-control" id="txtEditLGAName" placeholder="Name..." />
+                    <input class="form-control" id="txtEditLGACode" placeholder="Code..." />
+
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save Edit" class="btn btn-sm ui yellow button" />
+                    <input type="reset" value="Clear" class="btn btn-sm ui secondary button" />
+                </div>
+            </form>
+
+            <div id="EditLGAInfo"> </div>
+        </div>
+
+
+    </div>
+
+    <div class="col-sm-8">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h4 class="card-title"> User LGAs </h4>
+                <h6 class="card-subtitle"> List of all created LGAs </h6>
+
+
+                <table id="TableLGAs" class="ui celled table table-hover" style="font-size:small">
+                    <thead>
+                        <tr>
+                            <th>
+                                State ID
+                            </th> 
+                            <th>
+                                LGA ID
+                            </th>
+                            <th>
+                                LGA Name
+                            </th>
+                            <th>
+                                LGA Code
+                            </th>
+                            <th>
+                                State
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script src="~/js/NewDepot Scripts/Configurations/LGAs.js"></script>
+
+}

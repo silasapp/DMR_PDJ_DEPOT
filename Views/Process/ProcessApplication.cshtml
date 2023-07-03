@@ -1,0 +1,2335 @@
+﻿@using NewDepot.Models;
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@model MyApps
+@{
+    ViewBag.Title = "Application details for " + Model.CompanyName + " (" + Model.CategoryName + ")";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var userEmail = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionEmail));
+
+    var mgrSch = new MeetingSchedules();
+    var PhaseName = Model.category_id == 1 ? Model.CategoryName + "(" + Model.PhaseName + ")" : Model.CategoryName;
+    string processDeskID = ViewBag.DeskID.ToString();
+    string alertx = string.Empty;
+    var elpsBase = ElpsServices._elpsBaseUrl;
+
+    if (Model.Status.ToLower() == "approved") { alertx = "label-success"; }
+    else if (Model.Status.ToLower() == "processing") { alertx = "label-info"; }
+    else if ((Model.Status.ToLower() == "pending") || (Model.Status.ToLower() == "label pending")) { alertx = "label-warning"; }
+    else { alertx = "label-danger"; }
+
+    int cnt = 0;
+
+    var AppTanks = (List<TankModel>)ViewBag.AppTanks;
+    var FacilityTanks = (List<TankModel>)ViewBag.Tanks;
+
+    var MistdoStaff = (List<MistdoStaff>)ViewBag.MistdoStaff;
+    var AppDocs = (List<PresentDocuments>)ViewBag.ApplicationDocs;
+    AppDocs = (List<PresentDocuments>)ViewBag.PresentDocument;
+    var missingDocs = (List<MissingDocument>)ViewBag.MissingDocument;
+    var otherDocs = (List<OtherDocuments>)ViewBag.OtherDocument;
+    var products = (List<Products>)ViewBag.Products;
+
+    var myInspectors = (List<Staff_UserBranchModel>)ViewBag.Inspectors;
+    var mySupervisors = (List<Staff_UserBranchModel>)ViewBag.Supervisors;
+    var wait = ViewBag.Wait != null && (bool)ViewBag.Wait == true ? "disabled" : "";
+
+
+    var jrModel = ((JointReportModel)ViewBag.Report).JointStaff;
+
+    string xtraPay = "no";
+    var texty = "";
+}
+
+
+@if (ViewBag.Reports != null)
+{
+
+    <div class="col-md-12">
+        <div class="alert alert-warning" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Report!</strong> @ViewBag.Reports
+        </div>
+    </div>
+}
+
+<div class="row">
+    @if (ViewBag.Message != null)
+    {
+        string alerttype = (ViewBag.MsgType.ToLower() == "fail" ? "alert-danger" : (ViewBag.MsgType.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+        string head = (ViewBag.MsgType.ToLower() == "fail" ? "Application Error!" : (ViewBag.MsgType.ToLower() == "warn" ? "Alert!" : "Success"));
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@head</strong> @ViewBag.Message
+            </div>
+        </div>
+    }
+    @if (ViewBag.scheMsg != null)
+    {
+        string alerttype = "alert-" + ViewBag.scheTyp;
+
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Application Schedule Alert!</strong> @ViewBag.scheMsg
+            </div>
+        </div>
+    }
+    @if (ViewBag.ExtraPayReport != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-info" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Extra Payment:</strong> @ViewBag.ExtraPayReport
+        </div>
+    </div>
+}
+    <form action="@Url.Action("PushApplication", "Process")" method="post" id="frmPush">
+        <input type="hidden" id="supervisor" name="supervisors" value="" />
+        <input type="hidden" name="selectedApps" id="selectedApps" value="@Model.appID" />
+        <input type="hidden" name="DeskID" id="txtDeskID" value="@ViewBag.DeskID" />
+    </form>
+    <form action="@Url.Action("PushApplication", "Process")" method="post" id="frmPushInsp">
+        <input type="hidden" id="inspectors" name="inspectors" value="" />
+        <input type="hidden" name="selectedApps" id="selectedApps" value="@Model.appID" />
+        <input type="hidden" name="DeskID" id="txtDeskID" value="@ViewBag.DeskID" />
+    </form>
+
+    <div class=""><h2> Application Details : Reference No : <b class="text-primary"> @Model.Reference </b> </h2></div>
+    <hr />
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-5 col-lg-5 col-md-5">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" style="resize:both">
+                            <tr>
+                                <td class="text-left">
+                                    <b>Company Name</b>
+                                    <input type="hidden" id="elpsBase" value="@elpsBase" />
+                                   <input type="hidden" id="phaseName" value="@Model.PhaseName" />
+
+                                </td>
+                                <td class="text-left"><a href="/Companies/FullCompanyProfile/@generalClass.Encrypt(Model.Company_Id.ToString())" class="checkOut">@Model.CompanyName</a></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">
+                                    <b>Facility Name</b>
+                                    <input type="hidden" id="elpsBase" value="@elpsBase" />
+                                </td>
+                                <td class="text-left">
+                                    <a href="@Url.Action("ViewFacility", "Facility", new { id =generalClass.Encrypt( Model.FacilityId.ToString()) })" target="_blank" class="checkOut">@Model.FacilityName</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Category</b></td>
+                                <td class="text-left">@Html.DisplayFor(model => model.PhaseName)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Application Type</b></td>
+                                <td class="text-left"><span class="label label-warning">@Html.DisplayFor(model => model.Type)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Year</b></td>
+                                <td class="text-left">@Html.DisplayFor(model => model.Year)</td>
+                            </tr>
+                            @if (Model.Current_Permit != null)
+                            {
+                                <tr>
+                                    <td class="text-left"><b>Current License/Approval Ref</b></td>
+                                    <td class="text-left">@Html.DisplayFor(model => model.Current_Permit)</td>
+                                </tr>
+                            }
+                                 @if (ViewBag.TranferCost != null)
+                            {
+                                <tr>
+                                    <td class="text-left"><b>Facility Transfer Cost</b></td>
+                                    <td class="text-left">@ViewBag.TranferCost</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td class="text-left"><b>Fee Payable</b></td>
+                                <td class="text-left">@Model.Fee_Payable.ToString("₦ ###,##0.00")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Service Charge</b></td>
+                                <td class="text-left">@Model.Service_Charge.ToString("₦ ###,##0.00")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Total Amount Due</b></td>
+                                <td class="text-left">
+                                    @{var amt = Model.Fee_Payable + Model.Service_Charge;}
+                                    @amt.ToString("₦ ###,##0.00")
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Payment Description</b></td>
+                                <td class="text-left">
+                                    @Model.PaymentDescription
+                                </td>
+                            </tr>
+                            @if (MistdoStaff.Count() > 0)
+                            {
+                                <tr>
+                                    <td class="text-left"><b> Mistdo Staff </b></td>
+                                    <td class="text-left">
+                                        @*Mistdo Staff Table*@
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Cert. No.</th>
+                                                <th>Exp. Date</th>
+                                            </tr>
+                                            @foreach (var ms in MistdoStaff)
+                                            {
+                                                <tr>
+                                                    <td>@ms.FullName</td>
+                                                    <td>@ms.Email</td>
+                                                    <td>@ms.CertificateNo</td>
+                                                    <td>@ms.ExpiryDate</td>
+
+                                                </tr>
+                                            }
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td class="text-left"><b> @Html.DisplayNameFor(model => model.Status) </b></td>
+                                <td class="text-left"><span class="label @alertx">@Html.DisplayFor(model => model.Status)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Date</b> </td>
+                                <td class="text-left">
+                                    <b>Applied:</b> @Model.Date_Added.Date <br />
+                                    <b>Submitted:</b> @Model.DateSubmitted
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top"><b>Attached Documents</b></td>
+                                <td class="text-left">
+                                    <div class="list-group doc-list">
+                                        @if (AppDocs != null)
+                                        {
+                                            foreach (var item in AppDocs)
+                                            {
+                                                if (item.Source != null && item.Source.ToLower().EndsWith(".pdf"))
+                                                {
+                                                    <a href="@item.Source" target="_blank" class="list-group-item">
+                                                        @if (item.TypeName.ToLower() == "other document")
+                                                        {
+                                                            @item.TypeName <i class="fa fa-file-pdf-o"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            @item.TypeName <i class="fa fa-file-pdf-o"></i>
+                                                        }
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@item.Source" target="_blank" class="list-group-item">
+                                                        @if (item.TypeName.ToLower() == "other document")
+                                                        {
+                                                            @item.TypeName <i class="glyphicon glyphicon-picture"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            @item.TypeName <i class="glyphicon glyphicon-picture"></i>
+                                                        }
+                                                    </a>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <h4>No Document Was Submitted for this Application yet</h4>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-lg-4 col-md-4">
+                    <div class="">
+                        <h4 class=""><b> Current Desk(s) </b></h4>
+                        @if (Model.Current_Desk != null)
+                        {
+                            <b class="text-black-50"> @Model.Current_Desk.Staff </b><br />
+                            <b class="text-info"> @Model.Current_Desk.StaffFieldOffice </b>
+                        }
+                    </div>
+                    <hr class="marg50" />
+                    <div class="">
+
+                        @if (ViewBag.ExtraPay != null)
+                        {
+                            var extPay = (List<ApplicationExtraPayments>)ViewBag.ExtraPay;
+
+                            var frstExt = extPay.FirstOrDefault(a => a.Status != "Paid");
+                            if (frstExt != null)
+                            {
+                                xtraPay = "yes";
+                            }
+
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h4 class=""><b> Extra Payment(s) </b></h4>
+                                </div>
+                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppExtraPaymentModal"> Add Extra Payment  </button>
+                                @if (extPay != null && extPay.Count > 0)
+                                {
+                                    <table class="table table-striped" id="divExtraPayment">
+                                        <tr>
+                                            <th><b>Reference & RRR</b></th>
+                                            <th><b> Type</b></th>
+                                            <th><b> Amount</b></th>
+                                            <th><b>Status</b></th>
+                                            <th><b>Date</b></th>
+                                        </tr>
+                                        @foreach (var item in extPay)
+                                        {
+                                    <tr>
+                                        <td class="text-left">@item.Reference - @item.RRR </td>
+                                        <td class="text-left">@item.Type  </td>
+                                        <td class="text-left">@item.Amount.ToString("N2")  </td>
+                                         @if (item.Status != "Paid" && item.Status != GeneralClass.PaymentCompleted)
+                                        {
+                                            <td style="color:#e01515">  @item.Status </td>
+                                        }
+                                        else
+                                        {
+                                        <td style="color:lightgreen">  @item.Status </td>
+                                        }
+
+                                        <td> @item.Date </td>
+
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Staff (Comment)</td>
+
+                                        <td colspan="2">
+                                            @item.UserName <br/> ( <small class="text-info">@item.Comment</small> )
+                                        </td>
+                                        <td class="text-left">
+                                            @if (item.UserName.ToLower() == userEmail.ToLower() && item.Status != GeneralClass.PaymentCompleted)
+                                            {
+                                                <button class="btn btn-sm btn-danger col-sm-3" onclick="DeleteExtraPay('@generalClass.Encrypt(item.Id.ToString())')">  <i class="fa fa-trash"> </i> Delete </button>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                        }
+                                    </table>
+                                }
+                            </div>
+                            <hr class="marg50" />
+
+                        }
+
+                        <div class="" style="width: 100%">
+                            <h4 class=""><b> Application History (Last 2) </b></h4>
+                            <table class="table table-bordered table-striped " style="width:100%">
+                                <tr>
+                                    <td style="width:20%"></td>
+                                    <td style="width:30%"><b>Date</b></td>
+                                    <td style="width:50%"><b>Comment</b></td>
+                                </tr>
+                                @foreach (var item in ViewBag.History)
+                                {
+                                    cnt++;
+                                    <tr>
+                                        <td style="width:20%">@cnt</td>
+                                        <td style="width:30%">@item.date</td>
+                                        <td style="width:50%">@item.comment</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td colspan="3">
+                                        <a href="/Process/History/@generalClass.Encrypt(Model.appID.ToString())">See all</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr class="marg50" />
+
+                        <div class="" style="width: 100%">
+                            <h4 class=""><b> Assigned Field Inspector(s) </b></h4>
+
+                            @if (jrModel.Count() > 0)
+                            {
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Branch</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in jrModel)
+                                        {
+                                            if (item != null)
+                                            {
+                                                var state = item != null && item.SignedOff == true ? "success" : "";
+                                                var count = Convert.ToInt16(jrModel.IndexOf(item)) + 1;
+                                                <tr class="@state">
+                                                    <td class="text-left">@count</td>
+                                                    <td class="text-left">
+                                                        @item.FirstName @item.LastName<br />
+                                                    </td>
+
+                                                    <td class="text-left">@item.FieldOffice</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+
+                                <div class="panel-content">
+                                    <p>No Inspector Assigned yet for joint operations.</p>
+                                </div>
+                            }
+                        </div>
+                        <hr class="marg50" />
+
+
+                        @if (ViewBag.InspectMeetAtt != null)
+                        {
+
+
+                            <div class="padd">
+
+                                <div class="panel ">
+                                    <div class="panel-heading">
+                                        <h4 class=""><b>Staff For Inspection/Meeting</b></h4>
+
+                                    </div>
+                                    @{ var insMas = (List<InspectionMeetingAttendees>)ViewBag.InspectMeetAtt;}
+                                    @if (insMas.Count() > 0)
+                                    {
+                                        int count = 0;
+                                        <table class="table table-striped">
+
+                                            <tbody>
+                                                @foreach (var item in insMas)
+                                                {
+                                                    count++;
+                                                    if (item != null)
+                                                    {
+                                                        <tr class="">
+                                                            <td class="text-left">@count</td>
+                                                            <td class="text-left">
+                                                                @item.StaffEmail<br />
+
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="cardTnk" style="width: 100%">
+                            <div class="card-bodyy">
+
+                                @if (AppTanks.Count() > 0)
+                                {
+
+                                    <h4 class=""><b> Application Tank Details </b></h4>
+                                    @if (ViewBag.facModification != null)
+                                    {
+                                        <h4>@ViewBag.facModification</h4>
+                                    }
+                                    @if (ViewBag.PrevProduct != null)
+                                    {
+                                        <h6>@ViewBag.PrevProduct</h6>
+                                    }
+                                    int tCount = 0;
+                                    <table class="table table-hover table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Capacity</th>
+                                                <th>Product</th>
+                                                <th>Height</th>
+                                                <th>Diameter</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.AppTanks)
+                                            {
+                                                tCount++;
+                                                decimal cap = Convert.ToDecimal(item.MaxCapacity);
+
+                                                <tr>
+                                                    <td class="text-left">@tCount</td>
+                                                    <td class="text-left">
+                                                        @item.Name
+                                                    </td>
+                                                    <td class="text-left">@cap.ToString("N2")</td>
+                                                    <td class="text-left">@item.ProductName</td>
+                                                    <td class="text-left">@item.Height</td>
+                                                    <td class="text-left">@item.Diameter</td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+
+                                @if (FacilityTanks.Count() > 0)
+                                {
+
+                                    <h4 class=""><b> Facility Tank Details </b></h4>
+                                    int tCount = 0;
+                                    <table class="table table-hover table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Capacity</th>
+                                                <th>Product</th>
+                                                <th>Height</th>
+                                                <th>Diameter</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.Tanks)
+                                            {
+                                                tCount++;
+                                                decimal cap = Convert.ToDecimal(item.MaxCapacity);
+
+                                                <tr>
+                                                    <td class="text-left">@tCount</td>
+                                                    <td class="text-left">
+                                                        @item.Name
+                                                    </td>
+                                                    <td class="text-left">@cap.ToString("N2")</td>
+                                                    <td class="text-left">@item.ProductName</td>
+                                                    <td class="text-left">@item.Height</td>
+                                                    <td class="text-left">@item.Diameter</td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3 col-lg-3 col-md-3">
+                    <div class="righty">
+                        <a href="/Process/MyDesk" class="btn btn-default"><i class="fa fa-arrow-left"></i> Back to My Desk</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"> Operations Controls </div>
+
+                        <a href="/Application/PreviewLicense/@Model.appID" class="btn btn-xs btn-block btn-info" target="_blank">Preview <i class="fa fa-eye"></i></a>
+                                          <p></p>
+                        @if (Model.Status != "Approved" && Model.Status != "Payment Pending")
+                        {
+
+
+                            @if (userRole == GeneralClass.INSPECTOR)
+                            {
+
+                                <div class="x_content">
+                                    @if (ViewBag.SignOff == false)
+                                    {
+
+                                        <div>
+                                            <form action="/Process/SignOff" method="post" id="frmSignOff">
+                                                <input type="hidden" name="applicationId" id="applicationId" value="@Model.appID" />
+                                            </form>
+                                            <a href="#" data-target="#modalPopup" class="btn btn-success btn-block sign"
+                                               data-name="@Model.FacilityName">
+                                                Sign Off &nbsp;<i class="icon-like"></i>
+                                            </a>
+                                        </div>
+
+
+                                        <p></p>
+                                    }
+
+                                    else
+                                    {
+                                        <button class="btn btn-warning btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppScheduleMeetingModal">
+                                            Schedule Meeting <i class="fa fa-calendar"></i>
+                                        </button>
+                                        <p></p>
+
+                                        //Inspection form should be accessible if schedule date has expired and schedule has been accepted and approved
+                                       
+                                            <a href="/Process/FillInspectionForm/@generalClass.Encrypt(Model.appID.ToString())/@generalClass.Encrypt(processDeskID)" class="btn btn-primary btn-block">
+                                                Fill Inspection Form &nbsp;<i class="icon-doc"></i>
+                                            </a>
+                                        
+                                        <button class="btn btn-success btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppApproveModal">
+                                            Pass for Approval <i class="fa fa-check"></i>
+                                        </button>
+                                        <p></p>
+                                        @*<button class="btn btn-danger btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppRejectionModal">Reject &nbsp;<i class="fa fa-times"></i></button>
+                        *@
+
+                                        <button class="btn btn-danger btn-block" id="btnExternalRejectionModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppExternalRejectionModals"> Reject To Marketer </button>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                if ((ViewBag.SPCanPushToInspector != null && ViewBag.SPCanPushToInspector == false))
+                                {
+                                    <a href="#" data-appId="@Model.appID" data-target="#modalPopup" class="btn btn-primary btn-block pushInsp" data-name="@Model.FacilityName">
+                                        Push Application to Inspector  &nbsp;<i class="fa fa-check"></i>
+                                    </a>
+                                    <p></p>
+                                         <button class="btn btn-danger btn-block" id="btnExternalRejectionModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppExternalRejectionModals"> Reject to Marketer &nbsp;<i class="fa fa-times"></i></button>
+                                    <p></p>
+
+                                }
+                                else
+                                {
+
+                                    @if ( userRole == GeneralClass.SUPERVISOR && (ViewBag.SPCanPushToInspector == false || ViewBag.HQPush != null) )
+                                    {
+
+                                        <button class="btn btn-success btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#InspectorModal">
+                                            Assign to Inspector &nbsp;<i class="fa fa-send"></i>
+                                        </button>
+                                        <p></p>
+                                    }
+
+                                    if (Model.category_id == 1)
+                                    {
+                                        if (userRole != GeneralClass.AUTHORITY && userRole != GeneralClass.HDS && userRole != GeneralClass.ADPDJ)
+                                        {
+
+
+                                            <button class="btn btn-info btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppReportModal">
+                                                Add Report <i class="fa fa-book"></i>
+                                            </button>
+                                            <p></p>
+                                        }
+                                    }
+
+
+                                    @if (ViewBag.MyAppScheduleExpiry == true)
+                                    {
+                                        <button class="btn btn-success btn-lg" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppEditScheduleMeetingModal">
+                                            Re-Schedule Meeting <i class="fa fa-calendar"></i>
+                                        </button>
+                                        <p></p>
+                                    }
+                                    else if (ViewBag.appForm == null)
+                                    {
+                                        <button class="btn btn-warning btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppScheduleMeetingModal">
+                                            Schedule Meeting <i class="fa fa-calendar"></i>
+                                        </button>
+                                        <p></p>
+                                    }
+                                    //Inspection form should be accessible if schedule date has expired and schedule has been accepted and approved
+                                    @if (ViewBag.CheckScheduledDate == "Yes")
+                                    {
+                                        { texty = ViewBag.appForm != null ? "View" : "Fill"; }
+
+
+                                        <a href="/Process/FillInspectionForm/@generalClass.Encrypt(Model.appID.ToString())/@generalClass.Encrypt(processDeskID)" class="btn btn-primary btn-block">
+                                            @texty Inspection Form &nbsp;<i class="icon-doc"></i>
+                                        </a>
+
+                                    }
+                                    else if (ViewBag.CheckScheduledDate == "No")
+                                    {
+                                        <p>An inspection schedule for this application is currently awaiting approval/acceptance</p>
+                                    }
+
+                                    <button class="btn btn-success btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppApproveModal">
+                                        Pass for Approval <i class="fa fa-check"></i>
+                                    </button>
+                                    <p></p>
+                                    @if (ViewBag.SPCanPushToInspector == true && userRole == GeneralClass.SUPERVISOR)
+                                    { 
+                                <button class="btn btn-danger btn-block" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppRejectionModal">Reject To Staff&nbsp;<i class="fa fa-times"></i></button>
+                                     <p></p>
+                                     }
+                                <button class="btn btn-danger btn-block" id="btnExternalRejectionModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppExternalRejectionModals"> Reject to Marketer &nbsp;<i class="fa fa-times"></i></button>
+                                <p></p>
+
+
+                        }
+
+
+
+        }
+                        }
+
+                    </div>
+
+                    <div class="card-black">
+                        <div id="divSchedule">
+                            <h4 class="" style="font-weight:bold"> <b>Inspection Form(s)</b> </h4>
+
+
+                            @if (ViewBag.Schedules != null && ((List<MeetingSchedules>)ViewBag.Schedules).Count() <= 0 && ViewBag.appForm == null)
+                            {
+                                <p>No inspection has been scheduled for application.</p>
+                            }
+                            @if (ViewBag.appForm != null)
+                            {
+                                <a href="/Process/ViewInspectionForm/@generalClass.Encrypt(Model.appID.ToString())" @*style="margin-right:30px;"*@ class="btn btn-sm btn-warning" data-name="@Model.CompanyName" data-uid="6">
+                                    View @ViewBag.appFormTitle Form
+                                </a>
+                                 <a href="/Process/FillInspectionForm/@generalClass.Encrypt(Model.appID.ToString())/@generalClass.Encrypt(processDeskID)" class="btn btn-primary btn-sm">
+                                                View <i class="icon-doc"></i>
+                               </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-black">
+                        <div id="divSchedule">
+                            <h4 class="" style="font-weight:bold"> <b>Schedule(s)</b> </h4>
+
+                            @if (ViewBag.Schedules != null && ((List<MeetingSchedules>)ViewBag.Schedules).Count() > 0)
+                            {
+                                var schds = (List<MeetingSchedules>)ViewBag.Schedules;
+                                foreach (var sch in schds.OrderByDescending(a => a.Date))
+                                {
+                                    <div style="border:1px solid #dadada; padding:10px; margin-top:10px;">
+
+                                        <small>
+                                            <p><b> Type : </b>Inspection</p>
+
+                                            <p><b>Scheduled By:</b>@sch.StaffUserName </p>
+
+                                            <p><b>Scheduled Date:</b> @sch.Date</p>
+                                            <p><b>Meeting Date:</b>@sch.MeetingDate</p>
+                                            <p><b>Venue:</b>@sch.Venue</p>
+                                            <p><b>Schedule Comment:</b>@sch.Message</p>
+                                            <p>
+                                                <b>Approver's Response</b> : <b>
+                                                    @if (sch.Approved == null)
+                                                    {
+                                                        <span>Awaiting Approval</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (sch.Approved == true)
+                                                        {
+                                                            <span class="text-success">Approved</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-danger">Declined.</span>
+                                                        }
+                                                    }
+
+
+                                                </b>
+                                            </p>
+                                            <p>
+                                                <b> Approver's Comment :</b>  <b class="text-primary">
+                                                    @if (sch.FinalComment == null)
+                                                    {
+                                                    }
+                                                    else
+                                                    {
+                                                        if (sch.FinalComment != null || sch.Approved != true)
+                                                        {
+                                                            <span class="text-danger">@sch.FinalComment</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-primary">Approved.</span>
+                                                        }
+                                                    }
+
+                                                </b>
+                                            </p>
+                                            <p>
+                                                <b> Customer Response :</b> <b>
+
+                                                    @if (sch.Accepted == null)
+                                                    {
+
+                                                        <span class="">Awaiting Acceptance</span>
+                                                    }
+                                                    else if (sch.Accepted == false)
+                                                    {
+                                                        <span class="text-danger">Declined</span>
+                                                    }
+                                                    else
+                                                    { <span class="text-success">Accepted</span>
+
+                                                    }
+                                                </b>
+                                            </p>
+                                            <p>
+                                                <b> Customer Comment :</b>  <b>
+                                                    @if (sch.DeclineReason != null)
+                                                    {
+                                                        <span class="">@sch.DeclineReason</span>
+
+                                                    }
+                                                    else if (sch.Accepted == true)
+                                                    {
+                                                        <span class="">Accepted</span>
+                                                    }
+
+                                                    else
+                                                    {
+                                                        <span class="">@sch.DeclineReason</span>
+                                                    }
+                                                </b>
+                                            </p>
+
+                                            <p>
+                                                <b>Schedule Status:</b>
+                                                <div class="btn-group">
+                                                    @if (sch.ScheduleExpired.GetValueOrDefault())
+                                                    {
+                                                        <span class="btn btn-xs btn-danger">Expired</span>
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                        if (sch.Approved == null)
+                                                        {
+                                                            <span class="text-warning">Awaiting Approval</span>
+                                                        }
+                                                        else
+                                                        if (sch.Approved.GetValueOrDefault() == true)
+                                                        {
+                                                            <span class="text-success">Approved</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-danger">Declined</span>
+                                                        }
+                                                        <span>|</span>
+                                                        if (sch.Accepted == null)
+                                                        {
+                                                            <span class="text-warning">Awaiting marketer's acceptance</span>
+                                                        }
+                                                        else
+                                                        if (sch.Accepted.GetValueOrDefault() == true)
+                                                        {
+                                                            <span class="text-success">Accepted</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-danger">Marketer Declined</span>
+                                                        }
+                                                    }
+                                                </div>
+                                            </p>
+
+                                            <hr class="mini" />
+                                            <p><b> Created At : </b>@sch.Date</p>
+                                            <p> <b> Updated At:</b> @sch.UpdatedAt</p>
+
+                                            <div class="btn-group">
+                                                @if (sch.StaffUserName == userEmail && sch.Completed != true)
+                                                {
+                                                    @if (sch.ScheduleExpired.GetValueOrDefault())
+                                                    {
+                                                        <button class="btn btn-sm btn-info" onclick="GetSchedule('@sch.Id', '@sch.MeetingDate')" data-toggle="modal" data-backdrop="static" data-keyboard="false"
+                                                                data-target="#AppEditScheduleMeetingModal">
+                                                            <i class="fas fa-pencil-alt"> </i> Re-Schedule
+                                                        </button>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-sm btn-info" onclick="GetSchedule('@sch.Id', '@sch.MeetingDate')" data-toggle="modal" data-backdrop="static" data-keyboard="false"
+                                                                data-target="#AppEditScheduleMeetingModal">
+                                                            <i class="fas fa-pencil-alt"> </i> Re-Schedule
+                                                        </button>
+                                                        <button class="btn btn-sm btn-googleplus" onclick="DeleteSchedule('@sch.Id')">  <i class="fa fa-trash"> </i> Cancel </button>
+
+                                                    }
+                                                }
+                                            </div>
+                                        </small>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                    </div>
+
+                    <div class="card-black">
+                        <div id="divReport">
+                            <h4 class="" style="font-weight:bold"> <b>Report(s)</b> </h4>
+                            <div class="">
+                                @if (ViewBag.Report == null || ((JointReportModel)ViewBag.Report).Reports.Count() <= 0)
+                                {
+                                    <p>No report on application.</p>
+                                }
+                                else
+                                {
+                                    var jrm = (JointReportModel)ViewBag.Report;
+                                    foreach (var item in jrm.Reports.OrderByDescending(a => a.CreatedAt))
+                                    {
+                                        var rtm = "reportmsg" + item.ReportID;
+                                        var rtF = "reportFN" + item.ReportID;
+                                        <div class="report" data-itemId="@item.ReportID" data-name="@Model.FacilityName">
+                                            <div class="clearfix">
+
+                                                <p class="msg closed" id="@rtm">@item.Comment</p>
+
+                                                <a href="#" class="pull-right moreReport hide">Read more <i class="fa fa-angle-double-right"></i></a>&nbsp;
+                                            </div>
+                                            <div id="@rtF">
+                                                <div class="foot-note">
+                                                    <div class="by text-primary"><b>Report By: </b>@item.Staff</div>
+                                                    <div class="when"><b>Added At: </b>@item.CreatedAt</div>
+                                                    <div class="when"><b>Updated At: </b>@item.UpdatedAt</div>
+                                                </div>
+                                                <div>
+                                                    <a class="btn btn-sm btn-primary" href="/Process/ViewReport/@generalClass.Encrypt(item.ReportID.ToString())" target="_blank"> <i class="fas fa-external-link-alt"> </i> View</a>
+
+                                                    @if (item.StaffID == Convert.ToInt32(generalClass.Decrypt(Context.Session.GetString(AuthController.sessionUserID)))) // change to staff session id
+                                                    {
+                                                        @*<button class="btn btn-sm btn-warning" onclick="GetReport('@generalClass.Encrypt(item.ReportID.ToString())')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppEditReportModal"> <i class="fa fa-edit"> </i> Edit </button>*@
+                                                        <button class="btn btn-sm btn-warning" onclick="GetReport('@generalClass.Encrypt(item.ReportID.ToString())')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppEditReportModal"> <i class="fa fa-edit"> </i> Edit </button>
+                                                        <button class="btn btn-sm btn-googleplus" onclick="DeleteReport('@generalClass.Encrypt(item.ReportID.ToString())')">  <i class="fa fa-trash"> </i> Bin </button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="AppExtraPaymentModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="AppExtraPaymentLoader">
+            <div class="modal-header">
+                <h3 class="modal-title text-center"> Extra Payment For This Application </h3>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            @if(ViewBag.Location == "HQ")
+            {
+
+                <div class="text-center row">
+                <label class="col-md-4"><strong> Extra Payment Type: </strong></label>
+                <select class="col-md-4"  id="EX_type"  style="background-color:white; border-radius:5%;color: black; font-size:12px; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
+                    <option >Other</option>
+                    <option >Take Over</option>
+                </select>
+                </div>
+            }
+
+            <div class="modal-body">
+                
+               <div style="padding:15px" class="TakeOverPayment" id="extraPaymentLoadder">
+                    @using (Html.BeginForm("ExtraPayment", "Payment", FormMethod.Post, new { @class = "form-horizontal", @id = "extraPayment" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="container" >
+
+
+                            <div class="row">
+                                @if (ViewBag.ExtraPayReport != null)
+                                {
+                                    <div class="alert alert-success alert-dismissable">@ViewBag.ExtraPayReport</div>
+                                }
+                                <table class="table">
+                                    <tr>
+                                        <td><b>Application Ref:</b></td>
+                                        <td class="text-left">@Model.Reference   <small>( @Model.PhaseName )</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Company</b></td>
+                                        <td class="text-left">@Model.CompanyName </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="row">
+
+                                @Html.ValidationSummary(true)
+                                <input type="hidden" name="applicationId" value="@Model.appID" />
+                                <input type="hidden" name="reference" value="@Model.Reference" />
+                                <input type="hidden" name="returnUrl" value='/Process/ViewApplication/@generalClass.Encrypt( Model.appID.ToString())' />
+                                <div class="form-group" style="margin-right:10px;">
+                                    <label class="control-label"><b>Transfer Cost</b></label>
+                                    <div class="">
+                                        <input type="number" id="transferCost" required name="TransferCost" class="form-control"  />
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-right:10px;">
+                                    <label class="control-label "><b>Amount</b></label>
+                                    <div class="">
+                                        <input type="number" id="extraAmount" required name="Amount" class="form-control extraAmount_TO"  />
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-right:10px;">
+                                    <label class="control-label"><b>Type </b></label>
+
+                                        <select class="form-control" name="Type" style="width:250px">
+                                            <option>Balance</option>
+                                            <option>Fine</option>
+                                        </select>
+                                </div>
+                                  </div>
+
+                        </div>
+                         <div class="form-group text-center">
+
+                                    <label class="control-label "><b>Comment</b></label>
+                                    <div class="">
+                                        <textarea  name="Comment_TO" id="extraComment_TO" class="extraComment_TO" cols="35" row="5" placeholder="Brief description"></textarea>
+                                    </div>
+                         </div>
+                    }
+                </div>
+                <div style="padding:15px" class="otherPayment"  id="extraPaymentLoadder">
+                    @using (Html.BeginForm("ExtraPayment", "Payment", FormMethod.Post, new { @class = "form-horizontal", @id = "extraPayment" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="container">
+
+
+                            <div class="row">
+                                @if (ViewBag.ExtraPayReport != null)
+                                {
+                                    <div class="alert alert-success alert-dismissable">@ViewBag.ExtraPayReport</div>
+                                }
+                                <table class="table">
+                                   <tr>
+                                        <td><b>Application Ref:</b></td>
+                                        <td class="text-left">@Model.Reference   <small>( @Model.PhaseName )</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Amount Paid</b></td>
+                                        <td class="text-left">@Model.Fee_Payable.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Company</b></td>
+                                        <td class="text-left">@Model.CompanyName </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="row">
+
+                                @Html.ValidationSummary(true)
+                               <input type="hidden" name="applicationId" value="@Model.appID" />
+                                <input type="hidden" name="reference" value="@Model.Reference" />
+                                <input type="hidden" name="returnUrl" value='/Process/ViewApplication/@generalClass.Encrypt( Model.appID.ToString())' />
+                                <div class="form-group">
+                                    <label class="control-label col-md-4"><b>Amount</b></label>
+                                    <div class="col-md-8">
+                                        <input type="number" id="extraAmount" required name="Amount" class="form-control extraAmount"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4"><b>Type </b></label>
+
+                                    <div class="col-md-8">
+                                        <select class="form-control" name="Type">
+                                            <option>Balance</option>
+                                            <option>Sanction Reduction</option>
+                                            <option>Calibration fee</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4"><b>Comment</b></label>
+                                    <div class="col-md-8">
+                                        <textarea name="Comment" id="extraComment" class="extraComment" cols="20" row="10" placeholder="Brief description"></textarea>
+                                    </div>
+                                </div>
+
+                                <hr class="clear" />
+                            </div>
+
+                        </div>
+                    }
+                </div>
+                <div class="form-group text-center">
+                    <div class="">
+                        <input type="button" id="btnExtraPayment" value="Save & Generate RRR" class="btn btn-success" />
+                    </div>
+                </div>
+                <div id="extraPaymentModalInfo"></div>
+
+                <p></p>
+
+                <div id="ExtraPayInfo"> </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* creating an applicatioin report *@
+
+<div class="modal" id="AppReportModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card-black" id="AppReportLoader">
+            <div class="modal-header">
+                <h3 class="modal-title"> Add a report to this application </h3>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="txtAppId" value="@Model.appID" />
+
+                <div class="form-group">
+                    <label for="title"><b>Title:</b></label>
+                    <br />
+                    <input id="txtReportTitle" class="form-control" required placeholder="Enter Report Title here" />
+                </div>
+
+                <div class="form-group">
+                    <label for="comment"><b>Comment:</b></label>
+                    <br />
+                    <textarea id="txtAppReport" style="width:100%" rows="5" cols="68" placeholder="Some report here..."></textarea>
+                </div>
+
+                <button class="btn btn-facebook" id="btnSaveReport"> Save Report </button>
+                <p></p>
+                <div id="ReportModalInfo" class="text-danger"> </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* Editing an applicatioin report *@
+<div class="modal" id="AppEditReportModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card-black" id="AppEditReportLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title"> Edit Report </h3>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <br />
+                    <input id="txtEditReportTitle" class="form-control" required placeholder="Enter Report Title here" />
+                </div>
+
+                <div class="form-group">
+                    <input id="txtEditReportID" value="" hidden />
+                    <label for="comment">Comment:</label>
+                    <br />
+                    <textarea id="txtEditAppReport" style="width:100%" rows="5" cols="68" placeholder="Some report here..."></textarea>
+                </div>
+
+                <button class="btn btn-info" id="btnEditReport"><i class="fa fa-edit"> </i> Edit Report </button>
+                <p></p>
+                <div id="EditReportModalInfo"> </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@*Approval modal*@
+<div class="modal" id="AppApproveModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="AppApproveLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title col-sm-8">
+                    @{ var title = userRole == GeneralClass.AUTHORITY ? "Final Approval" : "Pass Application For Approval";}
+                    <b>@title </b>
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger"><i class="fa fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form action="/Process/Approve" method="post" id="apprvFrm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="selectedApps" id="selectedApps" value="@Model.appID" />
+                    <input type="hidden" name="DeskID" id="txtDeskID" value="@ViewBag.DeskID" />
+
+
+                    @if (ViewBag.AppForms != null)
+                    {
+                        <div class="alert alert-info alert-dismissable">
+                            <h4>@ViewBag.AppForms</h4>
+                        </div>
+                    }
+                    <br />
+                    <div class="alert alert-info">
+                        <div>
+                            <h5><b>Reference NO </b>: @Model.Reference </h5>
+                        </div>
+                        <br />
+                        <div>
+
+                            <h5>
+                                <b>Company Name </b>:
+                                <a href="/Companies/FullCompanyProfile/@generalClass.Encrypt(Model.Company_Id.ToString())" title="View Company Profile">@Model.CompanyName</a>
+                            </h5>
+                        </div>
+                        <br />
+                        <div>
+                            <h5><b>Facility Name </b>: @Model.FacilityName </h5>
+                        </div>
+                        <br />
+                        <div>
+                            <h5><b>Phase</b> : @PhaseName</h5>
+                        </div>
+                        <br />
+                        <div class="text-sm-left">
+                            <h5><b>Status :</b> <b class="text-primary"> @Model.Status</b> </h5>
+                        </div>
+                        <br />
+                        <div>
+                            <h5> <b>Date Applied </b>: @Model.Date_Added </h5>
+                        </div>
+                    </div>
+                    <h5><b>Comment:</b></h5>
+                    <textarea @*class="form-control"*@ id="comment" name="comment" style="width:100%" rows="5" cols="68" placeholder="Some comment here...Max(100)" required></textarea></>
+
+                </form>
+
+            </div>
+            <div class="clear"></div>
+
+            <div class="row">
+                <div class="col-md-5"></div>
+                @{ var cont = userRole == GeneralClass.AUTHORITY ? "Generate License/Approval" : "Approve & Continue";}
+                <input type="button" id="btnApprove" value=@cont class="btn btn-success" style="width:auto" />
+
+            </div>
+            <p></p>
+            <div id="ApproveModalInfo"> </div>
+
+        </div>
+    </div>
+</div>
+
+
+@* Rejection modal*@
+<div class="modal" id="AppRejectionModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="AppRejectionLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title col-sm-8">
+                    Reject Application
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger"><i class="fa fa-times"></i></span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm("Reject", "Process", FormMethod.Post, new { @id = "mRejFrm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.appHistory.id)
+
+                <div class="modal-body">
+
+                    <input hidden value="@Model.appID" name="application_id" />
+                    <div class="alert alert-info">
+                        <div>
+                            <h5><b>Reference NO </b>: @Model.Reference </h5>
+                        </div>
+                        <br />
+                        <div>
+                            <h5><b>Company Name </b>: @Model.CompanyName </h5>
+                        </div>
+                        <br />
+                        <div>
+                            <h5><b>Facility Name </b>: @Model.FacilityName </h5>
+                        </div>
+                        <br />
+                        <div>
+                            <h5><b>Phase</b> : @Model.PhaseName</h5>
+                        </div>
+                        <br />
+                        <div class="text-sm-left">
+                            <h5><b>Status :</b> <b class="text-primary"> @Model.Status</b> </h5>
+                        </div>
+                        <br />
+                        <div>
+                            <h5> <b>Date Applied </b>: @Model.Date_Added </h5>
+                        </div>
+                    </div>
+                    <h5><b>Comment:</b></h5>
+                    <textarea class="" id="rejComment" name="comment" rows="5" style="width: 100%" placeholder="Some comment here..." required></textarea>
+
+                </div>
+                <div class="clear"></div>
+
+                <div class="row">
+                    <div class="col-md-5"></div>
+                    <input type="button" id="btnMReject" value="Reject" class="btn btn-danger" />
+                </div>
+                <p></p>
+
+                <div id="MRejectModalInfo"> </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+@* Rejection *@
+
+<div class="modal" id="AppExternalRejectionModals">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card-black" style="width:950px" id="AppExternalRejectionLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title"> Reject Application Back </h3>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Reject", "Process", FormMethod.Post, new { @id = "RejFrm" }))
+            {
+        <div class="modal-body">
+            <input hidden value="@Model.appID" name="application_id" />
+            <input hidden value="@Model.appID" name="applicationid" />
+            <input hidden value="true" name="ToMarketer" />
+
+            <div class="alert alert-info">
+                <div class="half">
+                    <div class="">
+                        <h3>List of Application Document(s)</h3>
+                        <hr />
+                        @*<h5>Please select the document you're rejecting (if any)</h5>*@
+                        <div style="max-height: 200px; overflow-y: scroll">
+                            <ul class="list-group" style="margin: 0 10px;">
+                                @if (AppDocs != null && AppDocs.Count > 0)
+                                {
+                                    foreach (var item in AppDocs)
+                                    {
+                                        if (item.Source != null && item.Source.ToLower().EndsWith(".pdf"))
+                                        {
+                                            <a href="@item.Source" target="_blank" class="list-group-item">
+                                                @if (item.TypeName.ToLower() == "other document")
+                                                {
+                                                    @item.TypeName <i class="fa fa-file-pdf-o"></i>
+                                                }
+                                                else
+                                                {
+                                                    @item.TypeName <i class="fa fa-file-pdf-o"></i>
+                                                }
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@item.Source" target="_blank" class="list-group-item">
+                                                @if (item.TypeName.ToLower() == "other document")
+                                                {
+                                                    @item.TypeName <i class="glyphicon glyphicon-picture"></i>
+                                                }
+                                                else
+                                                {
+                                                    @item.TypeName <i class="glyphicon glyphicon-picture"></i>
+                                                }
+                                            </a>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <h4>No Document Was Submitted for this Application yet</h4>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <hr />
+                    @if (ViewBag.AppFileNotSubmittedYet != null && ViewBag.AppFileNotSubmittedYet.Count > 0)
+                    {
+                        <h4 class="error">List of required Application Documents not Submited</h4>
+                        <div style="max-height: 200px; overflow-y: scroll">
+                            <ul class="list-group" style="margin: 0 10px;">
+                                @foreach (var item in (List<MissingDocument>)ViewBag.AppFileNotSubmittedYet)
+                                {
+                                    <li class="list-group-item">@item.TypeName</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <h4>All application required document(s) have been uploaded.</h4>
+                    }
+                </div>
+                <div class="half">
+                    <h3>Request New Document</h3>
+                    <div class="form-group">
+                        <div class="">
+                            <input type="hidden" id="checker" name="chckr" value="" />
+                            <input hidden value="@Model.appID" name="application_id" />
+                            <table style="width: 100%; min-height: 150px; background-color:white">
+                                @*<select multiple name="newRequest" id="newRequest" ></select>*@
+
+                                <tr><th></th><th>Name</th></tr>
+                                @if (otherDocs != null && otherDocs.Count > 0)
+                                {
+                                    @foreach (var otherDoc in otherDocs)
+                                    {
+                                        <tr>
+                                            <td style="padding-left: 18px;">
+                                                <input type="checkbox" name="RequiredDocs" value="@otherDoc.LocalDocID" />
+
+                                            </td>
+                                            <td class="text-left">@otherDoc.DocName</td>
+                                        </tr>
+                                    }
+                                }
+
+                            </table>
+
+                        </div>
+                    </div>
+                    <hr />
+                    <h3>Reason for Rejection/Comment:</h3>
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.appHistory.id)
+                    @Html.HiddenFor(model => model.appID)
+
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <div class="">
+                            <textarea class="" id="RejComment" name="comment" style="width:100%" rows="5" cols="68" placeholder="Some comment here..." required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5"></div>
+                <input type="button" id="btnReject" value="Reject" class="btn btn-danger" />
+            </div>
+            <p></p>
+
+            <p></p>
+            <div id="RejectModalInfo"> </div>
+
+        </div>
+            }
+        </div>
+    </div>
+</div>
+
+@*Schedule Meeting Modal*@
+<div class="modal" id="AppScheduleMeetingModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="AppScheduleMeetingLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title"><b> Schedule an Inspection with @Model.CompanyName</b>  </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger"><i class="fa fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form action="/Process/ScheduleMeeting" method="post" id="schFrm">
+                    <div class="modal-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <input type="hidden" name="ApplicationId" id="txtSchAppID" value="@Model.appID" />
+                        <input type="hidden" name="appProcId" id="txtSchDeskID" value="@ViewBag.DeskID" />
+
+                        <div class="form-group row">
+                            <label class="control-label col-md-3"><b>Meeting Date</b></label>
+                            <div class="col-md-9 input-group">
+                                <span class="input-group-addon glyphicon glyphicon-calendar" style=""></span>
+                                <input type="text" name="MeetingDate" class="form-control" id="txtSchduleDate" value="" autocomplete="off" />
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="control-label col-md-3"><b>Venue</b></label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => mgrSch.VenueId, (SelectList)ViewBag.venue, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => mgrSch.VenueId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="control-label col-md-3"><b>Message</b></label>
+                            <div class="col-md-9">
+                                <textarea style="width:100%" cols="68" id="schMsg" name="Message" rows="4"></textarea>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="row">
+                        <div class="col-md-4">                        </div>
+
+                        @*<a href="@Url.Action("PreviewSchedule", "Process" )" class="btn btn-primary preview">Preview</a>*@
+                        <input type="button" value="Create Schedule" id="btnScheduleMeeting" class="btn btn-success" />
+                    </div>
+                </form>
+
+            </div>
+
+            <div id="ScheduleMeetingModalInfo"> </div>
+
+        </div>
+    </div>
+</div>
+@*Edit Schedule Meeting Modal*@
+<div class="modal" id="AppEditScheduleMeetingModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="AppEditScheduleMeetingLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title"><b> Re-Schedule Inspection with @Model.CompanyName</b>  </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger">Close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form action="/Process/EditScheduleMeeting" method="post" id="EditSchFrm">
+                    <div class="modal-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <input type="hidden" name="ScheduleId" id="txtEditScheduleID" value="" />
+                        <input type="hidden" name="ApplicationId" id="txtSchAppID" value="@Model.appID" />
+                        <input type="hidden" name="appProcId" id="txtSchDeskID" value="@ViewBag.DeskID" />
+
+                        <div class="form-group row">
+                            <label class="control-label col-md-3"><b>Previous Meeting Date: </b></label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon glyphicon glyphicon-calendar" style=""></span>
+                                    <input type="text" name="M" readonly class="form-control" id="txtPrevDate" value="" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3"><b>Meeting Date: </b></label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon glyphicon glyphicon-calendar" style=""></span>
+                                    <input type="text" name="MeetingDate" class="form-control" id="txtEditSchduleDate" value="" autocomplete="off" />
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="control-label col-md-3"> <b>Venue: </b></label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => mgrSch.VenueId, (SelectList)ViewBag.venue, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => mgrSch.VenueId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="control-label col-md-3"><b></b>Comment:</label>
+                            <div class="col-md-9">
+                                <textarea style="width:100%" cols="68" id="EditSchMsg" name="Message" rows="4"></textarea>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="modal-footer">
+                        <div class="txtcenter">
+                            <input type="button" value="Re-Schedule" id="btnEditScheduleMeeting" class="btn btn-success" />
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <div id="EditScheduleMeetingModalInfo"> </div>
+
+        </div>
+    </div>
+</div>
+
+@*Inspector modal*@
+<div class="modal" id="InspectorModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="InspectorLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title col-sm-8"><b> Assign to Inspector</b>  </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger">Close</span>
+                </button>
+            </div>
+
+            @if (myInspectors != null && myInspectors.Count() > 0)
+            {
+                int count = 0;
+
+                <div class="modal-body">
+                    <div>
+                        <p>
+                            Please select an inspector to assign application
+                        </p>
+                        <table id="inspTable" class="table table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="padding-left: 10px;">
+                                        @*<input type="checkbox" name="inspectors" id="inspectorsAll" />*@
+                                    </th>
+                                    <th>Staff Name</th>
+                                    <th>Email</th>
+                                    <th>Branch</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in myInspectors)
+                                {
+                                    count++;
+                                    <tr>
+                                        <td style="padding-left: 10px;">
+                                            <input type="checkbox" name="inspector" class="insp" value="@item.StaffId" />
+                                        </td>
+                                        <td class="text-left">@item.StaffFullName</td>
+                                        <td class="text-left">@item.StaffEmail</td>
+                                        @if (item.FieldOffice != null)
+                                        {
+                                            <td class="text-left">@item.FieldOffice </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-left">Staff branch wasn't found'</td>
+                                        }
+                                        <td class="text-left">Active</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <div class="modal-footer">
+                    <input type="button" id="btnAssignInsp" value="Assign Application" class="offset-4 btn btn-success" />
+                </div>
+            }
+            else
+            {
+                <div class="modal-body">
+                    <div>
+                        <p>
+                            No inspector found. Please contact the portal admin for addition of staff on the portal.
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-Default" data-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+            }
+            <div class="clear"></div>
+            <div id="InspectorModalInfo"> </div>
+
+        </div>
+    </div>
+</div>@*Supervisor modal*@
+<div class="modal" id="SupervisorModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="SupervisorLoadder">
+            <div class="modal-header">
+                <h3 class="modal-title col-sm-8"><b> Assign to Supervisor(s)</b>  </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger">Close</span>
+                </button>
+            </div>
+
+            @if (mySupervisors != null && mySupervisors.Count() > 0)
+            {
+                int count = 0;
+
+                <div class="modal-body">
+                    <div>
+                        <p>
+                            Please select one or more Supervisors to Assign to working on the Application
+                        </p>
+                        <table id="inspTable" class="table table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="padding-left: 10px;">
+                                        <input type="checkbox" name="SupervisorsAll" id="SupervisorsAll" />
+                                    </th>
+                                    <th>Staff Name</th>
+                                    <th>Email</th>
+                                    <th>Branch</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in mySupervisors)
+                                {
+                                    count++;
+                                    <tr>
+                                        <td style="padding-left: 10px;">
+                                            <input type="checkbox" name="Supervisors" class="insp" value="@item.StaffId" />
+                                        </td>
+                                        <td class="text-left">@item.StaffFullName</td>
+                                        <td class="text-left">@item.StaffEmail</td>
+                                        @if (item.FieldOffice != null)
+                                        {
+                                            <td class="text-left">@item.FieldOffice </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-left">Staff branch wasn't found'</td>
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <input type="button" id="btnAssign" value="Confirm Push Application" class="btn btn-success" />
+                </div>
+            }
+            else
+            {
+                <div class="modal-body">
+                    <div>
+                        <p>
+                            No Supervisor found. Please contact the portal admin for addition of staff on the portal.
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-Default" data-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+            }
+            <div class="clear"></div>
+            <div id="SupervisorModalInfo"> </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="myModalBody">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+
+                    </button>
+                    <h3 id="myModalLabel">Modal Title</h3>
+                </div>
+                <div class="modal-body" id="modalBody">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/OldDepotStyle/Scripts/js/moment/moment.min.js"></script>
+
+    <script src="~/OldDepotStyle/Scripts/Checker.js"></script>
+
+    <script type="text/javascript">
+
+
+
+        function GetSchedule(ScheduleID, ScheduleDate) {
+
+            $("#txtEditScheduleID").val(ScheduleID);
+            $("#txtPrevDate").val(ScheduleDate);
+
+
+        }
+
+        function DeleteSchedule(ScheduleID) {
+
+            $.confirm({
+                text: "Are you sure you want to cancel this schedule ?",
+                confirm: function () {
+                    //$("#AppApproveLoadder").addClass('Submitloader');
+
+                    $.getJSON("/Schedule/DeleteSchedule", { "ScheduleID": ScheduleID }, function (response) {
+
+                        if (response === "Schedule Deleted") {
+                            alert("Schedule removed successfully.");
+                            location.reload();
+                        }
+                        else {
+                            ErrorMessage("#AppViewInfo", response);
+                        }
+                    });
+
+
+                },
+                cancel: function () {
+                    //$("#AppApproveLoadder").removeClass("Submitloader");
+
+                },
+                confirmButton: "Yes",
+                cancelButton: "No"
+            })
+
+        }
+
+
+
+
+        $(document).ready(function () {
+
+            var phaseName=$("#phaseName").val();
+            debugger;
+
+            if(phaseName === "Take Over"){
+               $(".TakeOverPayment").show();
+               $(".otherPayment").hide();
+               $("#EX_type").val("Take Over");
+            }
+            else{
+
+                  $(".TakeOverPayment").hide();
+                  $("#EX_type").val("Other");
+                  $(".otherPayment").show();
+
+            }
+
+
+            $("#EX_type").change(function (){
+
+               var selection= $("#EX_type option:selected").val();
+                 debugger;
+
+               if(selection === "Take Over"){
+                   $(".TakeOverPayment").show();
+                   $(".otherPayment").hide();
+               }
+               else{
+                   $(".TakeOverPayment").hide();
+                   $(".otherPayment").show();
+               }
+            })
+
+
+
+            //section for button actions confirmation
+            $("#btnMRejecty").on("click", function (e) {
+                e.preventDefault();
+
+                var frm = $("#mRejFrm");
+                var modalTop = $(this).attr("#adminPopup");
+                console.log(frm);
+                $.confirm({
+                    text: "Are you sure you want to reject this application ?",
+                    confirm: function () {
+                        $("#AppRejectionLoadder").addClass('Submitloader');
+                        $(frm).submit();
+
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+            });
+
+
+  //section for button actions confirmation
+    $("#btnExtraPayment").on("click", function (e) {
+                e.preventDefault();
+              
+
+                var txtComment = $(".extraComment").val();
+                var txtComment_TO = $(".extraComment_TO").val();
+                var txtAmount = $(".extraAmount").val();
+                var txtAmount_TO = $(".extraAmount_TO").val();
+                var txtTransferCost= $("#transferCost").val();
+                var frm = $("#extraPayment");
+                var EX_Type= $("#EX_type option:selected").val(); 
+
+                debugger;
+              
+                
+                if ( (txtTransferCost === "" || txtTransferCost==="0") && EX_Type === "Take Over") {
+                    ErrorMessage("#extraPaymentModalInfo", "Please enter a transfer cost amount.");
+                    $("#transferCost").focus();
+                }
+                else if ((txtAmount === "" || txtAmount === "0") && EX_Type !== "Take Over") {
+                    ErrorMessage("#extraPaymentModalInfo", "Please enter a valid amount.");
+                    $(".extraAmount").focus();
+                }
+                else if ((txtAmount_TO === "" || txtAmount_TO === "0") && EX_Type === "Take Over") {
+                    ErrorMessage("#extraPaymentModalInfo", "Please enter a valid amount.");
+                    $(".extraAmount").focus();
+                }
+                else if (txtComment === "" && EX_Type !== "Take Over") {
+                    ErrorMessage("#extraPaymentModalInfo", "Please enter a comment.");
+                    $(".extraComment").focus();
+                }  
+                else if (txtComment_TO === "" && EX_Type === "Take Over") {
+                    ErrorMessage("#extraPaymentModalInfo", "Please enter a comment.");
+                    $(".extraComment_TO").focus();
+                }
+                else {
+                               if (EX_Type !== "Take Over") {
+                                $(".extraAmount_TO").val(txtAmount);
+                               }
+                               else{
+                               var frm = $("#extraPayment_TO");
+                               }
+                    var confirmTxt = "Are you sure you want to generate extra payment for this application ?";
+
+                    console.log(frm);
+
+                    $.confirm({
+                        text: confirmTxt,
+                        confirm: function () {
+                            $("#AppExtraPaymentLoader").addClass('Submitloader');
+                                    $(frm).submit();
+                        },
+                        cancel: function () {
+                            $("#AppExtraPaymentLoader").removeClass("Submitloader");
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });     
+            $("#btnApprove").on("click", function (e) {
+                e.preventDefault();
+
+
+                var txtComment = $("#comment").val();
+                var txtDeskID = $("#txtDeskID").val();
+                var selectedApps = $("#selectedApps").val();
+                var location = window.location.origin + "/Process/MyDesk";
+
+                if (txtComment === "") {
+                    ErrorMessage("#ApproveModalInfo", "Please enter a comment.");
+                    $("#comment").focus();
+                }
+                else {
+                    var confirmTxt = "Are you sure you want to pass this application for approval ?";
+                    if ('@userRole' === '@GeneralClass.AUTHORITY') {
+
+                        confirmTxt = "Your approval will generate License/Approval for this application. Click 'yes' to proceed.";
+
+                    }
+
+                    var frm = $("#apprvFrm");
+                    console.log(frm);
+
+                    $.confirm({
+                        text: confirmTxt,
+                        confirm: function () {
+                            $("#AppApproveLoadder").addClass('Submitloader');
+
+                            //$(frm).submit();
+                            $.post("/Process/Approve", { "comment": txtComment, "DeskID": txtDeskID, "selectedApps": selectedApps }, function (response) {
+
+                                if ($.trim(response) === "Approve 1") {
+                                    SuccessMessage("#ApproveModalInfo", "Application approved and moved to the next processing officer.");
+
+                                    alert("Application approved and moved to the next processing officer.");
+
+                                    window.location.href = location;
+
+                                    $("#AppApproveLoadder").removeClass("Submitloader");
+                                }
+                                else if ($.trim(response) === "Approved") {
+                                    SuccessMessage("#ApproveModalInfo", "FINAL APPLICATION FORM APPROVED BY DIRECTOR.");
+                                    alert("FINAL APPLICATION FORM APPROVED BY DIRECTOR.");
+
+                                    window.location.href = location;
+
+                                    $("#AppApproveLoadder").removeClass("Submitloader");
+                                }
+                                else {
+                                    ErrorMessage("#ApproveModalInfo", response);
+                                    $("#AppApproveLoadder").removeClass("Submitloader");
+                                }
+                            });
+
+
+                        },
+                        cancel: function () {
+                            $("#AppApproveLoadder").removeClass("Submitloader");
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+
+            $(document).on("click", "#btnReject", function (e) {
+
+                e.preventDefault();
+                var txtComment = $("#RejComment").val();
+                $("#checker").val("yes");
+
+                if (txtComment === "") {
+                    ErrorMessage("#RejectModalInfo", "Please enter a rejection comment.");
+                    $("#RejComment").focus();
+                }
+                else {
+
+                    var frm = $("#RejFrm");
+                    console.log(frm);
+                    $.confirm({
+                        text: "Are you sure you want to reject this application ?",
+                        confirm: function () {
+                            $("#RejFrm").addClass('Submitloader');
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+
+            $("#btnScheduleMeeting").on("click", function (e) {
+                e.preventDefault();
+
+
+                var txtComment = $("#schMsg").val();
+                var date = $("#txtSchduleDate").val();
+
+                var frm = $("#schFrm");
+                console.log(frm);
+                if (txtComment === "") {
+                    ErrorMessage("#ScheduleMeetingModalInfo", "Please enter a comment.");
+                    $("#schMsg").focus();
+                }
+                else {
+                    var confirmTxt = "Are you sure you want to schedule meeting for this application ?";
+                    $.confirm({
+                        text: confirmTxt,
+                        confirm: function () {
+                            $("#AppScheduleMeetingLoadder").addClass('Submitloader');
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+                            $("#AppScheduleMeetingLoadder").removeClass("Submitloader");
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+            $("#btnEditScheduleMeeting").on("click", function (e) {
+                e.preventDefault();
+
+
+                var txtComment = $("#EditSchMsg").val();
+                var txtDate = $("#txtEditSchduleDate").val();
+
+                var frm = $("#EditSchFrm");
+                console.log(frm);
+                if (txtComment === "") {
+                    ErrorMessage("#EditScheduleMeetingModalInfo", "Please, enter a comment.");
+                    $("#EditSchMsg").focus();
+                }
+               else if (txtDate === "") {
+                    ErrorMessage("#EditScheduleMeetingModalInfo", "Please, select new date.");
+                    $("#txtEditSchduleDate").focus();
+                }
+                else {
+                    var confirmTxt = "Are you sure you want to re-schedule meeting for this application ?";
+                    $.confirm({
+                        text: confirmTxt,
+                        confirm: function () {
+                            $("#AppEditScheduleMeetingLoadder").addClass('Submitloader');
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+                            $("#AppEditScheduleMeetingLoadder").removeClass("Submitloader");
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+
+            $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+
+
+            $(".zPix").click(function (e) {
+                $("#myModalBody").html(Loading());
+                e.preventDefault();
+                //var url = $(this).data("url");file
+                var src = $(this).attr("data-url");
+                var fsrc = $(this).attr("data-file");
+                var elpsB = $('#elpsBase').val();
+                var name = $(this).text();
+                var md = $("#imgModal").html();
+                $("#myModalBody").html(md);
+                $("#modalBody").html("<img src=\"" + fsrc + "\" alt=\"\" />");
+                $("#myModalLabel").text(name);
+            });
+
+
+            $(".AddReport").click(function (e) {
+                e.preventDefault();
+                var title = $(this).data("name");
+
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-title').text('Add a Report to ' + title + ' application');
+                    modal.find('#modal-body').html(Loading());
+                    var page = $("#addReport").html();
+                    $("#modal-body").html(page);
+                });
+                $("#modalPopup").modal('show');
+            });
+
+
+            //$(".report").click(function (e) {
+            //    e.preventDefault();
+            //    var title = $(this).data("name");
+            //    var msgId = $(this).data("itemid");
+            //    var msg = $("#reportmsg" + msgId).html();
+            //    var msgFN = $("#reportFN" + msgId).html();
+
+            //    $("#modalPopup").on('show.bs.modal', function () {
+            //        var modal = $(this);
+            //        modal.find('.modal-title').text('Report to ' + title + ' application');
+            //        modal.find('#modal-body').html("");
+            //        modal.find('#modal-body').html(Loading());
+            //        //var page = $("#addReport").html();
+            //        $("#modal-body").html('<div class="modal-body">' + msg + '</div>' + '<div class="modal-footer">' + msgFN + '</div>');
+            //    });
+            //    $("#modalPopup").modal('show');
+            //});
+
+
+            $(".push").on("click", function (e) {
+                e.preventDefault();
+
+                var id = $(this).attr('data-appId');
+                $('#SelectedAppds').val(id);
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-title').text('');
+                    modal.find('#modal-body').html("");
+                    modal.find('.modal-content').html(Loading());
+
+                    $.get('/Process/GetSupervisors', function (data) {
+                        $(".modal-content").html(data);
+                    });
+                });
+                $("#modalPopup").modal('show');
+
+
+            });
+            $(".pushInsp").on("click", function (e) {
+                e.preventDefault();
+
+                var id = $(this).attr('data-appId');
+                $('#SelectedAppds').val(id);
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-title').text('');
+                    modal.find('#modal-body').html("");
+                    modal.find('.modal-content').html(Loading());
+
+                    $.get('/Process/GetInspectors', function (data) {
+                        $(".modal-content").html(data);
+                    });
+                });
+                $("#modalPopup").modal('show');
+
+
+            });
+
+            $(document).on("click", "#btnAssign", function () {
+                if (CheckSupvCount()) {
+                    var sup = '';
+                    sup = $('.supv:checked').val();
+
+                    $('#supervisor').val(sup);
+                    $('#processor').val(sup);
+                    $("#frmPush").submit();
+                }
+                else {
+                    alert("Please select one or more Supervisor to work on the application(s).");
+                }
+            });
+            $(document).on("click", "#btnAssignInsp", function () {
+                if (CheckInspCount()) {
+                    var insp = '';
+                    insp = $('.insp:checked').val();
+                    var confirmTxt = "Are you sure you want to assign applictaion to selected inspector(s)";
+
+
+                    $('#inspectors').val(insp);
+                    $('#processorInsp').val(insp);
+                    $.confirm({
+                        text: confirmTxt,
+                        confirm: function () {
+                            $("#InspectorLoadder").addClass('Submitloader');
+
+                            $("#frmPushInsp").submit();
+
+                        },
+                        cancel: function () {
+                            $("#InspectorLoadder").removeClass("Submitloader");
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+
+                }
+                else {
+                    alert("Please select one or more inspector(s) to work on the application(s).");
+                }
+            });
+
+            $(".sign").click(function () {
+                var name = $(this).data("name");
+                if (confirm("Are you sure you want to Sign off on this Application to further the Application Process?")) {
+                    $("#frmSignOff").submit();
+                }
+            });
+
+        });
+
+        function CheckSupvCount() {
+            var count = 0;
+            if ($('.supv:checked').length > 0) {
+                return true;
+            }
+            return false;
+        }function CheckInspCount() {
+            var count = 0;
+            if ($('.insp:checked').length > 0) {
+                return true;
+            }
+            return false;
+        }
+    </script>
+
+
+    <script id="imgModal" type="text/x-handlebars-template">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <h3 id="myModalLabel"></h3>
+        </div>
+        <div class="modal-body" id="modalBody">
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+        </div>
+    </script>
+
+
+
+    <script id="addReport" type="text/x-handlebars-template">
+        <form method="post" action="/Process/AddReport">
+            <input type="hidden" name="appId" id="" value="@Model.appID" />
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to Pass this Application for Approval by your Supervisor?
+                </p>
+
+                <dl class="dl-horizontal lt">
+                    <dt>Application Reference:</dt>
+                    <dd>@Model.Reference</dd>
+
+                    <dt>Category</dt>
+                    <dd>@Model.CategoryName</dd>
+
+                    <dt>Phase</dt>
+                    <dd>@Model.PhaseName</dd>
+
+                    <dt>Facility Name</dt>
+                    <dd>@Model.FacilityName</dd>
+
+                    <dt>Report</dt>
+                    <dd>
+                        <textarea style="width:100%" cols="68" id="report" name="report" rows="4"></textarea>
+                    </dd>
+                </dl>
+            </div>
+            <div class="clear"></div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" value="Save Report" class="btn btn-success" />
+            </div>
+        </form>
+    </script>
+
+    <script id="x_modal" type="text/x-handlebars-template">
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+        </div>
+    </script>
+}

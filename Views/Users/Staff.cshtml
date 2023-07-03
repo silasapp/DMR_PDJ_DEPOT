@@ -1,0 +1,282 @@
+﻿
+@{
+    ViewData["Title"] = "Staff Management";
+    ViewData["BodyClass"] = "fix-header fix-sidebar";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+}
+
+<div class="row">
+
+    <div class="col-sm-12">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h4 class="card-title"> Staff List </h4>
+                <h6 class="card-subtitle"> List of all created staff <span class="pull-right"> <button class="btn btn-primary waves-effect waves-light" id="btnCreateStaff"> Create Staff </button> </span> </h6>
+
+                <div class="text-right">
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table id="TableStaff" class="table table-responsive table-bordered table-hover" style="font-size:small">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Staff ID
+                                </th>
+                                <th>
+                                    First Name
+                                </th>
+                                <th>
+                                    Last Name
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Office
+                                </th>
+                                <th>
+                                    Role
+                                </th>
+                                <th>
+                                    Desk Count
+                                </th>
+                                <th>
+                                    Location
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    CreatedAt
+                                </th>
+                                @*<th>
+                                        CreatedBy
+                                    </th>
+                                    <th>
+                                        UpdatedAt
+                                    </th>*@
+
+                                <th>
+                                    Action
+                                </th>
+                                <th>
+                                    Signature
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+
+        <div class="card">
+
+            <div class="card-subtitle">
+                <i class="user icon"></i>
+                <span class="content">
+                    Create new staff on PDJ Depot
+                </span>
+            </div>
+
+            <form action="#" id="FormCreateStaff">
+
+                <div class="form-group" id="StaffLoader1">
+                    <label class="text-info"> Staff on ELPS </label>
+                    <input type="text" name="txtElpsStaff" list="staffList" id="txtElpsStaff" class="form-control" required placeholder="Search Staff Name Here" />
+
+                    <datalist id="staffList">
+
+                        @if ((ViewBag.StaffList as List<LpgLicense.Models.Staff>).Count() > 0)
+                        {
+                            foreach (var p in (ViewBag.StaffList as List<LpgLicense.Models.Staff>))
+                            {
+                                <option value="@p.email">@p.firstName @p.lastName (@p.email)</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="Empty User">Empty user </option>
+                        }
+
+                    </datalist>
+                    <br />
+                </div>
+
+                <span class="content text-primary"> Staff Details </span>
+                <hr />
+
+                <div class="form-group" id="StaffLoader2">
+
+                    <div class="row">
+
+                        <div class="col-sm-3">
+                            <input name="txtElpsID" id="txtElpsID" class="form-control" readonly placeholder="Elps ID" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-9">
+
+                            <input name="txtElpsHashID" id="txtElpsHashID" class="form-control" readonly placeholder="Hash ID" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-8">
+
+                            <input name="txtElpsEmail" id="txtElpsEmail" type="email" readonly class="form-control" placeholder="Staff email" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-4">
+
+                            <select name="txtLocation" id="txtLocation" class="form-control" required></select>
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="text-secondary"><small> First Name </small></label>
+                            <input name="txtFirstName" id="txtFirstName" class="form-control" placeholder="First Name" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="text-secondary"><small> Last Name </small></label>
+                            <input name="txtLastName" id="txtLastName" class="form-control" placeholder="Last Name" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <select name="txtRole" id="txtRole" class="form-control" required></select>
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <select name="txtFieldOffice" id="txtFieldOffice" class="form-control" required></select>
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="text-secondary"><small> Add Signature </small></label>
+                            <input type="file" id="txtSignature" name="txtSignature" class="form-control btn btn-default" accept="image/*" />
+                            <p></p>
+                            <b><span id="errorImage1"> </span></b>
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <img src="~/images/Signature/TestSignature.jpg" alt="Error image" style="height:150px;" id="Signaturethumbnil" class="text-center img-responsive img-thumbnail">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create Staff" class="btn btn-primary waves-effect waves-light" />
+                    <input type="reset" class="btn btn-secondary waves-effect waves-light" />
+                </div>
+
+                <div id="CreateStaffInfo"> </div>
+            </form>
+        </div>
+        <br />
+    </div>
+
+
+    <div class="col-sm-6">
+        <div class="card" id="EditForm">
+
+            <div class="card-subtitle">
+                <i class="user icon"></i>
+                <span class="content">
+                    Edit staff on PDJ Depot
+                </span>
+            </div>
+
+            <form action="#" id="FormEditStaff">
+
+                <div id="StaffLoader3">
+                    <div class="row">
+
+                        <input type="hidden" id="txtEditStaffID" />
+
+                        <div class="col-sm-8">
+
+                            <input name="txtEditElpsEmail" id="txtEditElpsEmail" type="email" readonly class="form-control" placeholder="Staff email" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-4">
+                            <select name="txtEditLocation" id="txtEditLocation" class="form-control" required></select>
+                            <br />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-secondary"><small> First Name </small></label>
+                            <input name="txtEditFirstName" id="txtEditFirstName" class="form-control" placeholder="First Name" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="text-secondary"><small> Last Name </small></label>
+                            <input name="txtEditLastName" id="txtEditLastName" class="form-control" placeholder="Last Name" required />
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <select name="txtRole" id="txtEditRole" class="form-control" required></select>
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <select name="txtFieldOffice" id="txtEditFieldOffice" class="form-control" required></select>
+                            <br />
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="text-secondary"><small> Add Signature </small></label>
+                            <input type="file" id="txtEditSignature" name="txtEditSignature" class="form-control btn btn-default" accept="image/*" />
+                            <p></p>
+                            <b><span id="errorImage"> </span></b>
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <img src="~/images/Signature/TestSignature.jpg" alt="Error image" style="height:150px;" id="EditSignaturethumbnil" class="text-center img-responsive img-thumbnail">
+                        </div>
+
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <input type="submit" value="Edit Staff" class="btn btn-primary waves-effect waves-light" />
+                        <input type="reset" class="btn btn-secondary waves-effect waves-light" />
+                    </div>
+
+                    <div id="EditStaffInfo"> </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts{
+
+    <script src="~/js/NewDepot Scripts/Users/Staff.js"></script>
+   
+}

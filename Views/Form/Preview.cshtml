@@ -1,0 +1,203 @@
+﻿@model IEnumerable<NewDepot.Models.Fields>
+@{
+    ViewBag.Title = "Application Inspection Form";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+
+<script src="~/scripts/jquery.validate.js"></script>
+<div class="content">
+    @using (Html.BeginForm("Index", "Form", FormMethod.Post, new { @Id = "DynamicForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        if (Model.Count() > 0)
+        {
+            <h3>@Model.FirstOrDefault().DisplayLabel</h3>
+        }
+        <hr />
+        <div class="row xrow og_form">
+            <div class="col-md-10">
+                <div class="well">
+                    @foreach (var item in Model)
+                    {
+
+                        <div class="form-group">
+                            <div class="row xrow">
+                                @if (item.DataType == "hidden")
+                                {
+                                    <input type="hidden" name="@item.Label" id="@item.Label" value="@item.OptionValue" />
+                                }
+                                @if (item.Label != "ApplicationId" && item.Label != "CompanyId")
+                                {
+                                    if (item.DataType.ToLower() == "header")
+                                    {
+                                        <div class="col-md-12"><h4>@item.Label</h4></div>
+                                    }
+                                    else if(item.DataType.ToLower() != "description")
+                                    {
+                                        if (!string.IsNullOrEmpty(item.DisplayLabel))
+                                        {
+                                            <label class="control-label col-md-4">@item.DisplayLabel</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="control-label col-md-4">@item.Label</label>
+                                        }
+                                    }
+                                }
+
+                                <div class="col-md-8">
+                                    @if (item.DataType == "One line Text")
+                                    {
+                                        if (item.IsRequired == true)
+                                        {
+                                            <input type="text" id="@item.Label" class="form-control" name="@item.Label" required value="@item.OptionValue" placeholder="@item.Description" />
+                                        }
+                                        else
+                                        {
+                                            <input type="text" id="@item.Label" class="form-control" name="@item.Label" value="@item.OptionValue" placeholder="@item.Description" />
+                                        }
+                                    }
+                                    else if (item.DataType == "MultiLine Text")
+                                    {
+                                        if (item.IsRequired == true)
+                                        {
+                                            <textarea id="@item.Label" class="form-control" name="@item.Label" required placeholder="@item.Description">@item.OptionValue</textarea>
+                                        }
+                                        else
+                                        {
+                                            <textarea id="@item.Label" class="form-control" name="@item.Label" placeholder="@item.Description">@item.OptionValue</textarea>
+                                        }
+                                    }
+                                    else if (item.DataType == "Date")
+                                    {
+                                        if (item.IsRequired == true)
+                                        {
+                                            <input type="date" class="form-control" id="@item.Label" name="@item.Label" required value="@item.OptionValue" />
+                                        }
+                                        else
+                                        {
+                                            <input type="date" class="form-control" id="@item.Label" name="@item.Label" value="@item.OptionValue" />
+                                        }
+                                    }
+                                    else if (item.DataType == "Options")
+                                    {
+                                        if (!string.IsNullOrEmpty(item.OptionValue))
+                                        {
+                                            List<string> options = item.OptionValue.Split(',').ToList();
+                                            if (item.IsRequired)
+                                            {
+                                                <select name="@item.Label" class="form-control" required>
+                                                    <option>Select @item.Label</option>
+                                                    @*<option value="@item.OptionValue">@item.OptionValue</option>*@
+                                                    @foreach (var option in options)
+                                                    {
+                                                        <option value="@option">@option</option>
+                                                    }
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select name="@item.Label" class="form-control">
+                                                    <option>Select @item.Label</option>
+                                                    @*<option value="@item.OptionValue">@item.OptionValue</option>*@
+                                                    @foreach (var option in options)
+                                                    {
+                                                        <option value="@option">@option</option>
+                                                    }
+                                                </select>
+                                            }
+                                        }
+                                    }
+                                    else if (item.DataType == "CheckBox")
+                                    {
+                                        if (!string.IsNullOrEmpty(item.OptionValue))
+                                        {
+                                            List<string> options = item.OptionValue.Split(',').ToList();
+
+                                            foreach (var option in options)
+                                            {
+                                                <input type="checkbox" name="@item.Label" value="@option" /> @option <br>
+                                            }
+
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    @*<br />
+
+                        <label>Would you recommend for Approval</label>
+                        <label>Reason for recommendation</label> <textarea name="Reason"></textarea>*@
+
+                    <hr />
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">Inspector's Recommendation</label>
+                            <div class="col-md-8">
+                                @if (ViewBag.Recommend != null)
+                                {
+                                    if ((bool)ViewBag.Recommend == true)
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" value="yes" required checked /> Recommend
+                                            &nbsp; &nbsp;
+                                            <input type="radio" name="recommend" value="no" required /> Not Recommended
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" value="yes" required /> Recommend
+                                            &nbsp; &nbsp;
+                                            <input type="radio" name="recommend" value="no" required checked /> Not Recommended
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>
+                                        <input type="radio" name="recommend" value="yes" required /> Recommend
+                                        &nbsp; &nbsp;
+                                        <input type="radio" name="recommend" value="no" required /> Not Recommended
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">Inspector's reason for recommendation</label>
+                            <div class="col-md-8">
+                                <textarea name="reason" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group marg25">
+                        <div class="txtcenter">
+                            @*<button type="reset" class="btn btn-default">Cancel</button>*@
+                            <input type="submit" value="Submit" class="btn btn-success" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $("#DynamicForm").validate();
+    </script>
+}
+

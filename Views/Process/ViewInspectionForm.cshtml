@@ -1,0 +1,718 @@
+﻿@using NewDepot.Helpers
+
+@using NewDepot.Controllers.Authentications;
+
+@using Microsoft.AspNetCore.Http;
+
+
+
+@model IEnumerable<InspectionDataModel>
+
+
+
+@{ ViewData["Title"] = "View " + ViewBag.FormTitle + " for " + ViewData["AppRefNo"];
+
+                Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+                List<FieldValues> formData = (List<FieldValues>)ViewBag.FormData;
+
+                var staffComment = ViewBag.Reasons;
+
+                int i = 0;
+
+                int tc = 0; }
+
+
+
+<h3>@ViewData["Title"]</h3>
+
+
+
+<br />
+
+
+
+<div class="card-black">
+
+
+
+    <div class="col-sm-12">
+
+
+
+        <h3 class="text-primary"> Application Information </h3>
+
+        <hr />
+
+
+
+        <div class="alert">
+
+            @if (Model != null)
+
+            {
+
+
+
+         <div class="alert alert-warning">
+
+          <div>
+
+        <h5>Ref No : <b> @Model.FirstOrDefault().Reference </b> </h5>
+
+         </div>
+
+        <br />
+    <div>
+
+        <h5>Company Details : <b> @Model.FirstOrDefault().CompanyName </b> </h5>
+
+    </div>
+
+    <br />
+
+    <div>
+
+        <h5>Facility Details : <small><b> @Model.FirstOrDefault().FacilityName ( @Model.FirstOrDefault().FacilityAddrss ) </b></small> </h5>
+
+    </div>
+
+    <br />
+
+
+
+    <div>
+
+        <h5>Phase : <b class="text-info" style="font-weight:bold"> @Model.FirstOrDefault().PhaseName </b> </h5>
+
+    </div>
+
+    <br />
+
+    <div>
+
+        <h5>Type : <b class="text-danger" style="font-weight:bold"> @Model.FirstOrDefault().Type </b> </h5>
+
+    </div>
+
+    <br />
+
+
+
+    <div>
+
+        <h5>Status : <b> @Model.FirstOrDefault().Status </b> </h5>
+
+    </div>
+
+    <br />
+
+
+
+    <div>
+
+        <h5>Date Applied : <b> @Model.FirstOrDefault().Date_Added </b> </h5>
+
+    </div>
+
+    <br />
+
+    <div>
+
+        <h5>Date Submitted : <b> @Model.FirstOrDefault().DateSubmitted </b> </h5>
+
+    </div>
+
+
+
+    <hr />
+
+
+
+    <div>
+
+        <h5>Inspection By : <b> @ViewBag.StaffName  </b> </h5>
+
+    </div>
+
+    <br />
+
+
+
+    <div>
+
+        <h5>Role : <b> @ViewBag.StaffRole </b> </h5>
+
+    </div>
+
+    <br />
+
+
+
+    <div>
+
+        <h5>Office : <b> @ViewBag.StaffOffice</b> </h5>
+
+    </div>
+
+    <br />
+
+
+
+</div>}
+
+        </div>
+    </div>
+    <br /><br />
+
+    <div class="row">
+
+
+
+        <div class="col-sm-6">
+
+
+
+            <div class="table-responsive">
+
+
+
+                <table class="table table-bordered" style="width:100%; font-size:small">
+
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>S/N</th>
+
+                            <th class="text-primary text-left" style="width:60%">FIELDS</th>
+
+                            <th class="text-primary text-left">COMMENT</th>
+
+                        </tr>
+                        
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.FirstOrDefault().Fields)
+
+                        {
+
+                        @if ( item.Id > 0 || item.Label != "ApplicationId" && item.Label != "CompanyId" && !item.Label.Contains("Picture") && !item.Label.Contains("tude"))
+
+                        {
+
+                         <tr>
+
+                            @if (formData.Count > 0)
+
+                            {
+
+                        var values = formData.Where(x => x.FieldId == item?.Id).FirstOrDefault();
+
+                        var itemValue = (values.Value != null || values.Value == "") ? " " : values.Value;
+                             i++;
+                            <td>@i</td>
+
+                        <td><b>@item.Label</b></td>
+                        <td class="text-left">
+
+                              @if (itemValue.Contains("Images")) { 
+
+                            <img src="@Url.Content(itemValue)" width="100" height="100" /> }
+
+                                 else{ <h5>@itemValue</h5>}
+
+                          </td>}
+
+                           </tr>
+                           }
+                        }
+
+
+
+                    </tbody>
+
+
+
+                </table>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="col-sm-6">
+
+
+
+            <div class="table-responsive">
+
+                <h5 class="text-primary"> <b>Application Tanks</b> </h5>
+
+
+
+                <br />
+
+
+
+                <table class="table table-bordered table-info table-striped" style="font-size: smaller; background: #f7f1f1">
+
+                    @if (ViewBag.ApTanks != null)
+
+                    {
+
+        <thead>
+
+            <tr>
+
+                <th>SN</th>
+
+                <th>Tank Name</th>
+
+                <th>Product Name</th>
+
+                <th>Capacity (m)</th>
+
+
+
+            </tr>
+
+        </thead>
+
+                        <tbody>
+
+                            @if (Model.FirstOrDefault().AppTanks.Count > 0)
+
+                            {
+
+            @foreach (var t in Model.FirstOrDefault().AppTanks)
+
+            {
+
+                tc++;
+
+<tr>
+
+    <td>@tc</td>
+
+    <td>@t.Name</td>
+
+    <td>@t.ProductName</td>
+
+    <td>@t.MaxCapacity</td>
+
+
+
+</tr>} }
+
+
+
+                            else
+
+                            {
+
+            <tr><td colspan="6" class="text-danger center">No available tanks for this application.</td></tr>}
+
+                        </tbody> }
+
+                                    else
+
+                                    {
+
+                        <thead>
+
+                            <tr>
+
+                                <th>SN</th>
+
+                                <th>Tank Name</th>
+
+                                <th>Product Name</th>
+
+                                <th>Capacity (m)</th>
+
+                                <th>Diameter (m)</th>
+
+                                <th>Height (m)</th>
+
+                            </tr>
+
+                        </thead>
+
+                                        <tbody>
+
+                                            @if (Model.FirstOrDefault().AppTanks.Count > 0)
+
+                                            {
+
+                            @foreach (var t in Model.FirstOrDefault().AppTanks)
+
+                            {
+
+                                tc++;
+
+        <tr>
+
+            <td>@tc</td>
+
+            <td>@t.Name</td>
+
+            <td>@t.ProductName</td>
+
+            <td>@t.MaxCapacity</td>
+
+            <td>@t.Diameter</td>
+
+            <td>@t.Height</td>
+
+        </tr>} }
+
+
+
+                                            else
+
+                                            {
+
+                            <tr><td colspan="6" class="text-danger center">No available tanks for this application.</td></tr>}
+
+                                        </tbody>}
+
+
+
+
+
+                </table>
+
+            </div>
+
+
+
+            <p><br /></p>
+
+
+
+            <h5 class="text-primary"> <b>Inspection Pictures</b> </h5>
+
+
+            <div class="row">
+
+                @foreach (var item2 in Model.FirstOrDefault().Fields)
+
+                {
+
+                    @if (item2.Label.Contains("Picture"))
+
+                    {
+
+                        @if (formData.Count > 0)
+
+                        {
+
+                            var values = formData.Where(x => x.FieldId == item2.Id).FirstOrDefault();
+
+                            var item2Value = values == null ? " " : values.Value;
+
+
+
+                            <div class="col-sm-6">
+
+                                <br />
+
+                                <b class="">@item2.Label</b>
+
+
+
+                                <hr />
+
+                                @if (item2Value != " ")
+
+                                {
+
+                                    <img class="img-thumbnail img-responsive" style="height:350px;" src="@item2Value" alt="@item2.Label" /> }
+
+                                else
+
+                                {
+
+                                    <p class="text-danger">Not Attached</p>}
+
+                                <br />
+
+                            </div>}}
+                }
+
+
+
+            </div>
+
+
+
+
+
+            <p><br /><br /></p>
+
+
+
+            <h5><b class="text-primary">Geo-Location</b></h5>
+
+
+
+            <table class="table table-warning table-bordered">
+
+                <caption><a target="_blank" href="http://maps.google.com/maps?q=@Model.FirstOrDefault().Longitude,@Model.FirstOrDefault().Latitude">Click to See Location on Map</a></caption>
+
+                <tbody>
+
+                    @foreach (var item2 in Model.FirstOrDefault().Fields)
+
+                    {
+
+        @if (item2.Label.Contains("tude"))
+
+        {
+
+@if (formData.Count > 0)
+
+{
+
+    var values = formData.Where(x => x.FieldId == item2.Id).FirstOrDefault();
+
+    var itemValue = values==null ? " " : values.Value;
+
+<tr>
+
+
+
+    <td><b>@item2.Label</b></td>
+
+    <td> @itemValue</td>
+
+</tr>}}}
+
+
+
+                </tbody>
+
+            </table>
+
+
+
+            <p><br /></p>
+
+
+
+            @if (Model != null && (!string.IsNullOrEmpty(Model.FirstOrDefault().appForm.ExtraReport1) || !string.IsNullOrEmpty(Model.FirstOrDefault().appForm.ExtraReport2)))
+
+            {
+
+<h5><b class="text-primary">Attached Report(s)</b></h5>
+
+
+
+                <div>
+
+
+
+                    @if (!string.IsNullOrEmpty(Model.FirstOrDefault().appForm.ExtraReport1))
+
+                    {
+
+    <div class="form-group">
+
+        <div class="row xrow">
+
+            <label class="control-label col-md-4">Extra Report</label>
+
+            <div class="col-md-8">
+
+                <div id="extFileName-1" class="files">
+
+                    @if (ViewBag.ReportFile1 != null)
+
+                    {
+
+                        var source = ViewBag.ReportFile1.Contains("|") ? ViewBag.ReportFile1.Split("|")[0] : ViewBag.ReportFile1;
+                        var file_icon = "";
+                        var font_png_icon = "fa-file-image";
+                        var font_pdf_icon = "fa-file-pdf text-danger";
+
+                        var font_file_icon = "fa-file text-info";
+
+                        var img_link =source;
+
+                        file_icon = source.EndsWith(".png") == true ? font_png_icon :
+                               source.EndsWith(".PNG") == true ? font_png_icon :
+                               source.EndsWith(".jpg") == true ? font_png_icon :
+                               source.EndsWith(".JPG") == true ? font_png_icon :
+                               source.EndsWith(".jpeg") == true ? font_png_icon :
+                               source.EndsWith(".JPEG") == true ? font_png_icon :
+                               source.EndsWith(".pdf") == true ? font_pdf_icon :
+                               source.EndsWith(".PDF") == true ? font_pdf_icon : font_file_icon;
+
+
+
+
+
+
+                    <div style="float: left; width: 48%;">
+                        <a href="@img_link" target="_blank" style="color:black" title="Click to view document">
+                            <i class="fa @file_icon fa-5x"></i>
+                        </a>
+
+                    </div><br />
+
+                        <div class="clearfix"></div>}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>}
+
+
+
+                    @if (!string.IsNullOrEmpty(Model.FirstOrDefault().appForm.ExtraReport2))
+
+                    {
+
+    <div class="form-group">
+
+        <div class="row xrow">
+
+            <label class="control-label col-md-4">Second Extra Report</label>
+
+            <div class="col-md-8">
+
+                <div id="extFileName-1" class="files">
+
+                    @if (ViewBag.ReportFile2 != null)
+
+                    {
+
+
+                        var source = ViewBag.ReportFile2.Contains("|") ? ViewBag.ReportFile2.Split("|")[0] : ViewBag.ReportFile2;
+
+                        var file_icon = "";
+                        var font_png_icon = "fa-file-image";
+                        var font_pdf_icon = "fa-file-pdf text-danger";
+
+                        var font_file_icon = "fa-file text-info";
+
+                        var img_link = source;
+
+                        file_icon = source.EndsWith(".png") == true ? font_png_icon :
+                               source.EndsWith(".PNG") == true ? font_png_icon :
+                               source.EndsWith(".jpg") == true ? font_png_icon :
+                               source.EndsWith(".JPG") == true ? font_png_icon :
+                               source.EndsWith(".jpeg") == true ? font_png_icon :
+                               source.EndsWith(".JPEG") == true ? font_png_icon :
+                               source.EndsWith(".pdf") == true ? font_pdf_icon :
+                               source.EndsWith(".PDF") == true ? font_pdf_icon : font_file_icon;
+
+                        <div style="float: left; width: 48%;">
+                            <a href="@img_link" target="_blank" style="color:black" title="Click to view document">
+                                <i class="fa @file_icon fa-5x"></i>
+                            </a>
+
+                        </div><br />
+
+                        <div class="clearfix"></div>}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>}
+
+                </div>}
+
+
+
+
+
+            <br /><br />
+
+
+
+            <h5><b class="text-primary">Staff Comment</b></h5>
+
+
+
+            <div>
+
+                @staffComment
+
+
+
+            </div>
+
+
+
+            <br /><br />
+
+
+
+            <div>
+
+                Created At : <span>@Model.FirstOrDefault().FormCreatedAt.ToString()</span>
+
+            </div>
+
+            <br />
+
+            <div>
+
+                Updated At : <span>@Model.FirstOrDefault().UpdatedAt?.ToString()</span>
+
+            </div>
+
+
+
+            <br />
+
+
+
+            @*<h5><b>Signature</b></h5>
+
+
+
+                <br />
+
+
+
+                <div class="col-sm-3">
+
+
+
+                    <img class="img-thumbnail img-responsive" style="height:100px;" src="@Model.FirstOrDefault().Signature?" alt="Signature Image" />
+
+                    <br />
+
+                </div>*@
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+
+

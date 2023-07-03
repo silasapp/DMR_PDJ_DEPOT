@@ -1,0 +1,72 @@
+﻿
+@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.StaffDesk>
+
+
+@{
+    ViewData["Title"] = ViewData["StaffDesk"].ToString();
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    int i = 0;
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<br />
+
+
+<div class="card-black">
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover" id="StaffDeskTable" style="cursor:pointer; font-size:small">
+
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Staff Fullname</th>
+                    <th>Staff Email</th>
+                    <th> Role</th>
+                    <th>Field Office</th>
+                    <th>Zonal Office</th>
+                    <th>Apps on Desk </th>
+                    @*<th>Total Apps </th>*@
+                    <th>Active Status </th>
+                    <th>Deleted Status </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (Model.Count() > 0)
+                {
+                    for (int a = 0; a < Model.Count(); a++)
+                    {
+                        i++;
+                        <tr>
+                            <td>@i</td>
+                            <td><b class="text-info"> @Model.ToList()[a].StaffName</b></td>
+                            <td> @Model.ToList()[a].StaffEmail</td>
+                            <td> <b class="text-danger">@Model.ToList()[a].StaffRole</b></td>
+                            <td> @Model.ToList()[a].FieldOffice</td>
+                            <td><b>@Model.ToList()[a].ZonalOffice</b></td>
+                            <td> @Model.ToList()[a].AppCount</td>
+                            @*<td> @Model.ToList()[a].AllAppCount</td>*@
+                            <td> @Model.ToList()[a].ActiveStatus</td>
+                            <td> @Model.ToList()[a].DeletedStatus</td>
+                            <td> <a href="/Deskes/StaffDeskApps/@generalClass.Encrypt(Model.ToList()[a].StaffID.ToString())" class="btn btn-primary btn-sm" target="_blank"> <i class="fas fa-files-o"> </i> View all Apps </a></td>
+                        </tr>
+                    }
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+

@@ -1,0 +1,182 @@
+﻿@using NewDepot.Models
+@model NewDepot.Models.MyApps
+@{
+    var pageType = (Model.Status.ToLower() == "Payment Pending".ToLower() ? "Invoice" : "Receipt");
+    ViewBag.Title = "Application " + pageType;
+   
+}
+
+<style type="text/css">
+    .list-group-item {
+        background-color: transparent;
+    }
+</style>
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">Application Reference:  @Model.Reference</h2>
+        <div class="righty">
+         
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="receipt">
+    @if (pageType.ToLower() != "resubmitted")
+    {
+        <div class="watermark">
+            <h1>Depot @pageType</h1>
+            <h3>This is not a Permit!</h3>
+        </div>
+    }
+    
+    <div class="body">
+        @if (pageType.ToLower() == "invoice")
+        {
+            <p>
+                You have just taken your first step in submitting your application online. Your application processing shall commence upon confirmation of payment.
+                <br />The following information is required to make payment for this application.
+
+                <h4>Payment Instructions</h4>
+                <ol style="margin-left: 25px;">
+                    <li>Visit any of the commercial banks</li>
+                    <li>Provide the reference number of this application to the cashier</li>
+                    <li>Pay the exact amount stated on this application</li>
+                    <li>Once your payment has been confirmed, you will receive an email or sms informing you of the need to continue with your application process</li>
+                </ol>
+            </p>
+        }
+        else if (pageType.ToLower() == "receipt")
+        {
+            <p>
+                This is to notify you that the payment for your DRP ROMSP Permit application with reference number @Model.Reference has been received and confirmed, 
+                And also that your Application has been sucessfully submitted.
+                <br />
+                Below is the breakdown of the funds received
+            </p>
+        }
+        else
+        {
+            <p>
+                You have Resubmit your DRP Depot Permit application with reference number @Model.Reference.
+                <br />
+                Below is the breakdown of Application Information
+            </p>
+        }
+        <hr />
+        <div class="">
+            <div class="mypanel-2leaf-h">
+                <div class="left-side">
+                    <div class="padd">
+                        <dl class="dl-horizontal lt">
+                            <dt>
+                                Reference No
+                            </dt>
+                            <dd class="">
+                              @*@ViewBag.rrr*@  @Html.DisplayFor(model => model.Reference)
+                            </dd>
+
+                            <dt>
+                                Statutory Permit Fee
+                            </dt>
+                            <dd class="">
+                                @Model.Fee_Payable.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Service Charge
+                            </dt>
+                            <dd class="">
+                                @Model.Service_Charge.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Total Amount Due
+                            </dt>
+                            <dd class="">
+                                @{var ad = Model.Fee_Payable + Model.Service_Charge;}
+                                @ad.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            @*<dt>
+                                Payment Method
+                            </dt>
+                            <dd class="">
+                                @ViewBag.PaymentMethod
+                            </dd>*@
+
+                            <dt>
+                                Required Documents
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in (List<Document_Type>)ViewBag.RequiredDocs)
+                                    {
+                                        if (item.Name.ToLower() == "other document")
+                                        {
+                                            <li class="list-group-item">@item.Document_Name</li>
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item">@item.Name</li>
+                                        }
+                                    }
+                                </ul>
+                            </dd>
+
+                        </dl>
+                    </div>
+                </div>
+                <div class="right-side">
+                    <div class="padd">
+                        <dl class="dl-horizontal lt">
+                            <dt>
+                                Receipt Number
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    <li class="list-group-item">@ViewBag.ReceiptNo</li>
+                                </ul>
+                            </dd>
+                            <dt>Permit Category</dt>
+                            <dd>
+                                <ul class="list-group">
+                                    <li class="list-group-item">@Model.CategoryName</li>
+                                </ul></dd>
+                            <dt>
+                                Service(s)
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in Model.AppServices)
+                                    {
+                                        <li class="list-group-item">@item.service_id</li>
+                                    }
+                                </ul>
+                            </dd>
+
+                            <dt>
+                                Job Specification(s)
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in Model.AppJobSpecs)
+                                    {
+                                        @*<li class="list-group-item">@item.Job_SpecificationName</li>*@
+                                    }
+                                </ul>
+                            </dd>
+
+
+                        </dl>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="clear"><hr /></div>
+        <div class="txtcenter">
+            <a href="/Account/Dashboard" class="btn btn-success">Continue to DashBoard</a>
+        </div>
+    </div>
+</div>

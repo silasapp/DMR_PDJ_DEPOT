@@ -1,0 +1,122 @@
+﻿@using NewDepot.Models
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Depot Modification";
+}
+
+
+@{
+    ViewBag.Title = "Depot Modification";
+    var fac = (Facilities)ViewBag.facility;
+    var tnks = (List<Tanks>)ViewBag.tnks;
+    var prds = (List<Products>)ViewBag.products;
+    int cnt = 0;
+}
+
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">Application for Depot Modification</h2>
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+
+
+<div class="row">
+    <div class="widget-content">
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>@fac.Name Tanks Installed</h3>
+            </div>
+
+            <form action="/LTO/Modification" method="post">
+                <input type="hidden" name="facilityId" value="@fac.Id" />
+                <input type="hidden" name="phaseId" value="@ViewBag.phaseId" />
+                <input type="hidden" name="permitId" value="@ViewBag.permitId" />
+                <div class="col-md-12">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tank Name</th>
+                                <th>Max. Capacity</th>
+                                <th>Product</th>
+                                <th>Position</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tankContainer" class="special-control">
+
+                            @foreach (var item in tnks)
+                            {
+                                var prd = prds.FirstOrDefault(a => a.Id == item.ProductId);
+                                cnt++;
+                                <tr>
+                                    <td>@cnt</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.MaxCapacity</td>
+                                    @if (prd != null)
+                                    {
+                                        <td>@prd.Name</td>
+                                    }
+                                    <td>@item.Position</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-lg-offset-2">
+                        <div style="padding:5px;margin:5px;float:left;width:auto">
+                            <input type="radio" id="upgrade" name="type" value="Upgrade" />
+                            <label for="upgrade">Upgrade (Adding more Tanks)</label>
+                        </div>
+                        <div style="padding:5px;margin:5px;float:left;width:auto">
+                            <input type="radio" id="Decomissioning" name="type" value="Decomissioning" />
+                            <label for="Decomissioning">Decomissioning of Tank(s)</label>
+
+                        </div>
+                        <div style="padding:5px;margin:5px;float:left;width:auto">
+                            <input type="radio" id="Both" name="type" value="Both" />
+                            <label for="Both">Both (Upgrade & Decomissionig)</label>
+
+                        </div>
+
+                        <div style="padding:5px;margin:5px;float:left;width:auto">
+                            <input type="radio" id="General" name="type" value="General" />
+                            <label for="General">General</label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-4 col-sm-offset-4">
+                            <input type="submit" class="btn btn-primary btn-success btn-block" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div style="clear:both"></div>
+    </div>
+</div>

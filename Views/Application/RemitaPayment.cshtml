@@ -1,0 +1,202 @@
+﻿@using NewDepot.Helpers
+@model NewDepot.Models.applications
+
+@using NewDepot.Payments
+
+@{
+    ViewBag.Title = "Permit Application Payment";
+}
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <div class="lefty col-md-8">
+            <h3 class="">Your Remita Payment Reference Code is: @ViewBag.rrr</h3>
+            <h5><small style="color: #FFF;"><B>NOTE: </B> PLEASE PAY ONLY TO THS RRR NUMBER (@ViewBag.rrr), DO NOT ALLOW BANKS TO GENERATE ANOTHER RRR NUMBER FOR YOU TO AVOID YOUR PAYMENT NOT REFLECTING ON YOUR APPLICATION</small></h5>
+        </div>
+        <div class="righty col-md-4">
+            <ul>
+                <li>Step 1</li>
+                <li class="selected">Step 2</li>
+                <li>Step 3</li>
+                <li>Step 4</li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="marg25">
+    <h3 class="page-header">Application Details</h3>
+
+    <p>
+        You have just taken your first step in submitting your application online. Your application processing shall commence upon confirmation of payment.
+        <br />The following information is required to make payment for this application.
+    </p>
+    <hr />
+    <div class="">
+        <div class="mypanel-2leaf-h">
+            <div class="left-side">
+                <div class="padd">
+                    <dl class="dl-horizontal lt">
+                        @*<dt>
+                                Reference No
+                            </dt>
+                            <dd class="">
+                                @Html.DisplayFor(model => model.Reference)
+                            </dd>*@
+
+                        <dt>
+                            Statutory and Processing Fee
+                        </dt>
+                        <dd class="">
+                            @Model.fee_payable.Value.ToString("₦ #,###,##.00")
+                        </dd>
+
+                        <dt>
+                            Service Charge
+                        </dt>
+                        <dd class="">
+                            @Model.service_charge.Value.ToString("₦ #,###,##.00")
+                        </dd>
+
+                        <dt>
+                            Total Amount Due
+                        </dt>
+                        <dd class="">
+                            @{var ad = Model.fee_payable + Model.service_charge;}
+                            @ad.Value.ToString("₦ #,###,##.00")
+                        </dd>
+
+                        <dt>
+                            <span style="color: #bf0101">
+                                Required Documents
+                            </span>  
+                        </dt>
+                        <dd>
+                            <ul class="list-group">
+                                @foreach (var item in (List<Document_Type>)ViewBag.RequiredDocs)
+                                {
+                                    <li class="list-group-item">@item.Name</li>
+                                }
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            @*<div class="right-side">
+                    <div class="padd">
+                        <dl class="dl-horizontal lt">
+                            <dt>Permit Category</dt>
+                            <dd>@Model.CategoryName</dd>
+                            <dt>
+                                Service(s)
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in Model.AppServices)
+                                    {
+                                        <li class="list-group-item">@item.ServiceName</li>
+                                    }
+                                </ul>
+                            </dd>
+
+                            <dt>
+                                Job Specification(s)
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in Model.AppJobSpecs)
+                                    {
+                                        <li class="list-group-item">@item.Job_SpecificationName</li>
+                                    }
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>*@
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<hr />
+
+<div class="col-md-4">
+    <div class="well">
+        <label for="MASTERCARD">
+            <input type="radio" id="paymentTypeOnline" name="paymentTypeForm" value="Online" />
+            <input type="radio" required name="paymenttype" id="MASTERCARD" value="MASTERCARD" style="width: 15px; height: 15px;" />
+            Pay with Verve or MasterCard
+        </label>
+        <br />
+        <small>Pay online now your Verve or MasterCard cards through Remita.</small>
+        <br /><br />
+        <img src="~/Content/Images/Verve_Mastercard.gif" style="height: 38px;" />
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="well">
+        <label for="VISA">
+            <input type="radio" required name="paymenttype" id="VISA" value="VISA" style="width: 15px; height: 15px;" /> VISA CARD
+        </label>
+        <br />
+        <small>Pay online now your Visa cards through Remita.</small>
+        <br /><br />
+        <img src="~/Content/Images/visa300.jpg" style="height: 38px;" />
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="well">
+        <label for="RRRGEN">
+            <input type="radio" required name="paymenttype" id="RRRGEN" value="RRRGEN" style="width: 15px; height: 15px;" />
+            @*<input type="radio" id="paymentTypeBank" name="paymentTypeForm" value="Bank Payment" />*@ Bank, ATM Or POS
+        </label>
+        <br />
+        <small>Walk into any of the banks below to pay with your Remita Reference Code (@ViewBag.rrr).</small>
+        <small style="color: #F00;"><B>NOTE: </B> PLEASE PAY ONLY TO THS RRR NUMBER (@ViewBag.rrr), DO NOT ALLOW BANKS TO GENERATE ANOTHER RRR NUMBER FOR YOU TO AVOID YOUR PAYMENT NOT REFLECTING ON YOUR APPLICATION</small>
+        <br /><br />
+        <img src="~/Content/Images/other_remitas.gif" style="height: 37px;" />
+</div>
+</div>
+<div class="clear"></div>
+
+<div class="clear"></div>
+
+<div class="col-md-12 txtcenter">
+    <button type="button" class="btn btn-default">Cancel</button>
+    <input type="submit" name="submit_btn" class="btn btn-success" value="Confirm Payment & Continue" />
+</div>
+       
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('#paymentTypeOnline').prop('checked', 'checked');
+
+            //$('#paymentTypeBank').click(function () {
+            $('#RRRGEN').click(function () {
+
+                var pf = $('#PaymentForm');
+                pf.prop('action', '/Application/RemitaPayment')
+                //alert("Bank Payment: " + pf.attr("action"));
+            });
+            $('#paymentTypeWallet').click(function () {
+
+                var pf = $('#PaymentForm');
+                pf.prop('action', '/Application/Wallet')
+
+            });
+
+
+            $('#paymentTypeOnline, #MASTERCARD, #VISA').click(function () {
+
+                var pf = $('#PaymentForm');
+                pf.prop('action', '@RemitaSplitParams.RRRGATEWAYPAYMENTURL')
+                //alert("Online Payment: " + pf.attr("action"));
+            });
+            //http://www.remitademo.net/remita/ecomm/finalize.reg
+
+        })
+
+    </script>
+}

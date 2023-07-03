@@ -1,0 +1,119 @@
+﻿@*@model IEnumerable<NewDepot.Models.ZonalOffice>*@
+@model IEnumerable<NewDepot.Models.ZonalOffice>
+
+
+@using NewDepot.Models
+
+@{
+    ViewBag.Title = "Zone Mapping";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    int count = 0;
+    var hq = Model.Where(a => a.Code.ToLower() == "HQ".ToLower()).FirstOrDefault();
+    var touse = Model.Where(a => a.Code.ToLower() != "HQ".ToLower()).ToList();
+    int noOfRows = touse.Sum(a => a.CoveredFieldOffices.Count());
+}
+
+<div class="content">
+    <h2 class="lefty">Zone Mappings</h2>
+    <div class="righty btn-group">
+        @*@Html.ActionLink("New Zone", "AddZone", null, new { @class = "btn btn-success" })*@
+        @*<a href="#" data-url="/ZoneMapping/MapZoneToBranch" class="btn btn-primary addZ" data-target="#modalPopup"
+               data-toggle="modal" data-uid="1">Zone to Field Office</a>
+            <a href="#" data-url="/ZoneMapping/Create" class="btn btn-info addZ" data-target="#modalPopup"
+               data-toggle="modal" data-uid="2">Field Office to State</a>*@
+    </div>
+    <hr class="clear" />
+    <div class="row xrow">
+        <div class="col-md-10 col-md-offset-1">
+            <table class="table table-bordered ">
+                <thead>
+                    <tr>
+                        <th>HQ</th>
+                        <th class="success">Zonal Offices</th>
+                        <th class="danger">Field Offices</th>
+                        @*<th></th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="@noOfRows">
+                            @hq.BranchName
+                        </td>
+                        <td rowspan="@touse.ElementAt(0).CoveredFieldOffices.Count()">
+                            @touse.ElementAt(0).Name (@touse.ElementAt(0).BranchName)
+                        </td>
+                        <td rowspan="1">
+                            @touse.ElementAt(0).CoveredFieldOffices.ElementAt(0).Name
+                        </td>
+                    </tr>
+                    @for (int i = 1; i < touse.ElementAt(0).CoveredFieldOffices.Count(); i++)
+                    {
+                        <tr>
+                            <td rowspan="1">
+                                @touse.ElementAt(0).CoveredFieldOffices.ElementAt(i).Name
+                            </td>
+                        </tr>
+                    }
+                    @for (int i = 1; i < touse.Count(); i++)
+                    {
+                        <tr>
+                            <td rowspan="@touse.ElementAt(i).CoveredFieldOffices.Count()">
+                                @touse.ElementAt(i).Name (@touse.ElementAt(i).BranchName)
+                            </td>
+                            <td>
+                                @touse.ElementAt(i).CoveredFieldOffices.ElementAt(0).Name
+                            </td>
+                        </tr>
+                        if (touse.ElementAt(i).CoveredFieldOffices.Count() > 1)
+                        {
+                            for (int x = 1; x < touse.ElementAt(i).CoveredFieldOffices.Count(); x++)
+                            {
+                                <tr>
+                                    <td>
+                                        @touse.ElementAt(i).CoveredFieldOffices.ElementAt(x).Name
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Zone > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/ZoneMapping']").addClass("selected");
+
+            $(".addZ, .edit, .del").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-name");
+
+                $("#modal-body").html("");
+                if (uid == "1") {
+                    var headTitle = "Map Zone to Field Office";
+                } else if (uid == "2") {
+                    var headTitle = "Map Field Office to State";
+                } else if (uid == "3") {
+                    var headTitle = "Delete Zone '" + name;
+                }
+
+                $(".modal-title").text(headTitle);        // find title for changr
+                $("#modal-body").html("");
+                $("#modal-body").html(Loading());
+                //Load the view
+                $.get(url, function (data) {
+                    $("#modal-body").html(data);
+                });
+            });
+        });
+    </script>
+}

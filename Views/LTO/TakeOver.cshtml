@@ -1,0 +1,295 @@
+﻿@using NewDepot.Models
+@model Facilities
+
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Depot Take Over";
+    //Category cat = (Category)ViewBag.Category;
+
+    var owner = (companies)ViewBag.Company;
+    var tanks = Model.Tanks == null ? 0 : Model.Tanks.Count();
+    var pumps = Model.Pumps == null ? 0 : Model.Pumps.Count();
+
+    var legacy = ViewBag.Legacy != null ? (bool)ViewBag.Legacy : false;
+    var lg = ViewBag.lg != null ? (Legacies)ViewBag.lg : null;
+    string LicenseNo = "";
+    string isLegacy = "";
+    if (legacy)
+    {
+        isLegacy = "true";
+        LicenseNo = ((Legacies)ViewBag.Permit).LicenseNo;
+    }
+    else
+    {
+        isLegacy = "false";
+        LicenseNo = ((permits)ViewBag.Permit).permit_no;
+    }
+}
+<style>
+    input, textarea {
+        width: 100%;
+    }
+    label{
+        font-weight:bold;
+    }
+    panel-body, form-horizontal {
+        margin-top: 20px!important;
+    }
+    panel-heading{
+        margin-bottom:20px;
+    }
+</style>
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title </h3>
+        <hr />
+    </div>
+</div>
+<div class="marg50"></div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+<div class="rowy">
+            @if (ViewBag.ErrorMsg != null)
+            {
+                string alerttype = (ViewBag.Type.ToLower() == "fail" ? "alert-danger" : (ViewBag.Type.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+
+                <div class="col-md-12">
+                    <div class="alert @alerttype" role="alert">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <strong>Application Error!</strong> @ViewBag.ErrorMsg
+                    </div>
+                </div>
+                <hr style="margin: 0 0 10px 0; padding: 0;" />
+            }
+
+            @using (Html.BeginForm("TakeOver", "LTO", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "ProcessForm" }))
+            {
+                <input type="hidden" name="oCoyId" value="@owner.id" />
+                <input type="hidden" name="IsLegacy" value="@isLegacy" />
+                <input type="hidden" name="LicenseNo" value="@LicenseNo" />
+                <input type="hidden" name="FacilityId" value="@Model.Id" />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Facility Information</h3>
+                            </div>
+                            <div class="panel-body" >
+                                <p class="marg25"></p>
+                                <div class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Name of Depot
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="facName" id="facName" required class="form-control" style="width: 100%" value="@Model.Name" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Depot Address
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" value="@ViewBag.FacAddress" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Depot LGA
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" value="@ViewBag.LGA" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Depot State
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" value="@ViewBag.FacState" />
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Facility Transfer Cost
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="number" name="TransferCost" class="form-control" value="" required />
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            No of Tanks
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" value="@tanks" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            No of Loading
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" value="@pumps" />
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Last Approval/License
+                                        </label>
+                                        <div class="col-md-8">
+                                            @if (legacy)
+                                            {
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">@LicenseNo</li>
+                                                    <li class="list-group-item">@ViewBag.Phase</li>
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">@LicenseNo</li>
+                                                    <li class="list-group-item">@ViewBag.Phase</li>
+                                                </ul>
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">My Company Name <small>(acquirer)</small></h3>
+                            </div>
+                            <div class="panel-body">
+                                <p class="marg25"></p>
+                                <div class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Company Name
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" readonly class="form-control" value="@ViewBag.NewCompany" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Current Owner</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p class="marg25"></p>
+                                <div class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Company Name
+                                        </label>
+                                        @{ var co = lg == null ? owner.name : lg.CompName;
+                                            var ca = lg == null ? ViewBag.OwnerAddress : lg.CompAddress;}
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" value="@co" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-4">
+                                            Company Address
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea readonly class="form-control" style="height: 60px;">@ca</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4"></div>
+
+                    <div class="col-md-4">
+                        <button type="button" id="btnConfirmTO" class="btn btn-block btn-success">Confirm &amp; Continue</button>
+                    </div>
+                </div>
+
+            }
+
+            <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modalPop">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="clear:both"></div>
+        </div>
+  
+@section Scripts {
+   
+
+    <script type="text/javascript">
+        $(function () {
+            $(document).on("click", "#btnConfirmTO", function (e) {
+
+                e.preventDefault();
+                
+                var valid = $("#ProcessForm").valid();
+                if (valid != true) {
+                    alert("Please enter facility cost transfer amount");
+                    //console.log("ERRORS ABOUND"); // exit if any error found
+                }
+                else {
+                    $.confirm({
+                        text: "Are you sure you want to continue this application ?",
+                        confirm: function () {
+                            $("#ProcessForm").addClass('Submitloader');
+                            $("#ProcessForm").submit();
+
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+       
+         
+        });
+    </script>
+}

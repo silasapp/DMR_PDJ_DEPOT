@@ -1,0 +1,126 @@
+﻿@model NewDepot.Models.SuitabilityLetterModel
+@{
+    Layout = null;
+    var office = !string.IsNullOrEmpty(Model.Office) ? Model.Office : "";
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style type="text/css">
+        #List1 li {
+            text-align: left;
+            padding: 20px;
+        }
+
+        #divPermitPreview {
+            background: url("~/OldDepotStyle/Content/Images/waterMark_preview.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: auto;
+        }
+    </style>
+</head>
+<body style="">
+    <div class="preview">
+        <div style="padding:0px; color:black">
+
+            <div style="width:100%;" id="divPermitPreview">
+
+                <div class="text-center">
+
+                    <div style="font-family:'Times New Roman'; font-weight:bold; line-height:30px">
+
+
+                        <div style="font-size:40px; color:forestgreen; margin-top:35px"> MINISTRY OF PETROLEUM RESOURCES </div>
+
+                        <div style="font-size:25px; color:forestgreen; margin-top:25px; margin-bottom:20px;"> NIGERIAN MIDSTREAM and DOWNSTREAM PETROLEUM REGULATORY AUTHORITY </div>
+
+                        <span style="border-bottom: 2px dotted forestgreen; font-size:20px;"> No 7, Sylvester Ugoh Street, Jabi, Abuja FCT. </span>
+
+                    </div>
+
+                    <p><br /></p>
+
+                    <div style="margin:0px 30px 0px 30px; padding:10px;" class="text-left">
+
+                        <table style="width: 100%; border-spacing: 0;">
+                            <tr style="font-size:17px;">
+                                <td style="width: 33.333%;" valign="top">
+                                    <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0;">
+                                        <p style="display: inline-block; margin-bottom: -3px; padding: 3px 10px 3px 0; color: #00a900;">P.M.B. No:</p>
+                                        &nbsp;<span style="font-family: Calibri;">3390, Garki Abuja</span>
+                                    </div>
+                                    <p></p>
+                                    <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0; font-size:14px!important">
+                                        <p style="display: inline-block; margin-bottom: -3px;  padding: 3px 10px 3px 0; color: #00a900;">Telephone:</p>
+                                        &nbsp;<span style="font-family: Calibri;">09-9032000</span>
+                                    </div>
+                                </td>
+                                <td style="width: 33.333%;">
+                                    <img src="~/images/coa.png" alt="Logo" style="height: 100px; display: block; margin: 0 auto" />
+                                </td>
+                                <td style="width: 33.333%;" valign="top">
+                                    <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0;font-size:14px!important">
+                                        <p style="display: inline-block; margin-bottom: -3px; background-color: #FFF; padding: 3px 10px 3px 0; color: #00a900;">Ref. No:</p>
+                                        &nbsp;<span style="font-family: Calibri;">@Model.RefNo</span>
+                                    </div>
+                                    <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0;">
+                                        <p style="display: inline-block; margin-bottom: -3px; background-color: #FFF; padding: 3px 10px 3px 0; color: #00a900;">Date:</p>
+                                        &nbsp;<span style="font-family: Calibri;">@Model.Date</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="font-family:Candara; font-size:18px; ">
+                            <div style=" margin-left:5px;" class="text-left">
+                                <div>The Managing Director,</div>
+                                @Model.CompanyName,<br />
+                                @Model.Address,<br />
+@*                                @Model.City,<br />
+*@                                @Model.State State.
+                            </div>
+                            <p><br /></p>
+                            <div style="text-align:left">Dear Sir/Ma,</div>
+
+                            <div style="line-height:40px; font-size:17px; text-align:justify">
+
+                                @Html.Raw(Model.Body)
+                            </div>
+
+                            <p style="font-size:1em">
+                                Yours faithfully,
+                                <br />
+
+                                <img src="@Model.Signature" style="height: 105px; width: 235px; margin-top: 10px;" />
+                                <br />
+
+                                For:  Director, Petroleum Resources
+
+                            </p>
+                            @*<p>
+                                    CC: <b> Operations Controller, @Model.FacStateName</b>
+
+                                <br />
+
+                                Above for your information and monitoring. Please nominate a staff to monitor the project as provided in (4) above. Kindly copy us on the staff nominated for our records.
+                                <br />
+
+                                </p>
+
+                                <p>
+                                    <strong>@Model.SignedBy</strong><br />
+                                    <span>Head DownStream (HDS)</span>
+                                </p>*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

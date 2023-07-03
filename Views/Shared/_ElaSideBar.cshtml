@@ -1,0 +1,1032 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    GeneralClass generalClass = new GeneralClass();
+    string background = "";
+
+    @if (generalClass.Decrypt(Context.Session.GetString(AuthController.sessionTheme)) == "Dark")
+    {
+        background = "rgb(59, 58, 57)";
+    }
+    else
+    {
+        background = "#f2f2f2";
+    }
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var userOffice = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionFieldID)); //24 for head office
+    var userName = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionUserName));
+}
+
+
+<style>
+    .left-sidebar, .scroll-sidebar, #AdditionalAppsModal {
+        overflow-y: auto !important;
+    }
+    .hide-menu{
+        font-weight:bold;
+        font-size:18px;
+    }
+</style>
+
+<div class="left-sidebar" style="background:@background;" id="SB">
+    <!-- Sidebar scroll-->
+   
+                <div class="scroll-sidebar">
+                    <!-- Sidebar navigation-->
+                    <nav class="sidebar-nav">
+                        <div style="background-color:aliceblue; padding-top:5px">
+                            <h3 class="text-center" style=" font-family: Candara"><b> @userRole.ToUpper()</b> </h3>
+                        </div>
+                        <ul id="sidebarnav">
+
+                            <li class="@Html.IsSelected(controller: "Staffs")">
+                                <a class="@Html.IsSelected(controller: "Staffs", action: "Dashboard") " href="@Url.Action("Dashboard", "Staffs")" aria-expanded="false">
+                                    <i class="fas fa-tachometer-alt"></i>&nbsp;<span class="hide-menuu text-danger"> Dashboard </span>
+                                </a>
+
+                            </li>
+
+                            @*Admin, IT, Support Sidebar*@
+                            @if (userRole.ToLower() == GeneralClass.SUPER_ADMIN.ToLower() || userRole.ToLower() == GeneralClass.IT_ADMIN.ToLower() || userRole.ToLower() == GeneralClass.SUPPORT.ToLower() || userRole.ToLower() == GeneralClass.ADMIN.ToLower())
+                            {
+
+
+
+                                <li class="@Html.IsSelected(controller: "Application") sideFirstLi" id="sideFirstLi">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="true"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Application</span></a>
+                                    <ul aria-expanded="true" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")" href="/Application/AllApplicationss"><i class="fa fa-briefcase"> </i>&nbsp; All Applications</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Application", action: "RejectedApplications")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "RejectedApplications")" href="/Application/RejectedApplications"><i class="fa fa-times"> </i>&nbsp; Rejected Applications</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllCompanies")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllCompanies")" href="/Companies/AllCompanies"><i class="far fa-building"> </i>&nbsp; All Companies</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")">
+                                            <a class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")" href="/Facility/AllFacilities"><i class="far fa-building"> </i>&nbsp; All Facilities</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                <li class="@Html.IsSelected(controller: "Staff") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Desk Activities</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Staff", action: "Staff Desk")">
+                                            <a class="@Html.IsSelected(controller: "Staff", action: "Staff Desk")" href="/Deskes/StaffDesk/_location"><i class="fa fa-table"> </i>&nbsp; Staff Desk</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Legacy") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Legacy</span></a>
+
+                                    <ul aria-expanded="false" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")">
+                                            <a href="/Legacies/LegacyApplications/0/@GeneralClass.Processing" class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")">
+                                                Legacy Applications
+                                                <span class="label label-rouded label-megna pull-right" id="LegacyCount2" style="font-weight:bolder">
+
+                                                </span>
+                                            </a>
+                                        </li>
+
+
+                                        <li class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")"><a href="/Legacies/LegacyApplications/0/ALL">All Legacies</a></li>
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                <li id="lnk-search" class="more">
+                                    <a href="#">
+                                        <i class="fa fa-lock" aria-hidden="true"></i>&nbsp;Search <span class="fa fa-chevron-down"></span>
+                                    </a>
+                                    <ul class="nav child_menu">
+
+                                        <li>
+                                            <a href="/Search"><i class="fa fa-search"></i>&nbsp;Search Others</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Application/Deleted"><i class="fa fa-briefcase"></i>&nbsp;Deleted Applications</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                @if (userRole.Contains("ITAdmin"))
+                                {
+                                    <li>
+                                        <a href="/Search/DownloadCompanyExcel">Download Depot Company</a>
+                                    </li>
+                                    <hr />
+                                    <li class="divider"></li>
+
+                                }
+                                <li class="@Html.IsSelected(controller: "Payment") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Payment</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Payment", action: "Index")">
+                                            <a class="@Html.IsSelected(controller: "Payment", action: "Index")" href="/Payment/RemitaList"><i class="far fa-clone"> </i>&nbsp; Remita Transactions</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/PaymentCategory"><i class="fas fa-file-invoice"></i>&nbsp; Payment Category</a>
+                                        </li>
+                                          <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                    <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/ExtraPayments"><i class="fas fa-file-invoice"></i>&nbsp; All Extra Payments</a>
+                                       </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                <li class="@Html.IsSelected(controller: "Permit") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Permits</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/Licenses"><i class="fa fa-drivers-license"> </i>&nbsp; All Permits</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=true"><i class="fa fa-drivers-license"> </i>&nbsp; Printed Permits</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=false"><i class="fa fa-drivers-license"> </i>&nbsp;Non Printed Permits</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+
+                                @if (userRole.ToLower() == GeneralClass.SUPER_ADMIN.ToLower())
+                                {
+                                    <li class="divider"></li>
+                                    <li class="@Html.IsSelected(controller: "Form") ">
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu"> Form</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+                                            <li class="@Html.IsSelected(controller: "Form", action: "List")">
+                                                <a class="@Html.IsSelected(controller: "Form", action: "List")" href="/Form/List"><i class="fa fa-book"> </i>&nbsp; Manage Forms</a>
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+                                    <hr />
+                        
+                                }
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Reports") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Reports</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+
+
+                                          <li class="@Html.IsSelected(controller: "Reports", action: "Applications")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "Applications")" href="/Reports/Applications/"><i class="fas fa-file-contract"></i>&nbsp; Applications Report</a>
+                                          </li>
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/TransactionReports/"><i class="fas fa-file-invoice"></i>&nbsp; Payments Report</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")" href="/Reports/PermitsReport/"><i class="far fa-chart-bar"></i>&nbsp; Permits Report</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")" href="/Reports/FacilityReport/"><i class="fas fa-city"></i>&nbsp; Facility Report</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <hr />
+
+                                @if (userRole.ToLower() == GeneralClass.SUPER_ADMIN.ToLower())
+                                {
+                                    <li class="@Html.IsSelected(controller: "ApplicationProducts", action: "Index")">
+                                        <a class="@Html.IsSelected(controller: "ApplicationProducts", action: "Index")" href="@Url.Action("AllRejectedApps", "Application")"><i class="fas fa-sitemap"></i>&nbsp; Applications Rejected</a>
+                                    </li>
+
+                                    <li class="@Html.IsSelected(controller: "ApplicationProducts", action: "Index")">
+                                        <a class="@Html.IsSelected(controller: "ApplicationProducts", action: "Index")" href="@Url.Action("AllProcessingApps", "Application")"><i class="fas fa-sitemap"></i>&nbsp; Applications Processing</a>
+                                    </li>
+
+
+                                    <li class="divider"></li>
+                                    <hr />
+
+                                    <li class="@Html.IsSelected(controller: "Setting") ">
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Configuration Setting</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+
+                                            <li class="@Html.IsSelected(controller: "UserRoles", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "UserRoles", action: "Index")" href="@Url.Action("Index", "UserRoles")"><i class="fas fa-user-tag"></i>&nbsp; Roles</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "ApplicationCategories", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "ApplicationCategories", action: "Index")" href="@Url.Action("Index", "ApplicationCategories")"><i class="fas fa-sitemap"></i>&nbsp; Application Categories</a>
+                                            </li>
+
+                                            <li class="@Html.IsSelected(controller: "Configurations", action: "ApplicationPhases")">
+                                                <a class="@Html.IsSelected(controller: "Configurations", action: "ApplicationPhases")" href="@Url.Action("Index", "ApplicationPhases")"><i class="fas fa-sitemap"></i>&nbsp; Application Phases</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "ApplicationDocuments", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "ApplicationDocuments", action: "Index")" href="@Url.Action("Index", "ApplicationDocuments")"><i class="far fa-file-alt"></i>&nbsp; Application Documents</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "WorkProccesses", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "WorkProccesses", action: "Index")" href="@Url.Action("Index", "WorkProccesses")"><i class="fab fa-connectdevelop"></i>&nbsp; Application Processes</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "ApplicationProducts", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "ApplicationProducts", action: "Index")" href="@Url.Action("Index", "ApplicationProducts")"><i class="fas fa-sitemap"></i>&nbsp; Application Products</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "States", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "States", action: "Index")" href="@Url.Action("Index", "States")"><i class="fas fa-sitemap"></i>&nbsp; States</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "States", action: "LGA")">
+                                                <a class="@Html.IsSelected(controller: "States", action: "LGA")" href="@Url.Action("LGA", "States")"><i class="fas fa-sitemap"></i>&nbsp; LGAs</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                    <hr />
+                                    <li class="divider"></li>
+                                    <li class="@Html.IsSelected(controller: "Setting") ">
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Zone/Field Mapping</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+                                            <li class="@Html.IsSelected(controller: "FieldOffices", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "FieldOffices", action: "Index")" href="@Url.Action("Index", "FieldOffices")"><i class="fas fa-sitemap"></i>&nbsp; Field Offices</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "FieldOfficeStates", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "FieldOfficeStates", action: "Index")" href="@Url.Action("Index", "FieldOfficeStates")"><i class="fas fa-sitemap"></i>&nbsp; Field Office States</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "ZonalStates", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "ZonalStates", action: "Index")" href="@Url.Action("Index", "ZonalOffices")"><i class="fas fa-sitemap"></i>&nbsp; Zonal Offices</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "ZonalOffices", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "ZonalOffices", action: "Index")" href="@Url.Action("Index", "ZonalStates")"><i class="fas fa-sitemap"></i>&nbsp; Zonal States</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "ZonalFieldOffices", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "ZonalFieldOffices", action: "Index")" href="@Url.Action("Index", "ZoneFieldOffices")"><i class="fas fa-sitemap"></i>&nbsp;Zonal Field Offices</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "Location", action: "Index")">
+                                                <a class="@Html.IsSelected(controller: "Location", action: "Index")" href="@Url.Action("Index", "Locations")"><i class="fas fa-sitemap"></i>&nbsp; Location</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                    <hr />
+                                }
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Setting") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Access Management</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "Setting", action: "Give Value")">
+                                            <a class="@Html.IsSelected(controller: "Setting", action: "Give Value")" href="/Payment/GiveValue"><i class="fa fa-drivers-license"> </i>&nbsp; Give Value</a>
+                                        </li>
+
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Users") ">
+                                    <a class="has-arrow  text-white" href="#" aria-expanded="false"><i class="fas fa-user-friends text-warning"></i>&nbsp;<span class="hide-menu">Users Setup</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Users", action: "Staff")">
+                                            <a class="@Html.IsSelected(controller: "Users", action: "Staff")" href="@Url.Action("Staff", "Users")"><i class="fas fa-user-cog"></i>&nbsp; Manage Staff</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Users", action: "Company")">
+                                            <a class="@Html.IsSelected(controller: "Users", action: "Company")" href="/Users/Company"><i class="fas fa-building"></i>&nbsp; Manage Company</a>
+                                        </li>
+
+                                        @if (userRole.ToLower() == GeneralClass.SUPER_ADMIN.ToLower())
+                                        {
+                                            <li class="@Html.IsSelected(controller: "Users", action: "StaffLogins")">
+                                                <a class="@Html.IsSelected(controller: "Users", action: "StaffLogins")" href="/Users/StaffLogins"><i class="fas fa-sign-in-alt"></i>&nbsp; Staff Logins</a>
+                                            </li>
+
+                                            <li class="@Html.IsSelected(controller: "Users", action: "CompanyLogins")">
+                                                <a class="@Html.IsSelected(controller: "Users", action: "CompanyLogins")" href="/Users/CompanyLogins"><i class="fas fa-sign-in-alt"></i>&nbsp; Company Logins</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "Users", action: "Activities")">
+                                                <a class="@Html.IsSelected(controller: "Users", action: "Activities")" href="/Users/Activities"><i class="fas fa-clipboard-list"></i>&nbsp; Users Activities</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "OutOfOffice") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Out Of Office</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "OutOfOffice", action: "AllOutOffice")">
+                                            <a class="@Html.IsSelected(controller: "OutOfOffice", action: "AllOutOfOffice")" href="/OutOfOffice/AllOutOfOffice"><i class="fa fa-drivers-license"> </i>&nbsp; All Out Of Office</a>
+                                        </li>
+
+
+                                    </ul>
+                                </li>
+
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Facility", action: "Update")">
+                                    <a class="@Html.IsSelected(controller: "Facility", action: "Update") changeActive" style="" href="/Facility/Update"><i class="fa fa-book"> </i>&nbsp; Update Facility</a>
+                                </li>
+
+                            }
+
+
+                            @*Printer SideBar*@
+
+                            @if (userRole == GeneralClass.PRINTER)
+                            {
+
+
+                                <li class="@Html.IsSelected(controller: "Application") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false">
+                                        <i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Application</span>
+                                    </a>
+                                    <ul aria-expanded="false" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")" href="/Application/AllApplicationss"><i class="far fa-clone"> </i>&nbsp; All Applications</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")">
+                                            <a class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")" href="/Facility/AllFacilities"><i class="far fa-building"> </i>&nbsp; All Facilities</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllCompanies")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllCompanies")" href="/Companies/AllCompanies"><i class="far fa-building"> </i>&nbsp; All Companies</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="Html.IsSelected(controller: 'Legacies') sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false">
+                                        <i class="ti-files text-warning"></i>&nbsp;
+                                        <span class="hide-menu">
+                                            Legacy
+                                        </span>
+                                    </a>
+                                    <ul aria-expanded="false" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")">
+                                            <a href="/Legacies/LegacyApplications/0/ALL"><i class="fa fa-procedures"> </i>&nbsp;All Legacies</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Permit") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Permits</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/Licenses"><i class="fa fa-drivers-license"> </i>&nbsp; Licenses / Permits</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=true"><i class="fa fa-drivers-license"> </i>&nbsp; Printed Permits</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=false"><i class="fa fa-drivers-license"> </i>&nbsp;Non Printed Permits</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                            } @*Inspector SideBar*@
+
+                            @if (userRole == GeneralClass.INSPECTOR)
+                            {
+
+
+                                <li class="@Html.IsSelected(controller: "Process") sideFirstLi" id="sideFirstLi">
+                                    <a class="has-arrowchangeActive " href="#" aria-expanded="true">
+                                        <i class="far fa-folder-open text-warning"> </i>&nbsp;
+                                        <span class="hide-menu">Process</span>
+                                    </a>
+
+
+                                    <ul aria-expanded="true" class="collapse showUL">
+
+                                        <li class="@Html.IsSelected(controller: "Process", action: "My Desk")">
+                                            <a class="@Html.IsSelected(controller: "Process", action: "My Desk")" href="/Process/MyDesk">
+                                                <i class="fa fa-table"> </i>&nbsp; My Desk
+                                                <span class="label label-rouded label-danger pull-right" id="MyDeskCount" style="font-weight:bolder">
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="lnk-Schedule">
+                                            <a href="@Url.Action("MyPendingSchedules", "Process")">
+                                                <i class="fa fa-calendar"></i>&nbsp;My Schedules
+                                                <span class="label label-rouded label-danger pull-right" id="MyPendingScheduleCount" style="font-weight:bolder">
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                <li class="@Html.IsSelected(controller: "Application") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false">
+                                        <i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Application</span>
+                                    </a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        @*<li class="@Html.IsSelected(controller: "Application", action: "Index")">
+                        <a class="@Html.IsSelected(controller: "Application", action: "Index")" href="/Application/Index"><i class="far fa-clone"> </i>&nbsp; All Applications</a>
+                    </li>*@
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")" href="/Application/AllApplicationss"><i class="far fa-clone"> </i>&nbsp; All Applications</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")">
+                                            <a class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")" href="/Facility/AllFacilities"><i class="far fa-building"> </i>&nbsp; All Facilities</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllCompanies")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllCompanies")" href="/Companies/AllCompanies"><i class="far fa-building"> </i>&nbsp; All Companies</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                @if (userOffice == "24") //Inspector is in head office
+                                {
+                                    <hr />
+                                    <li class="divider"></li>
+                                    <li class="@Html.IsSelected(controller: "Permit") sideFirstLi" id="sideFirstLi">
+
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Permits</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+                                            <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                                <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/Licenses"><i class="fa fa-drivers-license"> </i>&nbsp; Licenses / Permits</a>
+                                            </li>
+
+                                            <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                                <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=true"><i class="fa fa-drivers-license"> </i>&nbsp; Printed Permits</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                                <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=false"><i class="fa fa-drivers-license"> </i>&nbsp;Non Printed Permits</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                    <hr />
+
+                                 <li class="divider"></li>
+
+                                 <li class="@Html.IsSelected(controller: "Payment") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Payment</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                      
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/PaymentCategory"><i class="fas fa-file-invoice"></i>&nbsp; Payment Category</a>
+                                        </li>
+                                          <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                    <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/ExtraPayments"><i class="fas fa-file-invoice"></i>&nbsp; All Extra Payments</a>
+                                       </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Reports") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Reports</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "Applications")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "Applications")" href="/Reports/Applications/"><i class="fas fa-file-contract"></i>&nbsp; Applications Report</a>
+                                        </li>
+                                        @* <li class="@Html.IsSelected(controller: "Reports", action: "Applications")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "Applications")" href="/NewReports/ApplicationReport/"><i class="fas fa-file-contract"></i>&nbsp; Applications Report</a>
+                                        </li>*@
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/TransactionReports/"><i class="fas fa-file-invoice"></i>&nbsp; Payments Report</a>
+                                        </li>
+
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")" href="/Reports/PermitsReport/"><i class="far fa-chart-bar"></i>&nbsp; Permits Report</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")" href="/Reports/FacilityReport/"><i class="fas fa-city"></i>&nbsp; Facility Report</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+
+                                <hr />
+                                <li class="divider"></li>
+                                }
+                                <li class="Html.IsSelected(controller: 'Legacies') sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false">
+                                        <i class="ti-files text-warning"></i>&nbsp;
+                                        <span class="hide-menu">
+                                            Legacy
+                                        </span>
+                                    </a>
+                                    <ul aria-expanded="false" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")">
+                                            <a href="/Legacies/LegacyApplications/0/ALL"><i class="fa fa-procedures"> </i>&nbsp;All Legacies</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "OutOfOffice") sideFirstLi" id="sideFirstLi">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Out Of Office</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "OutOfOffice", action: "OutOfOffice")">
+                                            <a class="@Html.IsSelected(controller: "OutOfOffice", action: "OutOfOffice")" href="/OutOfOffice/OutOfOffice">
+                                                <i class="fa fa-sign-out"> </i>&nbsp; Out Of Office
+                                            </a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "OutOfOffice", action: "RelieveStaff")">
+                                            <a class="@Html.IsSelected(controller: "OutOfOffice", action: "RelieveStaff")" href="/OutOfOffice/RelieveStaff"><i class="fa fa-user"> </i>&nbsp;Relieve Staff</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                            }
+
+                            @if (userRole == GeneralClass.SUPERVISOR)
+                            {
+
+
+                                <li class="@Html.IsSelected(controller: "Process") sideFirstLi" id="sideFirstLi">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Process</span></a>
+                                    <ul aria-expanded="true" class="collapse showUL">
+                                        <li class="@Html.IsSelected(controller: "Process", action: "My Desk")">
+                                            <a class="@Html.IsSelected(controller: "Process", action: "My Desk")" href="/Process/MyDesk">
+                                                <i class="fa fa-table"> </i>&nbsp; My Desk
+                                                <span class="label label-rouded label-danger pull-right" id="MyDeskCount" style="font-weight:bolder">
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="lnk-Schedule">
+                                            <a href="@Url.Action("MyPendingSchedules", "Process")">
+                                                <i class="fa fa-calendar"></i>&nbsp;My Schedules
+                                                <span class="label label-rouded label-danger pull-right" id="MyPendingScheduleCount" style="font-weight:bolder">
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Process", action: "AllSchedules")">
+                                            <a class="@Html.IsSelected(controller: "Process", action: "AllSchedules")" href="/Process/AllSchedules">
+                                                <i class="fa fa-clock"> </i>&nbsp;All Schedules
+
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                <li class="@Html.IsSelected(controller: "Staff") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Desk Activities</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Staff", action: "Staff Desk")">
+                                            <a class="@Html.IsSelected(controller: "Staff", action: "Staff Desk")" href="/Deskes/StaffDesk/_location"><i class="fa fa-table"> </i>&nbsp; Staff Desk</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Application") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Application</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")" href="/Application/AllApplicationss"><i class="far fa-clone"> </i>&nbsp; All Applications</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")">
+                                            <a class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")" href="/Facility/AllFacilities"><i class="far fa-building"> </i>&nbsp; All Facilities</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllCompanies")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllCompanies")" href="/Companies/AllCompanies"><i class="far fa-building"> </i>&nbsp; All Companies</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Legacies") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow  changeActive" href="#" aria-expanded="false">
+                                        <i class="ti-files text-warning"></i>&nbsp;
+                                        <span class="hide-menu">
+                                            Legacy
+                                            @*<span class="label label-rouded label-megna pull-right" id="LegacyCount2" style="font-weight:bolder">
+
+                        </span>*@
+                                        </span>
+                                    </a>
+                                    <ul aria-expanded="false" class="collapse">
+
+                                        <li class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")">
+                                            <a href="/Legacies/LegacyApplications/0/@GeneralClass.Processing" class="changeActive">
+                                                Legacy Applications
+                                                <span class="label label-rouded label-megna pull-right" id="LegacyCount2" style="font-weight:bolder">
+
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")"><a href="/Legacies/LegacyApplications/0/ALL">All Legacies</a></li>
+                                    </ul>
+                                </li>
+
+                                <hr />
+                                <li class="divider"></li>
+
+
+                                <li class="@Html.IsSelected(controller: "Permit") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Permits</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/Licenses"><i class="fa fa-drivers-license"> </i>&nbsp; Licenses / Permits</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=true"><i class="fa fa-drivers-license"> </i>&nbsp; Printed Permits</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=false"><i class="fa fa-drivers-license"> </i>&nbsp;Non Printed Permits</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+
+                                   <li class="@Html.IsSelected(controller: "Payment") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Payment</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                  
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/PaymentCategory"><i class="fas fa-file-invoice"></i>&nbsp; Payment Category</a>
+                                        </li>
+                                          <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                    <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/ExtraPayments"><i class="fas fa-file-invoice"></i>&nbsp; All Extra Payments</a>
+                                       </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Reports") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Reports</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+
+
+                                      <li class="@Html.IsSelected(controller: "Reports", action: "Applications")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "Applications")" href="/Reports/Applications/"><i class="fas fa-file-contract"></i>&nbsp; Applications Report</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/TransactionReports/"><i class="fas fa-file-invoice"></i>&nbsp; Payments Report</a>
+                                        </li>
+
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")" href="/Reports/PermitsReport/"><i class="far fa-chart-bar"></i>&nbsp; Permits Report</a>
+                                        </li>
+
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")" href="/Reports/FacilityReport/"><i class="fas fa-city"></i>&nbsp; Facility Report</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "Facility", action: "Update")">
+                                    <a class="@Html.IsSelected(controller: "Facility", action: "Update") changeActive" style="" href="/Facility/Update"><i class="far fa-book"> </i>&nbsp; Update Facility Identification Code</a>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                                <li class="@Html.IsSelected(controller: "OutOfOffice") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Out Of Office</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "OutOfOffice", action: "OutOfOffice")">
+                                            <a class="@Html.IsSelected(controller: "OutOfOffice", action: "OutOfOffice")" href="/OutOfOffice/OutOfOffice">
+                                                <i class="fa fa-sign-out"> </i>&nbsp; Out Of Office
+                                            </a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "OutOfOffice", action: "RelieveStaff")">
+                                            <a class="@Html.IsSelected(controller: "OutOfOffice", action: "RelieveStaff")" href="/OutOfOffice/RelieveStaff"><i class="fa fa-user"> </i>&nbsp;Relieve Staff</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "OutOfOffice", action: "AllOutOffice")">
+                                            <a class="@Html.IsSelected(controller: "OutOfOffice", action: "AllOutOfOffice")" href="/OutOfOffice/AllOutOfOffice"><i class="fa fa-drivers-license"> </i>&nbsp; All Out Of Office</a>
+                                        </li>
+
+
+                                    </ul>
+                                </li>
+                            }
+                            @if (userRole.ToUpper() == GeneralClass.ED_STA.ToUpper()) { 
+
+                                <li class="@Html.IsSelected(controller: "Process") sideFirstLi" id="sideFirstLi">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="true"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Process</span></a>
+                                    <ul id="showUL">
+                                        <li class="@Html.IsSelected(controller: "Process", action: "My Desk")">
+                                            <a class="@Html.IsSelected(controller: "Process", action: "My Desk")" href="/Process/MyDesk">
+                                                <i class="fa fa-table"> </i>&nbsp; ED's Desk
+                                                <span class="label label-rouded label-danger pull-right" id="MyDeskCount" style="font-weight:bolder">
+                                                </span>
+                                            </a>
+                                        </li>
+
+                               </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                             
+                                <li class="@Html.IsSelected(controller: "Application") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Application</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")" href="/Application/AllApplicationss"><i class="far fa-clone"> </i>&nbsp; All Applications</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")">
+                                            <a class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")" href="/Facility/AllFacilities"><i class="far fa-building"> </i>&nbsp; All Facilities</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllCompanies")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllCompanies")" href="/Companies/AllCompanies"><i class="far fa-building"> </i>&nbsp; All Companies</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                            }  @if (userRole.ToUpper() == GeneralClass.ACE_STA.ToUpper()) { 
+
+                                <li class="@Html.IsSelected(controller: "Process") sideFirstLi" id="sideFirstLi">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="true"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Process</span></a>
+                                    <ul id="showUL">
+                                        <li class="@Html.IsSelected(controller: "Process", action: "My Desk")">
+                                            <a class="@Html.IsSelected(controller: "Process", action: "My Desk")" href="/Process/MyDesk">
+                                                <i class="fa fa-table"> </i>&nbsp; CEO's Desk
+                                                <span class="label label-rouded label-danger pull-right" id="MyDeskCount" style="font-weight:bolder">
+                                                </span>
+                                            </a>
+                                        </li>
+
+                               </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                             
+                                <li class="@Html.IsSelected(controller: "Application") sideFirstLi" id="sideFirstLi">
+
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Application</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")" href="/Application/AllApplicationss"><i class="far fa-clone"> </i>&nbsp; All Applications</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")">
+                                            <a class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")" href="/Facility/AllFacilities"><i class="far fa-building"> </i>&nbsp; All Facilities</a>
+                                        </li>
+                                        <li class="@Html.IsSelected(controller: "Application", action: "AllCompanies")">
+                                            <a class="@Html.IsSelected(controller: "Application", action: "AllCompanies")" href="/Companies/AllCompanies"><i class="far fa-building"> </i>&nbsp; All Companies</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <hr />
+                                <li class="divider"></li>
+                            }
+                                @*ADOPS, HDS, EED, OOD OPSCON and TeamLead SideBar*@
+                                @if (userRole == GeneralClass.AUTHORITY || userRole == GeneralClass.OOD  || userRole == GeneralClass.ED || userRole == GeneralClass.HDS || userRole == GeneralClass.ADPDJ || userRole == GeneralClass.TEAMLEAD || userRole == GeneralClass.ADOPS || userRole == GeneralClass.OPSCON)
+                                {
+
+
+                                    <li class="@Html.IsSelected(controller: "Process") sideFirstLi" id="sideFirstLi">
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="true"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Process</span></a>
+                                        <ul id="showUL">
+                                            <li class="@Html.IsSelected(controller: "Process", action: "My Desk")">
+                                                <a class="@Html.IsSelected(controller: "Process", action: "My Desk")" href="/Process/MyDesk">
+                                                    <i class="fa fa-table"> </i>&nbsp; My Desk
+                                                    <span class="label label-rouded label-danger pull-right" id="MyDeskCount" style="font-weight:bolder">
+                                                    </span>
+                                                </a>
+                                            </li>
+
+                                            @if (userRole == GeneralClass.ADOPS || userRole == GeneralClass.OPSCON || userRole == GeneralClass.TEAMLEAD)
+                                            {
+                                                <li class="@Html.IsSelected(controller: "Process", action: "Joint Applications")">
+                                                    <a class="@Html.IsSelected(controller: "Process", action: "Joint Applications")" href="/Process/JointApplications">
+                                                        <i class="fa fa-table"> </i>&nbsp; Joint Applications
+                                                        <span class="label label-rouded label-danger pull-right" id="MyJDCount" style="font-weight:bolder">
+                                                        </span>
+                                                    </a>
+                                                </li>
+
+                                            }
+                                            @if (userRole == GeneralClass.ADPDJ || userRole == GeneralClass.TEAMLEAD)
+                                            {
+                                                <li class="lnk-Schedule">
+                                                    <a href="@Url.Action("MyPendingSchedules", "Process")">
+                                                        <i class="fa fa-calendar"></i>&nbsp;My Schedules
+                                                        <span class="label label-rouded label-danger pull-right" id="MyPendingScheduleCount" style="font-weight:bolder">
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            }
+                                            @if (userRole == GeneralClass.ADPDJ)
+                                            {
+                                                <li class="@Html.IsSelected(controller: "Process", action: "Schedules")">
+                                                    <a class="@Html.IsSelected(controller: "Process", action: "Schedules")" href="/Process/AllSchedules">
+                                                        <i class="fa fa-clock"> </i>&nbsp;All Schedules
+
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                    <hr />
+                                    <li class="divider"></li>
+                                    <li class="@Html.IsSelected(controller: "Staff") sideFirstLi" id="sideFirstLi">
+
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Desk Activities</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+                                            <li class="@Html.IsSelected(controller: "Staff", action: "Staff Desk")">
+                                                <a class="@Html.IsSelected(controller: "Staff", action: "Staff Desk")" href="/Deskes/StaffDesk/_location"><i class="fa fa-table"> </i>&nbsp; Staff Desk</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                    <hr />
+                                    <li class="divider"></li>
+
+                                    <li class="@Html.IsSelected(controller: "Application") sideFirstLi" id="sideFirstLi">
+
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Application</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+                                            <li class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")">
+                                                <a class="@Html.IsSelected(controller: "Application", action: "AllApplicationss")" href="/Application/AllApplicationss"><i class="far fa-clone"> </i>&nbsp; All Applications</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")">
+                                                <a class="@Html.IsSelected(controller: "Facility", action: "AllFacilities")" href="/Facility/AllFacilities"><i class="far fa-building"> </i>&nbsp; All Facilities</a>
+                                            </li>
+                                            <li class="@Html.IsSelected(controller: "Application", action: "AllCompanies")">
+                                                <a class="@Html.IsSelected(controller: "Application", action: "AllCompanies")" href="/Companies/AllCompanies"><i class="far fa-building"> </i>&nbsp; All Companies</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                    <hr />
+                                    <li class="divider"></li>
+                                    @if (userRole == GeneralClass.ADPDJ || userRole == GeneralClass.ED || userRole == GeneralClass.AUTHORITY || userRole == GeneralClass.HDS || userRole == GeneralClass.OOD)
+                                    {
+                                        <li class="@Html.IsSelected(controller: "Legacy") sideFirstLi" id="sideFirstLi">
+
+                                            <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp; <span class="hide-menu">Legacy</span></a>
+
+                                            <ul aria-expanded="false" class="collapse">
+
+                                                <li class="@Html.IsSelected(controller: "Legacies", action: "LegacyApplications")"><a href="/Legacies/LegacyApplications/0/ALL">All Legacies</a></li>
+                                            </ul>
+                                        </li>
+                                        <hr />
+                                        <li class="divider"></li>
+
+
+                                        <li class="@Html.IsSelected(controller: "Permit") ">
+                                            <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Permits</span></a>
+                                            <ul aria-expanded="false" class="collapse">
+                                                <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                                    <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/Licenses"><i class="fa fa-drivers-license"> </i>&nbsp;Licenses / Permits</a>
+                                                </li>
+
+                                                <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                                    <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=true"><i class="fa fa-drivers-license"> </i>&nbsp; Printed Permits</a>
+                                                </li>
+                                                <li class="@Html.IsSelected(controller: "Application", action: "Permits")">
+                                                    <a class="@Html.IsSelected(controller: "Application", action: "Permits")" href="/Application/PrintLicenses?printed=false"><i class="fa fa-drivers-license"></i>&nbsp;Non Printed Permits</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        <hr />
+
+                                           <li class="@Html.IsSelected(controller: "Payment") ">
+                                    <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Payment</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                            <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/PaymentCategory"><i class="fas fa-file-invoice"></i>&nbsp; Payment Category</a>
+                                        </li>
+                                          <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                    <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/ExtraPayments"><i class="fas fa-file-invoice"></i>&nbsp; All Extra Payments</a>
+                                       </li>
+
+                                    </ul>
+                                </li>
+                                        <hr />
+
+                                        <li class="divider"></li>
+                                        <li class="@Html.IsSelected(controller: "Reports") sideFirstLi" id="sideFirstLi">
+
+                                            <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Reports</span></a>
+                                            <ul aria-expanded="false" class="collapse">
+
+
+                                                <li class="@Html.IsSelected(controller: "Reports", action: "Applications")">
+                                                    <a class="@Html.IsSelected(controller: "Reports", action: "Applications")" href="/Reports/Applications/"><i class="fas fa-file-contract"></i>&nbsp; Applications Report</a>
+                                                </li>
+
+                                                <li class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")">
+                                                    <a class="@Html.IsSelected(controller: "Reports", action: "TransactionReports")" href="/Reports/TransactionReports/"><i class="fas fa-file-invoice"></i>&nbsp; Payments Report</a>
+                                                </li>
+
+
+                                                <li class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")">
+                                                    <a class="@Html.IsSelected(controller: "Reports", action: "PermitsReport")" href="/Reports/PermitsReport/"><i class="far fa-chart-bar"></i>&nbsp; Permits Report</a>
+                                                </li>
+
+                                                <li class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")">
+                                                    <a class="@Html.IsSelected(controller: "Reports", action: "FacilityReport")" href="/Reports/FacilityReport/"><i class="fas fa-city"></i>&nbsp; Facility Report</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        <hr />
+                                    }
+                                    <li class="divider"></li>
+                                    <li class="@Html.IsSelected(controller: "OutOfOffice") ">
+                                        <a class="has-arrow changeActive " href="#" aria-expanded="false"><i class="far fa-folder-open text-warning"> </i>&nbsp;<span class="hide-menu">Out Of Office</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+                                            <li class="@Html.IsSelected(controller: "OutOfOffice", action: "OutOfOffice")">
+                                                <a class="@Html.IsSelected(controller: "OutOfOffice", action: "OutOfOffice")" href="/OutOfOffice/OutOfOffice">
+                                                    <i class="fa fa-drivers-license"> </i>&nbsp; Out Of Office
+                                                </a>
+                                            </li>
+
+                                            <li class="@Html.IsSelected(controller: "OutOfOffice", action: "AllOutOffice")">
+                                                <a class="@Html.IsSelected(controller: "OutOfOffice", action: "AllOutOfOffice")" href="/OutOfOffice/AllOutOfOffice"><i class="fa fa-drivers-license"> </i>&nbsp; All Out Of Office</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+
+                                }
+
+
+                            </ul>
+                                    <br />
+
+                                
+</nav>
+
+                    <!-- End Sidebar navigation -->
+                </div>
+                <!-- End Sidebar scroll-->
+    </div>

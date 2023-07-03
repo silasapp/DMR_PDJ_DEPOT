@@ -1,0 +1,365 @@
+﻿
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<NewDepot.Models.MySchdule>
+
+@{
+    ViewData["Title"] = ViewData["ScheduleTitle"];
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+
+
+<div class="card">
+
+    <br />
+    <input type="text" id="txtScheduleID" hidden />
+    <input type="text" id="txtScheduleStaffID" hidden />
+
+    <div class="pull-right">
+        <div class="btn-group" role="group">
+            <button class="btn btn-primary" id="RecordView"><i class="fas fa-table"></i> Table View</button>
+            <button class="btn btn-warning" id="CalendarView"><i class="far fa-calendar-alt"></i> Calendar View</button>
+        </div>
+    </div>
+
+
+
+    <p><hr /></p>
+
+    <div style="max-height:initial">
+
+        <div id="SchduleDiv" class="table-responsive">
+
+            <table class="table table-bordered table-hover" id="MyScheduleTable" style="font-size:small">
+                <thead>
+                    <tr>
+
+                        <th> Company </th>
+                        <th> Facility </th>
+                        @*<th> Type </th>*@
+                        <th> Location </th>
+                        <th> Date </th>
+
+                        <th> Created By </th>
+                        <th> Staff Comment </th>
+
+                        <th> Marketer Accepted </th>
+                        <th> Marketer Comment </th>
+
+                        <th> Approver </th>
+                        <th> Approval Status </th>
+                        <th> Approver Comment </th>
+
+                        <th> CreatedAt </th>
+                        <th> UpdatedAt </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @*@for(int i=1;i<7;i++){
+
+                        var numb = i;
+                    }*@
+                     @foreach (var a in Model) { var cResponse = a.CustomerResponse;  var sResponse = a.SupervisorApproved == 1 ? "Accepted" : a.SupervisorApproved == 2 ? "Rejected" : "Awaiting";  var startDate = DateTime.Parse(a.ScheduleDate.ToString()).Date; var expDate = startDate.AddDays(3);  <tr>
+
+                            <td> @a.CompanyName</td>
+                            <td> @a.FacilityName  - @a.ContactName (@a.ContactPhone)</td>
+
+                            @*<td> @a.ScheduleType</td>*@
+                            <td> @a.ScheduleLocation</td>
+                            <td> @a.ScheduleDate</td>
+
+                            <td> @a.ScheduleBy</td>
+                            <td> <small>@a.StaffComment</small></td>
+
+                            <td> <b> @cResponse</b></td>
+                            <td> <small> @a.CustomerComment </small></td>
+
+                            <td> @a.Supervisor </td>
+                            <td>
+                                <a href="/Application/ViewApplication/@a.ApplicationID" class="btn btn-xs btn-primary" target="_blank">View Application</a>
+
+                                @if (DateTime.Now.Date > expDate)
+                                {
+                                    <b class="text-danger"> Schedule Expired </b>
+                                }
+                                else
+                                {
+
+                                    @if (a.Supervisor == generalClass.Decrypt(Context.Session.GetString("_sessionEmail")))
+                                    {
+
+                                        if (a.SupervisorApproved == 0)
+                                        {
+                                            <div class="btn-group">
+                                                <a href="#" data-target="#modalPopup" data-toggle="modal" data-url="/process/ManagerSchedule/@a.ScheduleID"
+                                                   class="btn btn-xs btn-success meetup" data-name="@a.CompanyName" data-uid="1" data-w="@a.WaiverRequest">Endorse</a>
+                                            </div>
+                                        }
+                                    }
+
+                                }
+
+                                <b class="text-primary"> @sResponse </b>
+                            </td>
+                            <td> <small>@a.SupervisorComment</small></td>
+
+
+                            <td> @a.CreatedAt </td>
+                            <td> @a.UpdatedAt </td>
+
+                        </tr>
+                        @*}*@
+
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <div id="CalendarDiv" class="hide">
+            <div id='calendar'></div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+@* Accepting application schedule with comment *@
+<div class="modal" id="ModalSupervsorAcceptSchedule">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="SupervsorAcceptSchedule">
+            <div class="modal-header">
+                <h4 class="modal-title text-success"> Accept schedule with comment </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-dark btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <br />
+                    <textarea id="txtSupervisorAcceptComment" style="max-width:95%" rows="5" cols="68" placeholder="Some comment here...Max(100)"></textarea>
+                </div>
+
+                <button class="btn btn-success" id="btnSupervisorAcceptSchedule" onclick="ApproveSchedule()"> Accept Schedule </button>
+                <p></p>
+                <div id="ScheduleModalInfo"> </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@* Rejecting Application schedule *@
+<div class="modal" id="ModalSupervisorRejectSchedule">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="SupervisorRejectSchedule">
+            <div class="modal-header">
+                <h4 class="modal-title text-danger"> Reject Schedule with comment </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-dark btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <br />
+                    <textarea id="txtSupervisorRejectComment" style="max-width:95%" rows="5" cols="68" placeholder="Some comment here...Max(100)"></textarea>
+                </div>
+
+                <button class="btn btn-danger" id="btnSupervisorRejectSchedule" onclick="RejectSchedule()"> Reject Schedule </button>
+                <p></p>
+                <div id="ScheduleRejectModalInfo" class="text-danger"> </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar;
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: ['bootstrap', 'dayGrid', 'timeGrid', 'list'],
+            height: 600,
+            header: {
+                left: 'prevYear,prev,next,nextYear today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth,listWeek,listDay,'
+            },
+            views: {
+                listDay: { buttonText: 'list day' },
+                listWeek: { buttonText: 'list week' },
+                listMonth: { buttonText: 'list month' }
+            },
+
+            defaultDate: new Date(),
+            themeSystem: 'bootstrap',
+            defaultView: 'dayGridMonth',
+            weekNumbers: false,
+            navLinks: true, // can click day/week names to navigate views
+            editable: false,
+            eventLimit: false, // allow "more" link when too many events
+            events: '@Url.RouteUrl(new { action = "ScheduleCalendar", controller = "Process", id = ViewData["ScheduleStaffID"].ToString()})',
+
+            eventRender: function (info) {
+                Tipped.create(info.el, function (element) {
+                    return {
+                        title: info.event.title + " SCHEDULE ",
+                        content: "<div> <b class='text-warning'> Schedule Details </b> <hr> <p> Company : " + info.event.extendedProps.company + " </p> <p> Facility : " + info.event.extendedProps.facility + " </p>  <p> Date : " + info.event.start + "</p> <p> Location : " + info.event.extendedProps.location + "</p> <p> Contact Person : " + info.event.extendedProps.contact + "</p> <p> Customer Response : " + info.event.extendedProps.customerResponse + "</p> <p> Customer Comment : " + info.event.extendedProps.customerComment + "</p> <hr> <p> Schedule By : " + info.event.extendedProps.schedule + "</p>  <p> Staff Comment : " + info.event.extendedProps.staffComment + "</p> <p> Approver Response : " + info.event.extendedProps.supervisorResponse + "</p> <p> Approver Comment : " + info.event.extendedProps.supervisorComment + "</p> </div>"
+                    };
+                },
+                    {
+                        radius: false,
+                        close: true,
+                        size: 'large',
+                        behavior: 'custom-slow',
+                    }
+                );
+            }
+        });
+
+        calendar.render();
+
+    });
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#MyScheduleTable").dataTable({
+                "aLengthMenu": [50, 100, 150, 200, 250],
+                'iDisplayLength': 200,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            $(".meetup").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-name");
+
+                $("#modal-body").html("");
+
+                var popup = $("#modalPopup .modal-content");
+
+                popup.html(Loading());
+                //Load the view
+                $.get(url, function (data) {
+                    //$("#modal-body").html(data);
+                    popup.html(data);
+                });
+
+            });
+
+            $(document).on("click", ".ApproveSchedule", function (e) {
+
+                e.preventDefault();
+
+                $("#Action").val("Approve");
+                var txtComment = $("#txtActionComment").val();
+
+                if (txtComment === "") {
+                    ErrorMessage("#ScheduleModalInfo", "Please enter a comment.");
+                    $("#txtActionComment").focus();
+                }
+                var confirmTxt = "Are you sure you want to approve this Schedule ?";
+
+                var frm = $("#endorseSchFrm");
+                console.log(frm);
+
+                $.confirm({
+                    text: confirmTxt,
+                    confirm: function () {
+                        $("#Loadder").addClass('Submitloader');
+
+                        $(frm).submit();
+
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+            });
+
+
+            //disapprove schedule
+            $(document).on("click", ".DisapproveSchedule", function () {
+
+                $("#Action").val("");
+                var txtComment = $("#txtActionComment").val();
+
+                if (txtComment === "") {
+                    ErrorMessage("#ScheduleModalInfo", "Please enter reason for disapproving schedule.");
+                    $("#txtActionComment").focus();
+                }
+                else {
+                    var confirmTxt = "Are you sure you want to disapprove this Schedule ?";
+
+                    var frm = $("#endorseSchFrm");
+                    console.log(frm);
+
+                    $.confirm({
+                        text: confirmTxt,
+                        confirm: function () {
+                            $("#Loadder").addClass('Submitloader');
+
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+
+
+
+
+        $("#RecordView").on('click', function (event) {
+            $("#CalendarDiv").slideUp();
+            $("#SchduleDiv").slideDown();
+        });
+
+        $("#CalendarView").on('click', function (event) {
+            $("#SchduleDiv").slideUp();
+            $("#CalendarDiv").slideDown();
+        });
+        })
+    </script>
+}

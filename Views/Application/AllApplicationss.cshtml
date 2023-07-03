@@ -1,0 +1,152 @@
+﻿@using NewDepot.Helpers;
+@model IEnumerable<NewDepot.Models.MyApps>
+
+@{
+    ViewBag.Title = "All Applications";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    var i = 1;
+}
+<div class="content">
+    <h2 class="lefty">@ViewBag.Titles</h2>
+
+    <link href="~/OldDepotStyle/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+
+    @using (Html.BeginForm("AllApplicationss", "Application", FormMethod.Post))
+    {
+<div class="row">
+    <div class="col-md-2">
+        <select id="year" name="year" class="form-control">
+            <option value="">Year</option>
+            @foreach (var item in ViewBag.Year)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+
+
+        <select id="phase" name="phase" class="form-control">
+            <option value="">Category</option>
+            @foreach (var item in ViewBag.Phases)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+    </div> 
+    <div class="col-md-2">
+
+
+        <select id="status" name="status" class="form-control">
+            <option value="">Application Status</option>
+              <option value="@GeneralClass.Processing">@GeneralClass.Processing</option>
+              <option value="@GeneralClass.Approved">@GeneralClass.Approved</option>
+              <option value="@GeneralClass.PaymentPending">@GeneralClass.PaymentPending</option>
+              <option value="@GeneralClass.Rejected">@GeneralClass.Rejected</option>
+            
+        </select>
+    </div>
+    <div id="reportrange" class="col-md-4" style="">
+
+        <div class="col-sm-2" style="">
+
+            <input type="text" name="sdate" placeholder="Date From:" id="txtApplicationReportFrom" value="" autocomplete="off" />
+        </div>
+        <div class="col-sm-2" style="">
+
+            <input type="text" name="edate" placeholder="Date To:" id="txtApplicationReportTo" value="" autocomplete="off"/>
+        </div>
+    </div>
+    <div id="" class="col-md-2">
+        <input type="submit" value="Filter" style="height:30px; width:40%; margin-left:-180px;" class=" btn btn-success input-append" />
+        <span class="fa fa-search"></span>
+
+    </div>
+    </div>
+    }
+    <p class="marg50"></p>
+    <table class="table table-striped table-hover dataTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>
+                    Reference
+                </th>
+                <th>Company Name</th>
+
+                <th>Facility Name (Address)</th>
+                <th>State</th>
+                <th>Category</th>
+                <th>Year</th>
+                <th>Status</th>
+                <th>Date Applied</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderByDescending(x=> x.DateSubmitted))
+            {
+                string alertx = string.Empty;
+                
+                if (item.Status.ToLower() == "approved") { alertx = "label-success"; }
+                else if (item.Status.ToLower() == "processing" || item.Status.ToLower() == "payment completed") { alertx = "label-info"; }
+                else if ((item.Status.ToLower() == "pending") || (item.Status.ToLower() == "payment pending")) { alertx = "label-warning"; }
+                else { alertx = "label-danger"; }
+                var id= i++;
+                <tr>
+                    <td>@id</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Reference)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @item.FacilityName <small>(  @item.Address_1 )</small>
+                    </td>
+                    <td>@item.StateName</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhaseName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>
+                    <td>
+                        <div class="btn btn-sm @alertx">
+                            <strong>@Html.DisplayFor(model => item.Status)</strong>
+                        </div>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateSubmitted)
+                    </td>
+                    <td>
+                        <a href="/Application/ViewApplication/@item.appID" class="btn btn-xs btn-info">View <i class="icon-eye"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+    @section Scripts{
+        <script type="text/javascript">
+            $(function () {
+                $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+                $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+                $(".dataTable").dataTable({
+                    "aLengthMenu": [25, 50, 75, 100, 200],
+                    'iDisplayLength': 50,
+                    columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                    "language": {
+                        "lengthMenu": "Display  _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    },
+                    //"order": [[1, "asc"]]
+                });
+            });
+        </script>
+    }

@@ -1,0 +1,32 @@
+﻿@model NewDepot.Models.Forms
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <h3 id="modal-title">Publish Form</h3>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        @Html.HiddenFor(c => c.Id)
+        <h5>
+            Are you sure you want to Publish this Form?
+        </h5>
+        <p>
+            The Form will not be Editable again will now be available for use.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <div class="txtcenter">
+            <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <input type="submit" value="Confirm Publish" class="btn btn-warning" />
+        </div>
+    </div>
+}

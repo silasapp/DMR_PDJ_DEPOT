@@ -1,0 +1,126 @@
+﻿@using NewDepot.Models;
+@using NewDepot.Helpers;
+@model IList<System.Linq.IGrouping<System.Int32, ApplicationDeskHistoryModel>>
+
+
+@{
+    ViewBag.Title = "Application History";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+@if (Model == null)
+{
+    <div class="content">
+        <h2>Can Not Process</h2>
+        <hr />
+        <h4>@ViewBag.Message</h4>
+    </div>
+}
+else
+{
+    <div class="">
+
+        <p>@ViewBag.Message</p>
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>@ViewBag.Header</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <dl class="dl-horizontal">
+                            @if (ViewBag.UsrName != null)
+                            {
+                                <dt>Current Desk</dt>
+                                <dd>
+                                    Application is currently on <b>@ViewBag.UsrName (@ViewBag.StaffFieldOffice)</b> desk
+                                </dd><br/>
+                            }
+                            <dt>Company's Name:</dt>
+                            <dd>@Model.FirstOrDefault().FirstOrDefault().CompanyName</dd>
+                            <dt>Application Category:</dt>
+                            <dd>
+                                @Model.FirstOrDefault().FirstOrDefault().CategoryName
+                            </dd>
+                            <dt>Date Applied:</dt>
+                            <dd>
+                                @Model.FirstOrDefault().FirstOrDefault().ApplicationDate
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2></h2>
+                    </div>
+                    <div class="x_content">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Date Processed
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Comment
+                                    </th>
+                                    <th>
+                                        Sender Desk
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (IGrouping<int, ApplicationDeskHistoryModel> items in Model)
+                                {
+                                    foreach (var item in items.OrderByDescending(a => a.id))
+                                    {
+                                        string trcolor = (item.Status.ToLower() == "rejected" ? "danger" : "");
+                                        <tr class="@trcolor">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Date)
+                                            </td>
+                                            <td>
+                                                @if (item.Status.ToLower() == "approved")
+                                                {
+                                                    <span class="label label-success">@item.Status</span>
+                                                }
+                                                else if (item.Status.ToLower() == "rejected")
+                                                {
+                                                    <span class="label label-danger">@item.Status</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-info">@item.Status</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Comment)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserName)
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

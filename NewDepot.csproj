@@ -1,0 +1,318 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TypeScriptToolsVersion>4.2</TypeScriptToolsVersion>
+    <StartupObject></StartupObject>
+    <UserSecretsId>a0158602-0ddd-4518-b1fa-1f9417834de3</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/2ac621cb-d72b-4d5e-a2d9-38aab86a69d7/resourceGroups/CELPS/providers/microsoft.insights/components/pdjdepot</ApplicationInsightsResourceId>
+    <Authors>Adeola Sekinat Tijani</Authors>
+    <Company>BrandOne Technologies/NMDPRA</Company>
+    <Product>PDJ Depot Licence</Product>
+    <Description>Automated Depot system for licensing and permit system for NMDPRA</Description>
+    <Copyright>BrandOne Technologies 2021</Copyright>
+    <PackageProjectUrl>https://depot.dpr.gov.ng</PackageProjectUrl>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Views\Account\**" />
+    <Compile Remove="Views\Branch\**" />
+    <Compile Remove="Views\InspectionForms\**" />
+    <Compile Remove="Views\Manage\**" />
+    <Compile Remove="Views\Message_Backend\**" />
+    <Compile Remove="Views\Page\**" />
+    <Compile Remove="Views\Phase\**" />
+    <Compile Remove="Views\Recyclebin\**" />
+    <Compile Remove="Views\Reports2\**" />
+    <Compile Remove="Views\RolesAdmin\**" />
+    <Compile Remove="Views\Service\**" />
+    <Compile Remove="Views\Specification\**" />
+    <Compile Remove="Views\Transactions\**" />
+    <Compile Remove="Views\UserRoles\**" />
+    <Compile Remove="Views\UsersAdmin\**" />
+    <Compile Remove="Views\ZoneMapping\**" />
+    <Compile Remove="Views\_Manage\**" />
+    <Content Remove="Views\Account\**" />
+    <Content Remove="Views\Branch\**" />
+    <Content Remove="Views\InspectionForms\**" />
+    <Content Remove="Views\Manage\**" />
+    <Content Remove="Views\Message_Backend\**" />
+    <Content Remove="Views\Page\**" />
+    <Content Remove="Views\Phase\**" />
+    <Content Remove="Views\Recyclebin\**" />
+    <Content Remove="Views\Reports2\**" />
+    <Content Remove="Views\RolesAdmin\**" />
+    <Content Remove="Views\Service\**" />
+    <Content Remove="Views\Specification\**" />
+    <Content Remove="Views\Transactions\**" />
+    <Content Remove="Views\UserRoles\**" />
+    <Content Remove="Views\UsersAdmin\**" />
+    <Content Remove="Views\ZoneMapping\**" />
+    <Content Remove="Views\_Manage\**" />
+    <EmbeddedResource Remove="Views\Account\**" />
+    <EmbeddedResource Remove="Views\Branch\**" />
+    <EmbeddedResource Remove="Views\InspectionForms\**" />
+    <EmbeddedResource Remove="Views\Manage\**" />
+    <EmbeddedResource Remove="Views\Message_Backend\**" />
+    <EmbeddedResource Remove="Views\Page\**" />
+    <EmbeddedResource Remove="Views\Phase\**" />
+    <EmbeddedResource Remove="Views\Recyclebin\**" />
+    <EmbeddedResource Remove="Views\Reports2\**" />
+    <EmbeddedResource Remove="Views\RolesAdmin\**" />
+    <EmbeddedResource Remove="Views\Service\**" />
+    <EmbeddedResource Remove="Views\Specification\**" />
+    <EmbeddedResource Remove="Views\Transactions\**" />
+    <EmbeddedResource Remove="Views\UserRoles\**" />
+    <EmbeddedResource Remove="Views\UsersAdmin\**" />
+    <EmbeddedResource Remove="Views\ZoneMapping\**" />
+    <EmbeddedResource Remove="Views\_Manage\**" />
+    <None Remove="Views\Account\**" />
+    <None Remove="Views\Branch\**" />
+    <None Remove="Views\InspectionForms\**" />
+    <None Remove="Views\Manage\**" />
+    <None Remove="Views\Message_Backend\**" />
+    <None Remove="Views\Page\**" />
+    <None Remove="Views\Phase\**" />
+    <None Remove="Views\Recyclebin\**" />
+    <None Remove="Views\Reports2\**" />
+    <None Remove="Views\RolesAdmin\**" />
+    <None Remove="Views\Service\**" />
+    <None Remove="Views\Specification\**" />
+    <None Remove="Views\Transactions\**" />
+    <None Remove="Views\UserRoles\**" />
+    <None Remove="Views\UsersAdmin\**" />
+    <None Remove="Views\ZoneMapping\**" />
+    <None Remove="Views\_Manage\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\Configurations\CountriesController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Application\GetServiceJobSpec.cshtml" />
+    <Content Remove="Views\Application\GetServices.cshtml" />
+    <Content Remove="Views\Application\LoadServiceForMap.cshtml" />
+    <Content Remove="Views\Application\StartCrawler.cshtml" />
+    <Content Remove="Views\Category\CreateCategoryRule2.cshtml" />
+    <Content Remove="Views\Form\DisplayForm.cshtml" />
+    <Content Remove="Views\Search\EditLegacy.cshtml" />
+    <Content Remove="Views\Shared\ErrorTestPdf.cshtml" />
+    <Content Remove="Views\Shared\Login.cshtml" />
+    <Content Remove="Views\Shared\miniError.cshtml" />
+    <Content Remove="Views\ZonalOffices\Delete.cshtml" />
+    <Content Remove="Views\_Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Remove="wwwroot\images\Signature\021121173037_NewDirectorSignature.png" />
+    <Content Remove="wwwroot\images\Signature\060720234542_sc.jpg" />
+    <Content Remove="wwwroot\images\Signature\DirectorSignature.png" />
+    <Content Remove="wwwroot\images\Signature\NewDirectorSignature.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNet.Highcharts" Version="4.0.0" />
+    <PackageReference Include="Highsoft.Highcharts" Version="9.1.2" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.2" />
+    <PackageReference Include="itextsharp.xmlworker" Version="5.5.13.2" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNet.Identity" Version="3.0.0-rc1-final" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.7" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.7" />-->
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0-preview1-35029" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0-preview.4.21253.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.10" />
+    <PackageReference Include="QRCoder" Version="1.3.2" />
+    <PackageReference Include="RestSharp" Version="106.3.1" />
+    <PackageReference Include="Rotativa.AspNetCore" Version="1.2.0-beta" />
+    <PackageReference Include="Sendgrid" Version="9.10.0" />
+    <PackageReference Include="Serilog" Version="2.8.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.7.21377.19" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.13" />
+    <PackageReference Include="Wangkanai.Detection" Version="2.0.0-beta8" />
+    <PackageReference Include="Westwind.AspNetCore.LiveReload" Version="0.3.2" />
+    <PackageReference Include="ZXing" Version="2.1.1" />
+    <PackageReference Include="ZXing.Net" Version="0.16.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Views\Home\Errorr.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="wwwroot\Templates\ApprovalTemplate\DM_Decommission.txt">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Scheduler\" />
+    <Folder Include="wwwroot\Guide\" />
+    <Folder Include="wwwroot\images\FormImages\" />
+    <Folder Include="wwwroot\js\Plugins\datatables.net-responsive\js\NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Depot_Database\Depot_Database.sqlproj" />
+    <None Include="Depot_Database\Depot_Database.sqlproj.user" />
+    <None Include="NewDepot.sln" />
+    <None Include="Views\Account\ExpiredSession.cshtml" />
+    <None Include="Views\Account\AccessDenied.cshtml" />
+    <None Include="Views\Account\ChangePassword.cshtml" />
+    <None Include="Views\Legacies\Apply.cshtml" />
+    <None Include="Views\Legacies\Create.cshtml" />
+    <None Include="Views\Legacies\Delete.cshtml" />
+    <None Include="Views\Legacies\Details.cshtml" />
+    <None Include="Views\Legacies\Edit.cshtml" />
+    <None Include="Views\Legacies\Index.cshtml" />
+    <None Include="Views\Legacies\LegacyApplications.cshtml" />
+    <None Include="Views\Legacies\MyLegacy.cshtml" />
+    <None Include="Views\Legacies\Resubmit.cshtml" />
+    <None Include="Views\Legacies\ViewLegacy.cshtml" />
+    <None Include="Views\Legacies\ViewLegacyApp.cshtml" />
+    <None Include="Views\OutOfOffice\AllOutOfOffice.cshtml" />
+    <None Include="Views\OutOfOffice\OutOfOffice.cshtml" />
+    <None Include="Views\OutOfOffice\RelieveStaff.cshtml" />
+    <None Include="Views\Reports\ApplicationCountReport.cshtml" />
+    <None Include="Views\Reports\ApplicationReport.cshtml" />
+    <None Include="Views\Reports\Applications.cshtml" />
+    <None Include="Views\Reports\ApplicationSummary.cshtml" />
+    <None Include="Views\Reports\PaymentExport.cshtml" />
+    <None Include="Views\Reports\PaymentSummary.cshtml" />
+    <None Include="Views\Reports\PermitReport.cshtml" />
+    <None Include="Views\Reports\Permits.cshtml" />
+    <None Include="Views\Reports\StaffMetrics.cshtml" />
+    <None Include="Views\Reports\StaffProcessingRate.cshtml" />
+    <None Include="Views\Reports\Transactions.cshtml" />
+    <None Include="Views\UserRoles\Index.cshtml" />
+    <None Include="Views\Users\Activities.cshtml" />
+    <None Include="Views\Users\Company.cshtml" />
+    <None Include="Views\Users\CompanyLogins.cshtml" />
+    <None Include="Views\Users\Staff.cshtml" />
+    <None Include="Views\Users\StaffLogins.cshtml" />
+    <None Include="Views\Users\Staffs.cshtml" />
+    <None Include="wwwroot\js\Plugins\datatables.net-bs\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-bs\js\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-bs\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons-bs\js\buttons.bootstrap.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons-bs\js\buttons.bootstrap.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons-bs\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.colVis.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.colVis.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.flash.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.flash.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.html5.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.html5.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.print.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\buttons.print.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\dataTables.buttons.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\js\dataTables.buttons.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-buttons\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-fixedheader-bs\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-fixedheader\js\dataTables.fixedHeader.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-fixedheader\js\dataTables.fixedHeader.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-fixedheader\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-keytable\js\dataTables.keyTable.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-keytable\js\dataTables.keyTable.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-keytable\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-responsive-bs\js\responsive.bootstrap.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-responsive-bs\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-responsive\js\dataTables.responsive.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-responsive\js\dataTables.responsive.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-responsive\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-scroller-bs\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net-scroller\js\dataTables.scroller.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-scroller\js\dataTables.scroller.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net-scroller\Readme.md" />
+    <None Include="wwwroot\js\Plugins\datatables.net\js\jquery.dataTables.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net\js\jquery.dataTables.min.js" />
+    <None Include="wwwroot\js\Plugins\datatables.net\Readme.md" />
+    <None Include="wwwroot\js\Plugins\jszip\CHANGES.md" />
+    <None Include="wwwroot\js\Plugins\jszip\dist\jszip.js" />
+    <None Include="wwwroot\js\Plugins\jszip\dist\jszip.min.js" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\constructor.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\constructor_load.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\file_data.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\file_name.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\file_regex.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\filter.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\folder_data.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\folder_regex.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\generate.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\load.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\remove.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_jszip\support.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\api_zipobject.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\contributing.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\examples.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\examples\downloader.js" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\faq.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\howto\read_zip.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\howto\write_zip.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\limitations.md" />
+    <None Include="wwwroot\js\Plugins\jszip\documentation\upgrade_guide.md" />
+    <None Include="wwwroot\js\Plugins\jszip\Gruntfile.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\arrayReader.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\base64.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\compressedObject.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\compressions.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\crc32.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\dataReader.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\defaults.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\deprecatedPublicUtils.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\flate.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\index.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\license_header.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\load.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\nodeBuffer.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\nodeBufferReader.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\object.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\signature.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\stringReader.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\stringWriter.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\support.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\uint8ArrayReader.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\uint8ArrayWriter.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\utf8.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\utils.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\zipEntries.js" />
+    <None Include="wwwroot\js\Plugins\jszip\lib\zipEntry.js" />
+    <None Include="wwwroot\js\Plugins\jszip\LICENSE.markdown" />
+    <None Include="wwwroot\js\Plugins\jszip\README.markdown" />
+    <None Include="wwwroot\js\Plugins\jszip\vendor\FileSaver.js" />
+    <None Include="wwwroot\js\Plugins\jszip\_config.yml" />
+    <None Include="wwwroot\js\Plugins\pdfmake\LICENSE" />
+  </ItemGroup>
+
+</Project>

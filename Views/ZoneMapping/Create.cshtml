@@ -1,0 +1,53 @@
+﻿
+
+
+@{
+    ViewBag.Title = "Create Zone Branch Moapping";
+    Layout = null;
+    var stat = (List<State>)ViewBag.state;
+    var brnch = (List<Branch>)ViewBag.branch;
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            <label class="control-label col-md-4">Field Office</label>
+            <div class="col-md-8">
+                <select id="Branch_Id" name="Branch_Id" required class="form-control">
+                    <option value="">Select Field Office</option>
+                    @foreach (var item in brnch)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label class = "control-label col-md-4" >State</label>
+            <div class="col-md-8">
+                <select id="state_Id" name="state_Id" required class="form-control">
+                    <option value="">Select State</option>
+                    @foreach (var item in stat)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <div class="clear"></div>
+    <div class="modal-footer">
+        <div class="txtcenter">
+            <button class="btn btn-default" data-dismiss="modal">Close</button>
+            <input type="submit" value="Save Mapping" class="btn btn-success" />
+        </div>
+    </div>
+}

@@ -1,0 +1,92 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<Staff_UserBranchModel>
+
+@{
+
+
+    Layout = null;
+    int count = 0;
+
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    string desk = "Inspectors";
+
+    if (userRole.Contains("AD"))
+    {
+
+        desk = "Inspector";
+    }
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">Assign Application to Inspector</h3>
+</div>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="modal-body">
+        <div>
+            <p>
+                Please select one or more Inspectors to assign application
+            </p>
+            <table id="inspTable" class="table table-hover table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="padding-left: 10px;">
+                            <input type="checkbox" name="inspectorsAll" id="inspectorsAll" />
+                        </th>
+                        <th>Staff Name</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td style="padding-left: 10px;">
+                                <input type="checkbox" name="inspector" class="insp" value="@item.StaffId" />
+                            </td>
+                            <td>@item.StaffFullName</td>
+                            <td>@item.StaffEmail</td>
+                            <td>@item.FieldOffice</td>
+                            <td>
+                                @if (item.Active == true)
+                                {
+                                    <span class="label label-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-danger">Inactive</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div> <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <input type="button" id="btnAssignInsp" value="Confirm Push Application" class="btn btn-success" />
+    </div>
+}
+else
+{
+    <div class="modal-body">
+        <div>
+            <p>
+                No inspector found. Please contact the Portal admin for addition of staff on the portal.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-Default" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+}

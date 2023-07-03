@@ -1,0 +1,315 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers
+@model MyApps
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Application details for " + Model.FacilityDetails + " (" + Model.PhaseName + ")";
+    string alertx = string.Empty;
+
+    if (Model.Status.ToLower() == "approved") { alertx = "label-success"; }
+    else if (Model.Status.ToLower() == "processing") { alertx = "label-info"; }
+    else if ((Model.Status.ToLower() == "pending") || (Model.Status.ToLower() == "payment pending")) { alertx = "label-warning"; }
+    else { alertx = "label-danger"; }
+    var AppDocs = (List<AppDocuument>)ViewBag.ApplicationDocs;
+    int rejectDocCount = ViewBag.DocsRemaining;
+    int i = 0;
+    var AppTanks = (List<TankModel>)ViewBag.AppTanks;
+
+}
+
+
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title </h3>
+        <hr />
+    </div>
+</div>
+<div class="marg25"></div>
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+
+
+<div class="row">
+    <h3 class="col-md-12">Reference: @Model.Reference</h3>
+  </div>  
+<div class="row">
+
+    <div class="col-sm-6">
+        <div class="padd">
+            <table class="table table-bordered table-striped">
+                <tbody>
+
+                    <tr>
+                        <td><b> My Company Name </b></td>
+                        <td class="text-left"> <a href="/Companies/CompanyInformation" class="text-info" target="_blank">  @Model.CompanyDetails</a> </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <b>Application Year</b>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Year)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Fee Payable</b>
+                        </td>
+                        <td>
+                            @Model.Fee_Payable.ToString("₦ #,###,##0.00")
+                        </td>
+                    <tr>
+                        <td>
+                            <b>Service Charge</b>
+                        </td>
+                        <td>
+                            @Model.Service_Charge.ToString("₦ #,###,##0.00")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Total Amount Due</b>
+                        </td>
+                        <td>
+                            @{var amt = Model.Fee_Payable + Model.Service_Charge;}
+                            @amt.ToString("₦ #,###,##0.00")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </b>
+                        </td>
+                        <td>
+                            <div class="label @alertx">
+                                <strong>@Html.DisplayFor(model => model.Status)</strong>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>
+                                Date
+                            </b>
+                        </td>
+                        <td>
+                            <b>Applied:</b> @Html.DisplayFor(model => model.Date_Added)<br />
+                            <b>Submitted:</b> @Html.DisplayFor(model => model.CreatedAt)<br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Attached Documents</b>
+                        </td>
+                        <td>
+
+                            <div class="list-group doc-list">
+                                @if (AppDocs.Count > 0)
+                                {
+                                    foreach (var item in AppDocs)
+                                    {
+                                        if (item.DocSource.ToLower().EndsWith(".pdf"))
+                                        {
+                                            <a href="@item.DocSource" class="list-group-item">
+                                                @if (item.DocName.ToLower() == "other document")
+                                                {
+                                                    @item.DocName <i class="fa fa-file-pdf-o"></i>
+                                                }
+                                                else
+                                                {
+                                                    @item.DocName <i class="fa fa-file-pdf-o"></i>
+                                                }
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@item.DocSource" class="list-group-item">
+                                                @if (item.DocName.ToLower() == "other document")
+                                                {
+                                                    @item.DocName <i class="glyphicon glyphicon-picture"></i>
+                                                }
+                                                else
+                                                {
+                                                    @item.DocName <i class="glyphicon glyphicon-picture"></i>
+                                                }
+                                            </a>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <h4>No Submitted for this Application yet</h4>
+                                }
+                            </div>
+
+                            @if (ViewBag.DocsRemaining > 0)
+                            {
+                                <p>You have @ViewBag.DocsRemaining Document remaining for your application, @*<a href="/Application/UploadPhaseDoc/@Model.Id" class="btn btn-xs btn-warning">Add Documents</a>*@ but wait while the applicatication will be released for you to proceed.</p>
+                            }
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="padd">
+
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>Facility</b>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.FacilityDetails)
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <b>  Phase</b>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.PhaseName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Application Type</b>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Type)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="padd">
+            <h3>Application Tanks</h3>
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tank Name</th>
+                        <th>Max. Capacity</th>
+                        <th>Product</th>
+                        <th>Diameter(m)</th>
+                        <th>Height(m)</th>
+                        <th>Modify Type</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (AppTanks.Count > 0)
+                    {
+                        @foreach (var item in AppTanks)
+                        {
+                            i++;
+
+                            <tr id="" class="tnks">
+                                <td style="display: table-cell; vertical-align: middle">@i</td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.MaxCapacity
+                                </td>
+                                <td>
+                                    @item.ProductName
+                                </td>
+                                <td>
+                                    @item.Diameter
+                                </td>
+                                <td>
+                                    @item.Height
+                                </td>
+                                <td>
+                                    @item.ModifyType
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                    else
+                    {
+
+                        <tr>
+                            <td colspan="7">
+                                <p class="text-danger">You do not have any tank associated with this facility. Kindly apply for ATC to construct tanks for your depot.</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clear"></div>
+    @if (ViewBag.Summary != null && ViewBag.Summary == true)
+    {
+        <hr />
+        <div class="txtcenter">
+            <a href="/Company" class="btn btn-success">Continue to Company Profile</a>
+        </div>
+    }
+</div>
+
+
+
+
+<!-- modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="myModalBody">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h3 id="myModalLabel">Modal Title</h3>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <p>One fine body&hellip;</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("a[data-toggle='modal']").click(function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+
+                $("#myModalBody").html(Loading());
+                $.get(url, function (data) {
+                    //alert(url + ":- " + data);
+                    $("#myModalBody").html(data);
+                });
+            });
+        });
+    </script>
+}

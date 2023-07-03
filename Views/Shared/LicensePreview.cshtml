@@ -1,0 +1,234 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model NewDepot.Models.PermitViewModel
+
+@{
+    Layout = null;
+    //var f = Model.PermitFor.ToLower();
+    var hColor = "indianred";
+    GeneralClass generalClass = new GeneralClass();
+
+    var prods = Model.Products.OrderBy(a => a.Value);
+    int prod = 1;
+    var cid = Model.CompanyIdCode;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+
+    <style type="text/css">
+    </style>
+</head>
+<body style="font-size: 1.1em;">
+    <div style="width: 1300px; height: 100%; margin: 0px auto;box-sizing: border-box; padding: 49px 19px; position: relative;">
+        <div style="width: 100%; text-align: center; position: absolute; top: 50%; margin-top: -300px;">
+            <img src="~/OldDepotStyle/Content/Images/waterMark_preview.png" style="width: 620px;" />
+        </div>
+        <div style="border: 10px solid #101010; padding: 47px 19px; font-family: 'Times New Roman'; position: relative; height: 100%; box-sizing: border-box;">
+            <div style="text-align: center;">
+                <img src="~/OldDepotStyle/Content/Images/coat-of-arm.jpg" alt="Logo" style="height: 140px; display: block; margin: 0 auto 15px auto;" />
+                <div>
+                    <h2 style="margin: 0; margin-top:10px;font-size: 1.7em">FEDERAL REPUBLIC OF NIGERIA</h2>
+                    <h2 style="margin: 0;font-size: 1.7em">PETROLEUM DECREE 1969</h2>
+
+
+                    <h1 style="margin: 0; font-size: 34px; color: @hColor;">Petroleum Depot Licence</h1>
+
+                </div>
+            </div>
+
+            <div style="padding: 0px; position: absolute; box-sizing: border-box; top: 380px; left: 97px; right: 97px;">
+                <div style="float: left; width: 50%;">
+                    &nbsp;
+                </div>
+                <div style="float: right; width: 480px; font-size: 1.3em;">
+                    <div style="padding-top: 0;">
+                        <div style="width: 140px; float: left;">License No:</div>
+                        <div style="border-bottom: 2px dotted #888; width: 340px; float: left; padding-left: 10px; box-sizing: border-box; text-align: right;font-weight: bold;">@Model.PermitNo&nbsp;</div>
+                        <div style="clear: both;"></div>
+                    </div>
+
+                    <div style="font-size: 0.8em; padding-top: 0; margin-top: 10px;">
+                        <div style="width: 290px; float: left; font-weight: bold;">Company Identification Code:</div>
+                        <div style="border-bottom: 2px dotted #888; width: 190px; float: left; padding-left: 10px; box-sizing: border-box; text-align: right; font-size: 18px; font-weight: bold;">@Model.CompanyIdCode&nbsp;</div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+
+            <div style="padding: 0px; position: absolute; box-sizing: border-box; top: 480px; left: 97px; right: 97px;">
+                <table style="width: 100%; border-spacing: 0; position: relative; margin-top: 0px; font-size: 26px;">
+                    <tr>
+                        <td style="border-bottom: 2px dotted #888;padding: 5px 0 0;" colspan="2">
+                            <div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                License is hereby granted to:
+                            </div>
+                            <span style="font-weight: bold; font-style: italic; font-size: 28px;" id="facLine1">@Model.CompanyNameL1.ToUpper()</span>
+                        </td>
+                    </tr>
+                    @if (!string.IsNullOrEmpty(Model.CompanyNameL2))
+                    {
+                        <tr>
+                            <td style=" border-bottom: 2px dotted #888;padding: 8px 0 5px 0;" colspan="2">
+                                &nbsp; &nbsp;&nbsp; &nbsp;<span style="font-weight: bold; font-style: italic;font-size: 28px;" id="facLine2">@Model.CompanyNameL2.ToUpper()</span>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td style=" border-bottom: 2px dotted #888;padding: 5px 0 0;" colspan="2">
+                            <div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                of
+                            </div>
+                            &nbsp; &nbsp;
+                            <span style="font-weight: bold;font-size: 26px;" id="coynameLine1">
+                                @Model.CoyAddL1
+                            </span>
+                        </td>
+                    </tr>
+                    @if (!string.IsNullOrEmpty(Model.CoyAddL2))
+                    { }
+
+                    <tr>
+                        <td style=" border-bottom: 2px dotted #888;padding: 8px 0 5px 0;" colspan="2">
+                            &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<span style="font-weight: bold;font-size: 26px;" id="coynameLine2">@Model.CoyAddL2</span>
+                        </td>
+                    </tr>
+
+
+                    @foreach (var item in prods)
+                    {
+                        string p = prod == 1 ? "for the Storage of " : "";
+
+                        <tr>
+                            <td style=" border-bottom: 2px dotted #888;padding: 8px 0 5px 0;" colspan="2">
+                                @{
+                                    var value = item.Value;
+                                    var num = GeneralClass.NumberToWords(value).ToUpper();
+                                }
+                                <div>@p @value.ToString("N2") &nbsp; <span style="font-size: 16px;"> (@num litres of <b>@item.Key</b></span> )</div>
+
+
+                            </td>
+                        </tr>
+                        prod++;
+                    }
+                  
+
+                    <tr>
+                        <td style="text-align: center; font-size: 0.8em;" colspan="2">Name(s) of Products</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style=" border-bottom: 2px dotted #888;padding: 5px 0 0;" colspan="2">
+                            <div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                at
+                            </div><span style="font-weight: bold;font-size: 28px;" id="facAddress1">@Model.FacilityAddress1</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" border-bottom: 2px dotted #888;padding: 8px 0 5px 0;" colspan="2">
+                            &nbsp;<span style="font-weight: bold;font-size: 28px;" id="facAddress2">@Model.FacilityAddress2</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-size: 18px;" colspan="2">Address of Premises</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 26px;">
+                            @*@if (f == "a")
+                                    {
+                                                        <p>
+                                                            This Licence is issued subject to the conditions prescribed in the Petroleum Decree 1969.
+                                                            It does not confer on the Licensee the right to sell petroleum products.
+                                                        </p>
+                                }
+                                else if (f == "c")
+                                {
+                                                        <p>
+                                                            This Licence is issued subject to the conditions prescribed in the Petroleum Decree 1969.
+                                                            It does not confer on the Licensee the right to sell petroleum products other than Kerosine.
+                                                        </p>
+                                }
+                                else
+                                { }*@
+                            <div style="font-size:0.9em">
+                                <p>
+                                    This License is issued subject to the conditions prescribed in the Petroleum
+                                    Decree 1969 of which the License admits cognizance.
+                                </p>
+
+                                <p>
+                                    This License shall expire on the 31st day of December next following the date
+                                    of issue hereof and may be renewed on application being made for this purpose
+                                    not later than 30 days previous to the date of expiry.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style=" border-bottom: 2px dotted #888;padding: 5px 0 0;">
+                            <div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                Dated
+                            </div>
+                            <span style="font-weight: bold;font-size: 26px;" id="date1">@Model.IssueDate.DayOfWeek.ToString(), @Model.IssueDate.Day</span>
+                        </td>
+                        <td style=" border-bottom: 2px dotted #888;padding: 5px 0 0;">
+                            <div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                &nbsp; &nbsp; Day of
+                            </div>
+                            <span style="font-weight: bold;font-size: 26px;" id="date2">@Model.IssueDate.Month @Model.IssueDate.Year</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" border-bottom: 2px dotted #888;padding: 5px 0 0;" colspan="2">
+                            <div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                FEE ₦:
+                            </div>
+                            <span style="font-weight: bold;font-size: 26px;" id="fee1">@Model.Fee.Value.ToString("#,###,##0.00") &nbsp; (@GeneralClass.NumberToWords(Convert.ToDouble(Model.Fee)))</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" border-bottom: 2px dotted #888;padding: 5px 0 0;" colspan="2">
+                            <div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                EXPIRY DATE:
+                            </div>
+                            <span style="font-weight: bold;font-size: 26px" id="expdate">@Model.ExpiryDate.Day @Model.ExpiryDate.Month, @Model.ExpiryDate.Year</span>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; position: relative;">
+                    <tr style="height: 150px; margin-top: 0px;">
+                        <td style="vertical-align: bottom;">
+                            <span style="font-size: 1em;" id="cateName">@Model.CategoryName</span>
+                        </td>
+                        <td>
+                            <div style="text-align: right; max-width: 390px; float: right; height: 140px; position: relative;">
+                                <div style="position: relative; height: 165px;">
+                                    @*<img src="/OldDepotStyle/Content/Signatures/DG2.png" style="height: 135px; width: 235px; position: absolute; bottom: 25px; right: 50px;" />*@
+                                </div>
+                                <div style="height: 20px; font-size: 1.3em; text-align: center; margin-bottom: 0; width: 390px; right: 0; border-top: 2px dotted #888; position: absolute; bottom: 0;">For: Honorable Minister of Petroleum Resources</div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+﻿<p><u>RE: APPLICATION FOR REGULARIZATION OF PETROLEUM PRODUCTS STORAGE DEPOT</u></p>
+<p style="text-align: justify; line-height: 1.4em;">
+   We refer to your application dated {1} for the regularization of your storage depot facility, located at {0} and the subsequent site inspection by a team of 
+   NMDPRA officials from the Head office and {2} carried out on {3}.
+<p style="text-align: justify; line-height: 1.4em;">		 
+
+	In view of the satisfactory inspection and assessment exercise conducted, I am pleased to inform you that you are hereby granted <b> Regularization Approval </b> for your Bulk Storage Depot Facility with the following capacities: 
+
+</p>
+ <table style="width: 100%; border-spacing: 0; margin-top: 25px; font-size: inherit;">
+        <tr>
+            <th>S/N</th>
+            <th>PRODUCT</th>
+            <th>DIAMETER (meters) </th>
+            <th>HEIGHT (meters)</th>
+            <th>CAPACITY (litres)</th>
+        </tr>
+        <tbody>
+            {4}
+        </tbody>
+    </table>
+    <br/>
+	<div>
+<p>
+Notwithstanding this approval, you are required to obtain any other requisite approvals/clearance from applicable agencies and to adhere strictly with the Department’s Guidelines for Construction and Operations of Petroleum Products Depots and Facilities in Nigeria.
+</p>
+ <p>
+ You are to apply for Licence to Operate the facility using the online depot portal at https://depot.dpr.gov.ng.
+</p>
+</div>

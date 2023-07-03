@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Payment Transactions";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<div class="content">
+    <h2 class="lefty">Payment Transactions</h2>
+    <hr class="clear" />
+
+    <table class="table customDT">
+        <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>Payment Date </th>
+                <th>
+
+                    Customer Reference
+                </th>
+                <th> Amount</th>
+                <th>Payment Reference </th>
+                <th>Payment Method</th>
+                <th>Item Name</th>
+                <th>Status</th>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-payment > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Company/All']").addClass("selected");
+
+
+        });
+
+        $(document).ready(function () {
+            $('.customDT').dataTable({
+
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("PayDirectLog", "Payment")',
+                "bProcessing": true,
+                "pageLength": 50,
+                "aoColumns": [
+
+                        { "sName": "Id" },
+                        { "sName": "Payment_Date" },
+                        { "sName": "Cust_Reference" },
+                        { "sName": "Amount" },
+                        { "sName": "payment_Reference" },
+                        { "sName": "payment_method" },
+                        { "sName": "item_Name" },
+                        { "sName": "Status" },
+                        { "sName": "Name" },
+                        {
+                            "sName": "Id",
+                            "bSearchable": false,
+                            "bSortable": false,
+                            "mRender": function (data, type, oObj) {
+                                if (!oObj[8])
+                                {
+                                    return '<a class="btn btn-xs btn-success" disabled href="TransactionDetail/' + oObj[8] + '">' + 'Query' + '<i class="icon-login"></i></a>';
+                                }
+                                else {
+                                    return '<a class="btn btn-xs btn-success" href="TransactionDetail/' + oObj[8] + '">' + 'Query' + '<i class="icon-login"></i></a>';
+
+
+                                }
+                            }
+                        }
+                ]
+            });
+        });
+    </script>
+}

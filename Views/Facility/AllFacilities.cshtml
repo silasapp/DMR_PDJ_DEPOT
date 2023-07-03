@@ -1,0 +1,172 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers
+@model IEnumerable<Facilities>
+
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ViewBag.Title = "Company Facilities";
+    int counter = 0;
+    var Companies = (List<companies>)ViewBag.Companies;
+     GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+
+}
+
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>All Facilities</h3>
+        </div>
+        <div class="title_right">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+
+                    <table class="table table-hover table-striped table-bordered dataTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>Owned By</th>
+                                <th>
+                                    Date Added
+                                </th>
+                                @*<th>
+            Drive In/Out
+        </th>*@
+                                <th>
+                                    Contact Information
+                                </th>
+                                <th>
+                                    Depot Address
+                                </th>
+                                <th>
+                                    Loading Arms
+                                </th>
+                                <th>
+                                    Tanks
+                                </th>
+                                <th>Identification Code</th>
+
+                                <th>Depot Throughput</th>
+                                   @if (userRole.ToLower() == GeneralClass.SUPER_ADMIN.ToLower() || userRole.ToLower() == GeneralClass.IT_ADMIN.ToLower() || userRole.ToLower() == GeneralClass.SUPPORT.ToLower() || userRole.ToLower() == GeneralClass.ADMIN.ToLower())
+                            {<th></th>
+                            }
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in Model)
+                        {
+                            var address = item.address_1;
+                            var compName =item.CompanyId >0? Companies.Where(x => x.id == item.CompanyId).FirstOrDefault()?.name :"";
+
+                            counter++;
+                    <tr>
+                        <td>@counter</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => compName)
+                        </td>
+                        <td>
+                            @item.Date
+                        </td>
+
+                        <td>
+                            @compName<br />
+                            @item.ContactNumber
+                        </td>
+                        <td>
+                            @address
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NoOfPumps)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NoOfTanks)
+                        </td>
+                        @if (item.IdentificationCode != null)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdentificationCode)
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td><span style="cursor: pointer;" title="@item.MaxCapacity.GetValueOrDefault()">@item.MaxCapacity.GetValueOrDefault().ToString("N2")</span></td>
+                         @if (userRole.ToLower() == GeneralClass.SUPER_ADMIN.ToLower() || userRole.ToLower() == GeneralClass.IT_ADMIN.ToLower() || userRole.ToLower() == GeneralClass.SUPPORT.ToLower() || userRole.ToLower() == GeneralClass.ADMIN.ToLower())
+                 {
+                     <td> <a class="btn btn-sm btn-primary" href="/Facility/UpdateForm/@item.Id">Edit <i class="fa fa-pen"></i></a></td>
+                  }
+                    </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".dataTable").dataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                    'copyHtml5',
+                    {
+                        extend: 'csvHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        footer: true,
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed two-column'
+                    }
+
+                ],
+
+                "aLengthMenu": [50, 100, 150, 200, 250],
+                'iDisplayLength': 200,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+        });
+    </script>
+}

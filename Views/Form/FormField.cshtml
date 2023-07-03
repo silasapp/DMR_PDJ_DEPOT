@@ -1,0 +1,57 @@
+﻿@model IEnumerable<NewDepot.Models.Fields>
+@{
+    Layout = null;
+    int count = 0;
+}
+<h2>Already added Fields</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Label)
+            </th>
+            <th>
+                Field Compulsory
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            count++;
+            <tr>
+                <td>@count</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Label)
+                </td>
+                <td>
+                    @if (item.IsRequired)
+                    {
+                        <span>Compulsory</span>
+                    }
+                    else
+                    {
+                        <span>Not Compulsory</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataType)
+                </td>
+                <td>
+                    @if (item.Label.ToLower() != "CompanyId".ToLower() && item.Label.ToLower() != "ApplicationId".ToLower())
+                    {
+                        <div>
+                            <a href="#" class="editFormField" title="Edit Field" data-id="@item.Id"><i class="glyphicon glyphicon-pencil text-info"></i></a> &nbsp;
+                            <a href="#" class="delFormField" title="Delete Field" data-id="@item.Id"><i class="glyphicon glyphicon-trash text-danger"></i></a>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

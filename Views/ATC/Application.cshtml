@@ -1,0 +1,271 @@
+﻿@*@model NewDepot.Models.applicationsAPIModel*@
+@using NewDepot.Helpers;
+;
+@using System.Configuration;
+@{
+    ViewBag.Title = "Application";
+    var companyId = ViewBag.companyId;
+    var docs = (List<Document_Type>)ViewBag.phaseDocs;
+    var availableDocs = (List<company_documents>)ViewBag.availableDocs;
+    ElpsServices services = new ElpsServices();
+
+}
+
+<h2>ATC Application</h2>
+
+@using (Html.BeginForm("Application", "ATC", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    //available documents
+    if (availableDocs.Count > 0)
+    {
+    <h4>Existing Documents</h4>
+
+    <table class="table table-responsive table-striped table-hover">
+        <thead>
+            <tr>
+                <td style="font-weight:bold">Document Type</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < availableDocs.Count; i++)
+            {
+                var id = availableDocs[i].id + "2";
+                var did = "availableDocs[" + i + "].Id";
+                var ddid = "availableDocs[" + i + "].document_type_id";
+                var progId = "extProgress-" + i;
+                var exFileName = "extFileName-" + i;
+                var editDoc = "editDoc" + i;
+                var complete = "complete" + i;
+                <tr>
+                    <td>@availableDocs[i].document_name</td>
+                    <td>
+                    <button class="btnEdit btn btn-xs btn-warning" data-i="@i"><i class="glyphicon glyphicon-upload"> </i> Change</button>
+                        <div class="btn btn-xs btn-success" id="@complete" style="display:none">Upload Complete</div>
+                        <div id="@editDoc" style="display:none">
+                            <input type="hidden" id="@availableDocs[i]" name="@ddid" value="@availableDocs[i].document_type_id" />
+
+
+                            <input type="hidden" id="@id" name="@did" value="" />
+
+                            <input type="file" name="Name" id="@availableDocs[i].type" class="docEdit" data-docTypeId="@availableDocs[i].document_type_id" data-compId="@companyId"
+                                   accept="image/gif, image/png, image/jpeg, application/pdf" data-i="@i" data-id="@availableDocs[i].id" data-status="@availableDocs[i].Status" />
+                            <div id="@exFileName" class="files"></div>
+                            <div id="@progId" class="progress">
+                                <div class="progress-bar progress-bar-success progress-bar-striped"></div>
+                            </div>
+                            <div class="btn btn-xs btn-info hide" id="msg-1"></div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+    //foreach (var item in docs)
+    if (docs.Count > 0)
+    {
+    <h4>New Documents Required</h4>
+    <div class="row">
+        @for (int i = 0; i < docs.Count; i++)
+        {
+            var id = docs[i].Id + "2";
+            var ddid = "docs[" + i + "].Document_Id";
+            var did = "docs[" + i + "].Id";
+            var progId = "extProgress-" + i;
+            var exFileName = "extFileName-" + i;
+            var upComp = "upComp" + i;
+
+            <div class="col-md-3 col-sm-3">
+                <input type="hidden" id="@docs[i].Id" name="@ddid" value="" />
+
+
+                <input type="hidden" id="@id" name="@did" value="" />
+
+                <label id="">@docs[i].Name</label>
+                <input type="file" name="Name" id="@docs[i].Name" class="docUpload" required data-docTypeId="@docs[i].Id" data-compId="@companyId"
+                       accept="image/gif, image/png, image/jpeg, application/pdf" data-i="@i" />
+                <div id="@exFileName" class="files"></div>
+                <div id="@progId" class="progress">
+                    <div class="progress-bar progress-bar-success progress-bar-striped"></div>
+                </div>
+                <div class="btn btn-xs btn-success" id="@upComp" style="display:none">Upload Complete</div>
+                <div class="btn btn-xs btn-info hide" id="msg-1"></div>
+            </div>
+
+        }
+    </div>
+    }
+    <input type="submit" value="Submit" class="btn btn-info" />
+}
+
+
+@section scripts{
+
+<script src="@Url.Content("/Scripts/js/vendor/jquery.ui.widget.js")" type="text/javascript"></script>
+<script src="@Url.Content("/Scripts/js/jquery.iframe-transport.js")" type="text/javascript"></script>
+<script src="@Url.Content("/Scripts/js/jquery.fileupload.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $(document.body).on("click", '.docUpload', function () {
+            //alert("Alert is here");
+
+            var compId = $(this).attr("data-compid");
+            var docTypeId = $(this).attr("data-docTypeId");
+            var docId = $(this).attr("data-docid");
+            var i = $(this).attr("data-i");
+            $('#extFileName-' + i).html('');
+
+            var loc = '@ElpsServices._elpsBaseUrl' + 'UploadCompanyDoc/' + docTypeId + '/' + compId + '/""/""';
+
+            var me = $(this);
+
+            $(this).fileupload({
+                dataType: 'json',
+                url: loc,
+                done: function (e, data) {
+                    $(this).css("display", "none");
+                    $('#' + docTypeId).val(data.jqXHR.responseJSON.fileid);
+                    $('#' + docTypeId + '2').val(docTypeId);
+                    //$('#extProgress-' + i).css("display", "none");
+
+                    //$("#uploadBtn").hide();
+                    me.removeAttr("required");
+                    $.each(data.result, function (index, file) {
+
+                        //$('<p />').text(file.name).appendTo("#fileName");
+                        //$("#doneBtn").removeClass("hide");
+                        //$("#cancelBtn").addClass("hide");
+
+                        //var str = file.source.toLowerCase().replace("~", "");
+                        //var src = str.match('.pdf$') ? '/Content/Images/pdf-icon.png' : prefix + str;
+
+
+                        //$(img).find("img").attr("src", src);
+                    });
+                },
+                fail: function (e, data) {
+                    $(this).css("display", "block");
+                    $.each(data.messages, function (index, error) {
+                        if (error.toLowerCase().indexOf('bytes exceed file size' > -1)) {
+                            //$('#extFileName-' + i).html('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>');
+                            $('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                            .appendTo('#extFileName-' + i);
+                        }
+                        else {
+                            $('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: ' + error + '<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                            .appendTo('#extFileName-' + i);
+                        }
+                    });
+                    //$("#exUploadBtn" + i).show().removeAttr("disabled");
+                    var progBox = '#extProgress-' + $(this).attr("data-i") + ' .progress-bar';
+                    $(progBox).css(
+                    'width',
+                    0 + '%'
+                    ).text("");
+                },
+                progressall: function (e, data) {
+                    //alert(uid);
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    var progBox = '#extProgress-' + i + ' .progress-bar';
+
+                    $(progBox).css(
+                    'width',
+                    progress + '%'
+                    ).text(progress + '%');
+                }
+            }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled')
+        }).bind('fileuploadadded', function (e, data) {
+            alert("File Upload complete");
+        });
+
+        $(document.body).on("click", '.btnEdit', function (e) {
+            var i = $(this).attr("data-i");
+            e.preventDefault();
+            $('#editDoc' + i).css("display", "block");
+            $(this).css("display", "none");
+        });
+
+        $(document.body).on("click", '.docEdit', function () {
+            //alert("Alert is here");
+
+            var compId = $(this).attr("data-compid");
+            var docTypeId = $(this).attr("data-docTypeId");
+            var docId = $(this).attr("data-docid");
+            var i = $(this).attr("data-i");
+            var id = $(this).attr("data-id");
+            var status = $(this).attr("data-status");
+            $('#extFileName-' + i).html('');
+
+            var loc = '@ElpsServices._elpsBaseUrl' + 'UpdateDocument/' + id + '/' + status + '/' + '@ElpsServices._elpsAppEmail' + '/' + '@ElpsServices.appHash';
+            @*var prefix = '@configuration.GetSection("ElpsKeys").GetSection("elpsBaseUrl").Value';*@
+            //console.log(img);
+
+            var me = $(this);
+
+            $(this).fileupload({
+                dataType: 'json',
+                url: loc,
+                method: 'PUT',
+                done: function (e, data) {
+                    $(this).css("display", "none");
+                    $('#' + id + '2').val(data.jqXHR.responseJSON.id);
+                    $('#' + docTypeId).val(docTypeId);
+
+                    $('#extProgress-' + i).css("display", "none");
+                    $('#complete' + i).css("display", "block");
+                    //$("#uploadBtn").hide();
+                    me.removeAttr("required");
+                    $.each(data.result, function (index, file) {
+
+                        //$('<p />').text(file.name).appendTo("#fileName");
+                        //$("#doneBtn").removeClass("hide");
+                        //$("#cancelBtn").addClass("hide");
+
+                        //var str = file.source.toLowerCase().replace("~", "");
+                        //var src = str.match('.pdf$') ? '/Content/Images/pdf-icon.png' : prefix + str;
+
+
+                        //$(img).find("img").attr("src", src);
+                    });
+                },
+                fail: function (e, data) {
+                    $(this).css("display", "block");
+                    $.each(data.messages, function (index, error) {
+                        if (error.toLowerCase().indexOf('bytes exceed file size' > -1)) {
+                            //$('#extFileName-' + i).html('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>');
+                            $('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                            .appendTo('#extFileName-' + i);
+                        }
+                        else {
+                            $('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: ' + error + '<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                            .appendTo('#extFileName-' + i);
+                        }
+                    });
+                    //$("#exUploadBtn" + i).show().removeAttr("disabled");
+                    var progBox = '#extProgress-' + $(this).attr("data-i") + ' .progress-bar';
+                    $(progBox).css(
+                    'width',
+                    0 + '%'
+                    ).text("");
+                },
+                progressall: function (e, data) {
+                    //alert(uid);
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    var progBox = '#extProgress-' + i + ' .progress-bar';
+
+                    $(progBox).css(
+                    'width',
+                    progress + '%'
+                    ).text(progress + '%');
+                }
+            }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled')
+        }).bind('fileuploadadded', function (e, data) {
+            alert("File Upload complete");
+        });
+    });
+</script>
+}

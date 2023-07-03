@@ -1,0 +1,82 @@
+﻿@model IEnumerable<NewDepot.Models.faq_description>
+
+@{
+    ViewBag.Title = "List";
+    Layout = null;
+
+    int count = 0;
+}
+<p class="righty">
+    <a href="#modalPopup" role="button" class="btn btn-primary addFAQ" data-url="/Faq/CreateDescription?Id=@ViewBag.faqsCatId" data-uid="1" data-toggle="modal">Add FAQ</a>
+</p>
+<div class="clear"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>@ViewBag.faqsCat Category</h4>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>#</th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Title)*@
+                Question
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Description)*@
+                Response
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            count += 1;
+            <tr>
+                <td>
+                    @count
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td class="puch-list">
+                    @Html.Raw(item.description)
+                </td>
+                
+            </tr>
+            <tr>
+                <td colspan="3" class="txtright">
+                    <div class="btn-group">
+                        <a href="#modalPopup" role="button" class="addFAQ btn btn-warning btn-xs" data-url="/Faq/FAQDescriptionEdit?id=@item.id"
+                           data-toggle="modal" data-uid="2">Edit</a>
+                        <a href="#modalPopup" role="button" class="addFAQ btn btn-danger btn-xs" data-url="/Faq/FAQDescriptionDelete?id=@item.id"
+                           data-toggle="modal" data-uid="3">Delete</a>
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+</div>
+
+@section scripts{
+    
+    <script type="text/javascript">
+        $(function () {
+            
+            $("a.addFAQ").click(function (e) {
+                e.preventDefault();
+                alert("FAQ itself");
+                //var url = $(this).attr("data-url");
+                //$(".modal-title").text("Add new FAQ");
+                //$("#modal-body").html(Loading());
+                //$.get(url, function (data) {
+                //    $("#modal-body").html(data);
+                //});
+            });
+            
+        });
+    </script>
+}

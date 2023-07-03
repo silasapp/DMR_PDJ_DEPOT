@@ -1,0 +1,329 @@
+﻿@using NewDepot.Models
+@model Facilities
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Name = "Facility Information";
+
+    GeneralClass generalClass = new GeneralClass();
+    var suit = (SuitabilityInspections)ViewBag.Suitability;
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+}
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Name </h3>
+        <hr />
+    </div>
+</div>
+<div class="marg50"></div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+
+<div class="">
+    <div class="row">
+        <div class="col-sm-7">
+            <div class="x_panel">
+                <div class="x_Name">
+                    <h2> @Model.Name Facility</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Name of Facility</label>
+                            <div class="col-md-7">
+                                @Html.HiddenFor(model => model.Id, new { @class = "form-control", @readonly = "readonly", @id="facilityID" })
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Facility Contact</label>
+                            <div class="col-md-7">
+                                <input type="text" name="name" class="form-control" readonly value="@Model.ContactName :: @Model.ContactNumber" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Facility Address</label>
+                            <div class="col-md-7">
+                                <textarea readonly class="form-control" style="height: 80px;">@ViewBag.FacAddress</textarea>
+                            </div>
+                        </div>
+                        @if (Model.IdentificationCode != null)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Identification Code</label>
+                                <div class="col-md-7">
+                                    <input type="text" name="name" class="form-control" readonly value="@Model.IdentificationCode" />
+                                </div>
+                            </div>
+                        }
+
+
+                        <hr />
+                        <h4><i class="fa fa-drum"></i> Facility Tanks</h4>
+                        @if (Model.Tanks.Count() > 0)
+                        {
+                            int tCount = 0;
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Capacity</th>
+                                        <th>Product</th>
+                                        <th>Height</th>
+                                        <th>Diameter</th>
+                                        <th>Decommissioned</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Tanks)
+                                    {
+                                        tCount++;
+                                        decimal cap = item.MaxCapacity!= null? Convert.ToDecimal(item.MaxCapacity):0;
+                                        <tr>
+                                            <td>@tCount</td>
+                                            <td>@item.Name</td>
+                                            <td>@cap.ToString("N2")</td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.Height</td>
+                                            <td>@item.Diameter</td>
+                                            <td>
+                                                @if (item.Decommissioned)
+                                                {
+                                                    <span>YES</span>
+                                                }
+                                                else
+                                                { <span>NO</span>}
+                                            </td>
+                                            <td>@item.Status</td>
+                                            @if (userRole == GeneralClass.SUPER_ADMIN || User.IsInRole("Support"))
+                                            {
+
+                                                <td>
+                                                <a class="btn btn-info" href="/LTO/UpdateFacilityTank/@generalClass.Encrypt( Model.Id.ToString()) ">Update Facility Tanks</a>
+                                                <a href="/Facility/DeleteTank/@item.Id" class="label label-danger delete">Delete</a>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <h5>No Tank Configured yet</h5>
+                        }
+                        @if (Model.ApplicationTanks.Count() > 0)
+                        {
+                            <hr /> <h4><i class="fa fa-drum"></i> Application Tanks</h4>
+
+                            int tCount = 0;
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Capacity</th>
+                                        <th>Product</th>
+                                        <th>Height</th>
+                                        <th>Diameter</th>
+                                        <th>Decommissioned</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ApplicationTanks)
+                                    {
+                                        tCount++;
+                                        decimal cap = item.MaxCapacity!= null? Convert.ToDecimal(item.MaxCapacity):0;
+                                        <tr>
+                                            <td>@tCount</td>
+                                            <td>@item.Name</td>
+                                            <td>@cap.ToString("N2")</td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.Height</td>
+                                            <td>@item.Diameter</td>
+                                            <td>
+                                                @if (item.Decommissioned)
+                                                {
+                                                    <span>YES</span>
+                                                }
+                                                else
+                                                { <span>NO</span>}
+                                            </td>
+                                            <td>@item.Status</td>
+                                            @if (userRole == GeneralClass.SUPER_ADMIN || User.IsInRole("Support"))
+                                            {
+
+                                                <td>
+                                                    @*@if (User.IsInRole("Admin"))
+                                                    {*@
+                                                   @*}*@
+                                                    <button onclick="GetTank('@item.Id', '@item.Name', '@item.ProductName', '@item.MaxCapacity', '@item.Height', '@item.Diameter', '@item.Status')" data-target="#EditTankModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" class="label label-warning edit">Edit <i class="fa fa-edit"> </i></button>
+                                                    <a href="/Facility/DeleteTank/@item.Id" class="label label-danger delete">Delete</a>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            <hr />
+                        }
+                        <h4>Loading Arms</h4>
+                        @if (Model.Pumps.Count() > 0)
+                        {
+                            <table class="table">
+                                @foreach (var item in Model.Pumps)
+                                {
+                                    <tr>
+                                        <td> @item.Name</td>
+                                        @if (userRole == GeneralClass.SUPER_ADMIN || User.IsInRole("Support"))
+                                        {
+                                            <td>
+                                                 @*@if (User.IsInRole("Admin"))
+                                                    {*@
+                                                    @*}*@
+                                             <button onclick="GetPump('@item.Id', '@item.Name')" data-target="#EditPumpModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" class="label label-warning edit">Edit <i class="fa fa-edit"> </i></button>
+                                                <a href="/Facility/DeletePump/@item.Id" class="label label-danger delete">Delete</a>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+
+
+                            </table>
+
+                        }
+                        else
+                        {
+                            <h5>No Loading Arm(s) Configured yet</h5>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="x_panel">
+                <div class="x_panel">
+                    <div class="x_Name">
+                        <h3>Suitabilty Information</h3>
+                    </div>
+                    <div class="x_content form-horizontal">
+                        @if (suit != null)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Land Size</label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" readonly class="form-control" value="@suit.SizeOfLand" />
+                                        <span class="input-group-addon">M<sup>2</sup></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Site Along Pipeline</label>
+                                <div class="col-md-6">
+                                    @if (suit.ISAlongPipeLine == true)
+                                    {
+                                        <input type="text" class="form-control" readonly value="YES" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" readonly value="NO" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Site Under High Tension</label>   <div class="col-md-6">
+                                    @if (suit.IsUnderHighTension == true)
+                                    {
+                                        <input type="text" class="form-control" readonly value="YES" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" readonly value="NO" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Site is on Highway</label><div class="col-md-6">
+                                    @if (suit.IsOnHighWay == true)
+                                    {
+                                        <input type="text" class="form-control" readonly value="YES" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" readonly value="NO" />
+                                    }
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                            <label class = "control-label col-md-5" >"Depots within 2km</label>class = "control-label col-md-6" })
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" value="@suit.StationsWithin2KM" />
+                            </div>
+                        </div>*@
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="x_Name">
+                <h3>Facility Licenses/Approvals</h3>
+            </div>
+            <div class="x_content">
+                <ul class="list-group">
+                    @if (ViewBag.Luggage != null)
+                    {
+                        var luggage = (List<permits>)ViewBag.Luggage;
+                        @if (luggage.Count() > 0)
+                        {
+
+                            foreach (var lug in luggage)
+                            {
+                                <li class="list-group-item list-group-item-success"> @lug.permit_no</li>
+
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item list-group-item-warning"> No license/Approval is available for this facility.</li>
+
+                        }
+                    }
+
+                    else
+                    {
+                        <li class="list-group-item list-group-item-warning"> No license/Approval is available for this facility.</li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

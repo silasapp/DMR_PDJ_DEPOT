@@ -1,0 +1,151 @@
+﻿@using NewDepot.Models
+@model NewDepot.Models.MyApps
+@{
+    var pageType = (Model.Status.ToLower() == "Payment Pending".ToLower() ? "Invoice" : "Receipt");
+    ViewBag.Title = "Application " + pageType;
+    }
+
+<style type="text/css">
+    .list-group-item {
+        background-color: transparent;
+    }
+</style>
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">Application Remita Retrieval Reference: @ViewBag.RRR</h2>
+        <div class="righty">
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="receipt">
+    @if (pageType.ToLower() != "resubmitted")
+    {
+        <div class="watermark">
+            <h1>Depot @pageType</h1>
+            <h3>This is not a Permit!</h3>
+        </div>
+    }
+    
+    <div class="body">
+        @if (pageType.ToLower() == "invoice")
+        {
+            <p>
+                You are almost done. Your application processing shall commence upon confirmation of payment.
+                <br />Please following information is required to make payment for this application.
+
+                <h4>Payment Instructions</h4>
+                <ol style="margin-left: 25px;">
+                    <li>Visit any of the commercial banks</li>
+                    <li>Provide your Payment Reference Number (@ViewBag.RRR) of this application to the cashier</li>
+                    <li>Pay the exact amount stated on this application</li>
+                    <li>Once your payment has been confirmed, you will receive an email or sms informing you of the need to continue with your application process</li>
+                </ol>
+            </p>
+        }
+        else if (pageType.ToLower() == "receipt")
+        {
+            <p>
+                This is to notify you that the payment for your DRP Depot Permit application with reference number @ViewBag.rrr @*@Model.Reference*@ has been received and confirmed,
+                And also that your Application has been sucessfully submitted.
+                <br />
+                Below is the breakdown of the funds received
+            </p>
+        }
+        else
+        {
+            <p>
+                You have re-submittted your DRP Depot Licence/Approval application with reference number @ViewBag.rrr @*@Model.Reference*@.
+                <br />
+                Below is the breakdown of Application Information:
+            </p>
+        }
+        <hr />
+        <div class="">
+            <div class="mypanel-2leaf-h">
+                <div class="left-side">
+                    <div class="padd">
+                        <dl class="dl-horizontal lt">
+                            <dt>
+                                Application Reference No
+                            </dt>
+                            <dd class="">
+                                @Html.DisplayFor(model => model.Reference)
+                            </dd>
+
+                            <dt>
+                                Payment Reference No
+                            </dt>
+                            <dd class="">
+                                @ViewBag.RRR
+                            </dd>
+
+                            <dt>
+                                Statutory and Processing Fee
+                            </dt>
+                            <dd class="">
+                                @Model.Fee_Payable.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Service Charge
+                            </dt>
+                            <dd class="">
+                                @Model.Service_Charge.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Total Amount Due
+                            </dt>
+                            <dd class="">
+                                @{var ad = Model.Fee_Payable + Model.Service_Charge;}
+                                @ad.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Payment Method
+                            </dt>
+                            <dd class="">
+                                @ViewBag.PaymentMethod
+                            </dd>
+
+                            <dt>
+                                Required Documents
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in (List<Document_Type>)ViewBag.RequiredDocs)
+                                    {
+                                        if (item.Name.ToLower() == "other document")
+                                        {
+                                            <li class="list-group-item">@item.Document_Name</li>
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item">@item.Name</li>
+                                        }
+                                    }
+                                </ul>
+                            </dd>
+
+                        </dl>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="clear"><hr /></div>
+        <div class="txtcenter">
+            @if (pageType.ToLower() == "invoice")
+            {
+                 <a href="/Account/Dashboard" class="btn btn-success">Continue to DashBoard</a>
+            }
+            else
+            {
+              <a href="/Account/Dashboard" class="btn btn-success">Continue to DashBoard</a>
+
+            }
+        </div>
+    </div>
+</div>

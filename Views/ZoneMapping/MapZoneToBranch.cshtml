@@ -1,0 +1,50 @@
+﻿
+
+@{
+    ViewBag.Title = "Map Zone To Field Office";
+    Layout = null;
+}
+
+<form action="/ZoneMapping/MapZoneToBranch" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            <label class="control-label col-md-4">Zone</label>
+            <div class="col-md-8">
+                <select id="ZoneId" name="ZoneId" required class="form-control">
+                    <option value="">Select Zone</option>
+                    @foreach (var item in (List<Zone>)ViewBag.zones)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label class="control-label col-md-4">Field Office</label>
+            <div class="col-md-8">
+                <select id="BranchId" name="BranchId" required class="form-control">
+                    <option value="">Select Field Office</option>
+                    @foreach (var item in (List<Branch>)ViewBag.branches)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+    </div>
+    <div class="clear"></div>
+    <div class="modal-footer">
+        <div class="txtcenter">
+            <button class="btn btn-default" data-dismiss="modal">Close</button>
+            <input type="submit" value="Save Mapping" class="btn btn-success" />
+        </div>
+    </div>
+</form>
+

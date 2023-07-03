@@ -1,0 +1,105 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@model IEnumerable<MyApps>
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+    int count = 0;
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+
+}
+
+@if (Model == null || Model.Count() <= 0)
+{
+    <h4>Your search does not return any result. Please try again</h4>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>NMDPRA Company ID</th>
+                <th>Company Name</th>
+                <th>LicenseNo</th>
+                <th>Address</th>
+                <th>Issue Date</th>
+                <th>Exp. Date</th>
+                <th>Used</th>
+                <th>Date Used</th>
+                <th>License Stage</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>@count</td>
+                    <td> @item.Company_Id</td>
+                    <td>@item.CompanyName</td>
+                    <td>@item.legaciess.LicenseNo</td>
+                    <td>@item.legaciess.FacilityAddress @item.LGA @item.StateName</td>
+                    <td>@item.legaciess.Issue_Date</td>
+                    <td>@item.legaciess.Exp_Date</td>
+                    <td>
+                        @if (item.legaciess.IsUsed == true)
+                        {
+                            <span>YES</span>
+                        }
+                        else
+                        {
+                            <span>NO</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.legaciess.IsUsed == true)
+                        {
+                            @item.legaciess.DateUsed.GetValueOrDefault().ToShortDateString()
+                        }
+                        else
+                        {
+                            <span>NILL</span>
+                        }
+                    </td>
+                    <td>@item.legaciess.AppType</td>
+                    <td>
+                        @if (userRole.Contains("Admin") || userRole.Contains("Support2") || userRole.Contains("Support") || userRole.Contains("ITAdmin"))
+                        {
+                            if (!item.legaciess.IsUsed == true)
+                            {
+                                @*<a href="" class="btn btn-xs btn-info" data-toggle="modal" data-target="#myModal" data-lno="@item.LicenseNo">Mail <i class="fa fa-send"></i></a>*@
+                            }
+                            else
+                            {
+                                <a href="" class="btn btn-xs btn-primary usageInfo" data-toggle="modal" data-target="#usageModal" data-lno="@item.legaciess.LicenseNo">See Usage</a>
+                            }
+                            <a href="" class="btn btn-xs btn-primary editInfo" data-toggle="modal" data-target="#usageModal" data-lno="@item.legaciess.LicenseNo" data-id="@item.Id">Edit</a>
+                        }
+                    </td>
+                </tr>
+
+                <tr>
+
+                    <td>AGO Vol. : @item.legaciess.AGOVol.Value.ToString("###,##0.00")</td>
+                    <td>PMS Vol. : @item.legaciess.PMSVol.Value.ToString("###,##0.00")</td>
+                    <td>DPK Vol. :  @item.legaciess.DPKVol.Value.ToString("###,##0.00")</td>
+
+
+                    <td>ATK Vol. : @item.legaciess.ATKVol.GetValueOrDefault().ToString("###,##0.00")</td>
+                    <td>Base Oil Vol. : @item.legaciess.BaseOilVol.GetValueOrDefault().ToString("###,##0.00")</td>
+                    <td>Bitumen Vol. :  @item.legaciess.BitumenVol.GetValueOrDefault().ToString("###,##0.00")</td>
+
+                    <td>Fuel Oil Vol. : @item.legaciess.FuelOilVol.GetValueOrDefault().ToString("###,##0.00")</td>
+                    <td>Lube Oil/Greese Vol. : @item.legaciess.LubeOilGreaseVol.GetValueOrDefault().ToString("###,##0.00")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

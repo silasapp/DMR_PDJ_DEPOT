@@ -1,0 +1,114 @@
+﻿@model IEnumerable<NewDepot.Models.applications>
+
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ViewBag.Title = "List of Deleted Applications";
+    int i = 1;
+}
+
+
+<div class="">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>@ViewBag.Title</h2>
+
+                    <div class="clearfix"></div>
+                </div>
+                    <div class="row">
+                        <table class="table table-hover dataTable">
+                            <tr>
+                                <th>SN</th>
+                                <th>
+                                    Application  Reference
+                                </th>
+                                <th>
+                                    Application Date
+                                </th>
+                                <th>
+                                    Date Modified
+                                </th>
+                                <th>
+                                    Company Id
+                                </th>
+                                <th>
+                                    Application Fee
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>Action</th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                var sn = i++;
+                                <tr>
+                                    <td>@sn </td>
+                                    <td>
+                                        @item.reference
+                                    </td>
+                                    <td>
+                                        @item.CreatedAt
+                                    </td>
+                                    <td>
+                                        @item.date_modified
+                                    </td>
+                                    <td>
+                                        @item.company_id
+                                    </td>
+                                    <td>
+                                        @item.fee_payable.Value.ToString("N2")
+                                    </td>
+
+
+                                    <td>
+                                        @item.status
+                                    </td>
+                                    <td>
+                                        <a href="/Application/UndoDelete/@item.id" class="label label-danger delete">Undo Delete</a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 50,
+                columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                "order": [[1, "asc"]]
+            });
+
+
+            $('.delete').click(function (e) {
+                if (confirm('Do you want to confirm the return of this Application? ')) {
+
+                } else {
+                    e.preventDefault();
+                }
+            })
+        });
+    </script>
+}
+

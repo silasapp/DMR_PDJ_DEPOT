@@ -1,0 +1,524 @@
+﻿@using NewDepot.Models;
+@using System.Configuration;
+@using NewDepot.Helpers;
+@model IList<Document_Type>
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Upload Application Documents";
+    int index = 0;
+    int index2 = 0;
+
+    var appDocs = Model.Where(a => a.Selected).ToList();
+    var remDocs = Model.Where(a => !a.Selected).ToList();
+    string baseDocUpload = "";
+}
+
+
+
+<div class="row">
+    <div class="pageTitlee bg1" style="width: 100%">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+<div class="widget-content">
+
+    @using (Html.BeginForm("ResubmitApplication", "Application", FormMethod.Post, new { id = "frmRS" }))
+    {
+        <div class="col-md-12 frmLoader">
+            <input type="hidden" id="companyId" name="companyId" value="@ViewBag.companyId" />
+            <input type="hidden" name="appId" id="appId" value="@ViewBag.appId" />
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 7%;">#</th>
+                        <th style="width: 20%;">Document Name</th>
+                        <th style="width: 30%;"></th>
+                        <th>Upload Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4"><h4>Companys' Existing Document (<small>Only PDF and Image (jpg/png) Max size: 4mb is allowed</small>) </h4></td>
+                    </tr>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        index++;
+                        if (Model[i].Selected)
+                        {
+                            var did = "document" + i;
+                            var application_id = "appdocs[" + i + "].application_id";
+                            var document_id = "appdocs[" + i + "].document_id";
+                            var document_type_id = "appdocs[" + i + "].document_type_id";
+                            var progId = "extProgress-" + i;
+                            var exFileName = "extFileName-" + i;
+                            var editDoc = "editDoc" + i;
+                            var complete = "complete" + i;
+                            var fl = "filebtn" + i;
+                            var source = Model[i].Source.StartsWith("http") ? Model[i].Source.Replace("~", "") : ElpsServices._elpsBaseUrl + Model[i].Source; //"http://localelps.dpr.gov.ng"
+                            Model[i].Source = source;                                                                                                                                  //configuration.GetSection("ElpsKeys").GetSection("elpsBaseUrl").Value +
+                            <tr class="form-group">
+                                <td>@index</td>
+                                <td>
+                                    <input type="hidden" name="@application_id" value="@ViewBag.appId" />
+                                    <input type="hidden" name="@document_id" value="@Model[i].CoyFileId" id="@did" />
+                                    <input type="hidden" name="@document_type_id" value="@Model[i].Id" />
+
+                                    @if (Model[i].Name.ToLower() == "other document")
+                                    {
+                                        <input type="text" name="documentName-@i" id="documentName-@i" placeholder="Document Name" required />
+                                    }
+                                    else
+                                    {
+                                        @Model[i].Name
+                                    }
+                                </td>
+                                <td>
+                                    <div id="@exFileName" class="files">
+                                        @if (Model[i].Source.ToLower().EndsWith(".pdf"))
+                                        {
+                                            <a id="doc_@i" href="/CompanyDocument/DisplayPDFDocument?docId=0&docUrl=@Model[i].Source" class="" target="_blank">
+                                                <img src="@Url.Content("/OldDepotStyle/Content/Images/pdf-icon.png")" class="thumbnail img-thumbnail"
+                                                     data-toggle="tooltip" data-placement="bottom" data-original-title="This Document was rejected goto my applications to know more"
+                                                     style="max-height:70px;max-width:70px; display: inline-block;" alt="@Model[i].Name" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a id="doc_@i" data-url="/CompanyDocument?docId=0&docUrl=@Model[i].Source" href="#modalPopup" data-toggle="modal" role="button" class="imgSilent">
+                                                <img src="@source" class="thumbnail img-thumbnail"
+                                                     data-toggle="tooltip" data-placement="bottom" data-original-title="This Document was rejected goto my applications to know more"
+                                                     style="max-height:70px;max-width:70px; display: inline-block;" alt="@Model[i].Name" />
+                                            </a>
+                                        }
+                                    </div>
+
+                                    <div id="@editDoc" style="display:none">
+
+                                        <input type="file" id="@fl" class="docEdit" data-doctypeid="@Model[i].Id"
+                                               data-compid="@ViewBag.companyId" data-docOwner="@Model[i].Type"
+                                               accept="image/gif, image/png, image/jpeg, application/pdf" data-i="@i"
+                                               data-docid="@Model[i].CoyFileId" data-status="@Model[i].ParentSelected" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btnEdit btn btn-xs btn-warning" data-i="@i" style="margin: 5px 0;">
+                                        <i class="glyphicon glyphicon-upload"> </i> Change Document
+                                    </button>
+
+                                    <div id="@progId" class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <table class="table table-bordered doctable">
+                <thead>
+                    <tr>
+                        <th style="width: 7%;">#</th>
+                        <th style="width: 20%;">Document Name</th>
+                        <th style="width: 30%;">Select Document</th>
+                        <th>Upload Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4"><h4>Required Documents Remaining <small>(Only PDF and Image (jpg/png) is allowed)</small> Max size: <small>4mb</small></h4></td>
+                    </tr>
+
+                    @if (Model.Count() > 0)
+                    {
+                        for (int i = 0; i < Model.Count; i++)
+                        {
+                            if (!Model[i].Selected)
+                            {
+                                index2++;
+                                var did = "document" + i;
+                                var application_id = "appdocs[" + i + "].application_id";
+                                var document_id = "appdocs[" + i + "].document_id";
+                                var document_type_id = "appdocs[" + i + "].document_type_id";
+                                var progId = "extProgress-" + i;
+                                var exFileName = "extFileName-" + i;
+                                var editDoc = "editDoc" + i;
+                                var complete = "complete" + i;
+                                var fl = "filebtn" + i;
+                                var fd = "facDoc_" + i;
+
+                                <tr class="form-group">
+                                    <td>@index2</td>
+                                    <td>
+
+                                        <input type="hidden" name="@application_id" value="@ViewBag.appId" />
+                                        <input type="hidden" name="@document_id" value="" id="@did" />
+                                        <input type="hidden" name="@document_type_id" value="@Model[i].Id" />
+
+                                        @if (Model[i].Name.ToLower() == "other document")
+                                        {
+                                            <input type="text" name="documentName-@i" id="documentName-@i" placeholder="Document Name" />
+                                        }
+                                        else
+                                        {
+                                            @Model[i].Name
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model[i].Type != "Facility")
+                                        {
+                                            <input type="hidden" name="facDoc" id="@fd" value="false" />
+                                            baseDocUpload = ElpsServices._elpsBaseUrl + "api/UploadCompanyDoc/" + Model[i].Id + "/" + ViewBag.companyId + "/" + ElpsServices._elpsAppEmail + "/" + ElpsServices.appHash;
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" name="facDoc" id="@fd" value="true" />
+                                            baseDocUpload = ElpsServices._elpsBaseUrl + "api/Facility/UploadFile/" + Model[i].Id + "/" + ViewBag.companyId + "/" + ViewBag.FacilityId + "/" + ElpsServices._elpsAppEmail + "/" + ElpsServices.appHash;
+                                        }
+                                        <input type="file" name="Name" id="@fl" class="docUpload" data-doctypeid="@Model[i].Id" data-compid="@ViewBag.companyId"
+                                               accept="image/gif, image/png, image/jpeg, application/pdf" data-i="@i" data-location="@baseDocUpload" />
+                                        <div id="@exFileName" class="files"></div>
+
+                                    </td>
+                                    <td>
+                                        <div id="@progId" class="progress">
+                                            <div class="progress-bar progress-bar-success progress-bar-striped"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">All required documents are available</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <input type="button" id="btnReSubmit" name="submit" value="Resubmit Now" class="btn btn-success btnSubmit" />
+                </div>
+                <div class="col-md-3">
+                    <button type="button" id="btnAddDoc" class="btn btn-info btnadddoc">Add Additional Documents()</button>
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+</div>
+
+
+@section Scripts{
+
+    <script src="~/OldDepotStyle/Scripts/application.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(".doctable").hide().prop('required', false);
+
+            $(document.body).on("click", '#btnReSubmit', function () {
+                var frm = $("#frmRS");
+                var location = "/Companies/Dashboard";
+                var comp = $("#companyId").val();
+                var app = $("#appId").val();
+              
+                $.confirm({
+                    text: "Are you sure you want to re-submit this application ?",
+                    confirm: function () {
+                        $(".frmLoader").addClass('Submitloader');
+                        frm.submit();
+                    //    $.post("/Application/ResubmitApplication", { companyId: comp, appId: app }, function (response) {
+                    //        if ($.trim(response) === "Success.") {
+
+                    //            alert("Application have been re-submitted successfully.");
+
+                    //            window.location.href = location;
+
+                    //            $(".frmLoader").removeClass("Submitloader");
+                    //        }
+                    //        else {
+                    //            $(".frmLoader").removeClass("Submitloader");
+                    //            alert(response);
+                    //        }
+                    //    });
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+
+            });
+            $(document.body).on("click", '#btnAddDoc', function () {
+                $(".doctable").show();
+                $(".btnadddoc").html("Hide Addidtional Documents");
+                $(this).addClass("btn-danger");
+                $(this).removeClass("btn-success");
+            });
+
+            $(document.body).on("click", '.btn-danger', function () {
+                $(".doctable").hide().prop('required', false);
+                $(".btnadddoc").html("Add Addidtional Documents");
+                $(this).addClass("btn-success");
+                $(this).removeClass("btn-danger");
+            });
+
+
+            $('#SponsorMarketCompId').change(function () {
+                //get the value added
+                var v = $(this).val();
+                //check if there a Company bearing this Id
+                $.get('/company/getCompany/' + v, function (data) {
+                    if (data == '0') {
+                        $('#SponsorMarketCompId').val('');
+                        $('#SponsorName').html('We Could find Any Company with this ID');
+                    } else {
+                        $('#SponsorName').html(data.Name);
+                    }
+                })
+            });
+
+            $(document.body).on("click", '.docUpload', function () {
+                var me = $(this);
+                var compId = $(this).attr("data-compid");
+                var docTypeId = $(this).attr("data-doctypeid");
+                //var docId = $(this).attr("data-docid");
+                var i = $(this).attr("data-i");
+                $('#extFileName-' + i).html('');
+
+
+                var loc = $(this).attr("data-location");
+                var prefix = '@ElpsServices._elpsBaseUrl';
+
+                $(this).fileupload({
+                    dataType: 'json',
+                    url: loc,
+                    done: function (e, data) {
+                        var file = data.result
+                        $('#document' + i).val(file.FileId);
+                        $(this).removeAttr("required").css("display", "none");
+                        //alert(JSON.stringify(file));
+                        var str = file.source.replace("~", "");
+                        //alert(str);
+                        var src = str.match('.pdf$') ? '/Content/Images/pdf-icon.png' : str;// prefix +
+                        var respContent = '<div style="float: left; width: 48%;"><img src="' + src + '" class="thumbnail" style="height: 80px;" />';
+                        respContent += '</div><br />';
+                        respContent += '<a href="#" class="btn btn-xs btn-danger delFile" data-i="' + i + '" data-toggle="modal" data-target="#modalPopup" data-fileid="' + file.FileId + '"><i class="fa fa-times"></i> Delete</a>';
+                        respContent += '</div><div class="clearfix"></div>';
+                        $("#extFileName-" + i).html(respContent);
+                    },
+                    fail: function (e, data) {
+                        $(this).css("display", "block");
+                        $.each(data.messages, function (index, error) {
+                            console.log(error);
+                            if (error && error.toLowerCase().indexOf('bytes exceed file size' > -1)) {
+                                //$('#extFileName-' + i).html('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>');
+                                $('<p style="color: red; font-style: italic; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                                .appendTo('#extFileName-' + i);
+                            }
+                            else {
+                                $('<p style="color: red; font-style: italic; font-size: 12px;">Upload file error: ' + error + '<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                                .appendTo('#extFileName-' + i);
+                            }
+                        });
+                        //$("#exUploadBtn" + i).show().removeAttr("disabled");
+                        var progBox = '#extProgress-' + $(this).attr("data-i") + ' .progress-bar';
+                        $(progBox).css(
+                        'width',
+                        0 + '%'
+                        ).text("");
+                    },
+                    progressall: function (e, data) {
+                        //alert(uid);
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        var progBox = '#extProgress-' + i + ' .progress-bar';
+
+                        $(progBox).css(
+                        'width',
+                        progress + '%'
+                        ).text(progress + '%');
+                    }
+                }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled')
+            }).bind('fileuploadadded', function (e, data) {
+                alert("File Upload complete");
+            });
+
+            $(document.body).on("click", '.btnEdit', function (e) {
+                var i = $(this).attr("data-i");
+                e.preventDefault();
+                $('#editDoc' + i).css("display", "block");
+                $(this).css("display", "none");
+            });
+
+            $(document.body).on("click", '.docEdit', function () {
+                var compId = $(this).attr("data-compid");
+                var docTypeId = $(this).attr("data-doctypeid");
+                var docId = $(this).attr("data-docid");
+                var docOwner = $(this).attr("data-docOwner");
+                var i = $(this).attr("data-i");
+                docOwner = docOwner.length > 0 ? docOwner : 'Company';
+
+                var loc = '@ElpsServices._elpsBaseUrl' + 'api/CompanyDocument/UpdateFile/' + docId + '/@ViewBag.CompanyId' + '/' + docOwner + '/?docid=' + docId;
+                if (docOwner.toLowerCase() === 'facility') {
+                      loc = '@ElpsServices._elpsBaseUrl' + 'api/FacilityDocument/UpdateFile/' + docId + '/@ViewBag.FacilityId' + '/?docid=' + docId;
+
+                }
+                var prefix = '@ElpsServices._elpsBaseUrl';
+                //alert(loc);
+                $(this).fileupload({
+                    dataType: 'json',
+                    url: loc,
+                    //method: 'PUT',
+                    done: function (e, data) {
+                        var file = data.result
+                        $('#document' + i).val(file.FileId);
+                        $(this).removeAttr("required").css("display", "none");
+                        //alert(JSON.stringify(file));
+                        var str = file.source.replace("~", "");
+                        //alert(str);
+                        var src = str.match('.pdf$') ? '/Content/Images/pdf-icon.png' : str;// prefix +
+                        var respContent = '<div style="float: left; width: 48%;"><img src="' + src + '" class="thumbnail" style="height: 80px;" />';
+                        respContent += '</div><br />';
+                        respContent += '<a href="#" class="btn btn-xs btn-danger delFile" data-i="' + i + '" data-toggle="modal" data-target="#modalPopup" data-fileid="' + file.FileId + '"><i class="fa fa-times"></i> Delete</a>';
+                        respContent += '</div><div class="clearfix"></div>';
+                        $("#extFileName-" + i).html(respContent);
+
+                    },
+                    fail: function (e, data) {
+                        $(this).css("display", "block");
+                        $.each(data.messages, function (index, error) {
+                            if (error && error.toLowerCase().indexOf('bytes exceed file size' > -1)) {
+                                //$('#extFileName-' + i).html('<p style="color: red; font-style: italics; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png)<i class="elusive-remove" style="padding-left:10px;" /></p>');
+                                $('<p style="color: red; font-style: italic; font-size: 12px;">Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg or png) [' + error + ']<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                                .appendTo('#extFileName-' + i);
+                            }
+                            else {
+                                $('<p style="color: red; font-style: italic; font-size: 12px;">Upload file error: ' + error + '<i class="elusive-remove" style="padding-left:10px;" /></p>')
+                                .appendTo('#extFileName-' + i);
+                            }
+                        });
+                        //$("#exUploadBtn" + i).show().removeAttr("disabled");
+                        var progBox = '#extProgress-' + $(this).attr("data-i") + ' .progress-bar';
+                        $(progBox).css(
+                        'width',
+                        0 + '%'
+                        ).text("");
+                    },
+                    progressall: function (e, data) {
+                        //alert(uid);
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        var progBox = '#extProgress-' + i + ' .progress-bar';
+
+                        $(progBox).css(
+                        'width',
+                        progress + '%'
+                        ).text(progress + '%');
+                    }
+                }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled')
+            }).bind('fileuploadadded', function (e, data) {
+                alert("File Upload complete");
+            });
+
+            $(document).on("click", ".delFile", function () {
+                var url = '@Url.Action("TotalDelete","CompanyDocument")';
+                var fff = $(this).attr("data-i");
+                var facdoc = $("#facDoc_" + fff).val();
+                //alert(facdoc);
+                var param = $(this).data("fileid");
+                $("#modalPopup").find('.modal-content').html(LoadingSmall());
+                $.get(url, { id: param, facDoc: facdoc }, function (data) {
+                    $("#modalPopup").on('show.bs.modal', function () {
+                        var modal = $(this);
+                        //modal.find('.modal-title').text('Document Upload Alert:');
+                        modal.find('.modal-content').html(data);
+                        //modal.find('.modal-footer').html('<button class="btn btn-default" data-dismiss="modal">Close</button>');
+                    });
+                    $("#modalPopup").modal('show');
+                });
+            });
+
+            $(document).on("submit", "#frmTotalDel", function (e) {
+                var id = $("#frmTotalDel").find("#toDelId").val();
+                var url = $(this).attr("action");
+                var param = $(this).serialize();
+
+                e.preventDefault();
+                //return false;
+                var msg = "";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: param,
+                    dataType: 'json',
+                    success: function (data) {
+                        //Do the needful
+                        var response;
+
+                        if (data === 1) {
+                            var i = $("a[data-fileid='" + id + "']").data("i");
+                            //$("#file" + i).html("");
+                            $("#extFileName-" + i).html("");
+                            //$("#fid-" + i).val("");
+                            $('#document' + i).val("");
+                            $("#filebtn" + i).show().removeAttr("disabled").attr("required", "required").removeClass("docEdit").addClass("docUpload");
+                            $("#extProgress-" + i + " .progress-bar").css('width', '0').text('');
+
+                            response = "Document has been deleted from list successfully";
+                        }
+                        else {
+                            response = "Document could not be deleted. Please try again";
+                        }
+
+
+                        $("#modalPopup").on('show.bs.modal', function () {
+                            var modal = $(this);
+                            modal.find('.modal-title').text('Delete Document!');
+                            modal.find('.modal-body').html(response);
+                            modal.find('.modal-footer').html('<button class="btn btn-default" data-dismiss="modal">Close</button>');
+                        });
+                        $("#modalPopup").modal('show');
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        $("#modalPopup").on('show.bs.modal', function () {
+                            var modal = $(this);
+                            modal.find('.modal-title').text('Delete Document!');
+                            modal.find('.modal-body').html("Document could not be deleted. Please try again");
+                            modal.find('.modal-footer').html('<button class="btn btn-default" data-dismiss="modal">Close</button>');
+                        });
+                        $("#modalPopup").modal('show');
+                    }
+                });
+            });
+
+        })
+    </script>
+
+}

@@ -1,0 +1,254 @@
+﻿@using NewDepot.Helpers;
+@model NewDepot.Models.DashBoardModel
+@using Microsoft.AspNetCore.Http;
+@using NewDepot.Controllers.Authentications;
+
+
+    @{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Company Dashboard";
+    }
+
+    <div class="row">
+        <div class="col-md-12 bg1">
+            <div class="pad-t">
+                <div class="col-md-4">
+                    <div class="welcome">
+                        <h4>Welcome</h4>
+                        <h2>@ViewBag.CompanyName</h2>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="col4_1x dTile">
+                        <div class="tileHead">
+                            <h1 id="applicationsCount">@Model.TotalApplication</h1>
+                        </div>
+                        <div class="tileBase">
+                            <p>Application(s)</p>
+                        </div>
+                    </div>
+                    <div class="col4_1x dTile">
+                        <div class="tileHead">
+                            <h1 id="processingCount">@Model.Processing</h1>
+                        </div>
+                        <div class="tileBase">
+                            <p>Application(s) being Processed</p>
+                        </div>
+                    </div>
+                    <div class="col4_1x dTile">
+                        <div class="tileHead">
+                            <h1 id="totalCount">@Model.Approved</h1>
+                        </div>
+                        <div class="tileBase">
+                            <p>Total License(s)/Approval(s)</p>
+                        </div>
+                    </div>
+                    <div class="col4_1x dTile">
+                        <div class="tileHead">
+                            <h1 id="expiringCount">@Model.Expiring</h1>
+                        </div>
+                        <div class="tileBase">
+                            <p>License(s)/Approval(s) Expiring in 90days</p>
+                            @*@Html.ActionLink("Click To renew now", "Expiring","Application")*@
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="padd-s">
+
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a class="btn btn-success" href="@Url.Action(" Apply", "Application" )">New Application</a>
+                    <a class="btn btn-primary" role="button" href="@Url.Action(" Index", "Company" )">Company Profile</a>
+                    <a class="btn btn-default" role="button" href="@Url.Action(" Index", "CompanyDocument" )">Document Library</a>
+                    <a class="btn btn-warning" role="button" href="@Url.Action(" Permits", "Application" )">View Permits</a>
+                </div>
+            </div>
+        </div>
+        <hr style="margin: 0 0 10px 0; padding: 0;" />
+        @if (Model.Rejected > 0)
+        {
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Application Rejected!</strong> You have an application that was rejected. Please goto
+                <a href="/Application/MyApplications" class="alert-link">My Applications</a> to know more.
+            </div>
+        </div>
+        }
+        @if (Model.Expiring > 0)
+        {
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Permit Expiring!</strong> You have @Model.Expiring permit(s) that will is Expiring in less that 90 days. Please goto
+                <a href="/Application/MyApplications" class="alert-link">My Applications</a> to know more.
+            </div>
+        </div>
+        }
+        @if (Model.Expired > 0)
+        {
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Permit Expired!</strong> You have @Model.Expired permit(s) that has Expired. Please goto
+                <a href="/Application/Permits" class="alert-link">My Permits</a> to review and start Renewal process.
+            </div>
+        </div>
+        }
+        @if (ViewBag.Msg != null)
+        {
+        string alerttype = (ViewBag.Type.ToLower() == "fail" ? "alert-danger"
+        : (ViewBag.Type.ToLower() == "warn" ? "alert-warning"
+        : (ViewBag.Type.ToLower() == "info" ? "alert-info" : "alert-success")));
+
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Alert!</strong> @ViewBag.Msg
+            </div>
+        </div>
+        }
+
+        <hr style="margin: 0 0 10px 0; padding: 0;" />
+        <div class="clearfix"></div>
+        <div class="row xrow" style="">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Recent Messages</h3>
+                    </div>
+                    <div class="col-md-12">
+                        @Html.ActionLink("Index", "Message", new { useview = "_MessageList", compId = Model.CompanyId })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                @Html.Partial("_CompanySideBar")
+            </div>
+            <div class="clearfix"></div>
+            @if (ViewBag.approveFac != null)
+            {
+            <div class="row xrow" style="">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>Station (Facilities) to Approve</h3>
+                        </div>
+                        <div class="col-md-12">
+                            @foreach (var item in ViewBag.approveFac)
+                            {
+                            <p>
+                                @item.FacilityName (@item.CompanyName)  <a href="/lto/ApproveSponsor/@item.Id">Review to Approve</a>
+                            </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
+
+
+    @section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnkDashboard").addClass("active");
+            var count = $("#expiringCount").text();
+            //alert(count);
+            if (count > 0) {
+                $("#expiringCount").parent("div").addClass("exp");
+            }
+
+            $("[data-toggle='modal']").on("click", function () {
+                // var cat = $(this).attr('catId');
+                $('#modalPopup').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget)
+                    //var recipient = button.data('whatever')
+                    var content = $("#classB").html();
+                    //alert(content);
+                    var modal = $(this)
+                    modal.find('.modal-title').text('Select Application Stage');
+                    modal.find('.modal-body').html(content);
+                });
+
+            });
+
+            $.get("/Facility/TopFacilities", function (data) {
+                var i = 0;
+                if (data == 0) {
+                    $("#topFacs").append("<div class='list-group-item'>No Facility added yet!</div>");
+                }
+                else {
+                    $.each(data, function (index, obj) {
+                        //<a href="#" class="list-group-item">Guide Lines</a>
+                        i++;
+                        $("#topFacs").append("<a href='/Facility/ViewFacility/" + obj.Id + "' class='list-group-item'>" + obj.Name + "</a>");
+                    });
+                    if (i >= 5) {
+                        $("#topFacs").append("<a href='/Facility/Index' class='list-group-item'>See All</a>");
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script type="text/x-handlebars-template" id="classB">
+        <div class="pad">
+            <form action="/Application/Apply" method="get">
+                <input type="hidden" name="catId" value=" " />
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" role="tab" id="headingsi">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#si" aria-expanded="true" aria-controls="collapseOne">
+                                    Suitability Inspection
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="si" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingsi">
+                            <div class="panel-body">
+                                Something for Men
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingatc">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#atc" aria-expanded="true" aria-controls="collapseOne">
+                                    Approval ToConstruct (ATC)
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="atc" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingatc">
+                            <div class="panel-body">
+                                <h4>Somethinf for the bois</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headinglto">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#lto" aria-expanded="true" aria-controls="collapseOne">
+                                    License To Operate (LTO)
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="lto" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headinglto">
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </script>
+
+    }

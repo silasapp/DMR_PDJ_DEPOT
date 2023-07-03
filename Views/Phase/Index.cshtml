@@ -1,0 +1,169 @@
+﻿@model IEnumerable<NewDepot.Models.Phase>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+
+    <div class="righty">
+        <a href="/Category" class="btn btn-default">
+            Back &nbsp;<i class="icon-arrow-left"></i>
+        </a>
+        <button class="btn btn-success callModal" data-url="/Phase/Create"
+                data-toggle="modal" data-target="#modalPopup" data-uid="1">
+            Creat New Phase <span class="fa fa-plus"></span>
+        </button>
+    </div>
+    <hr class="clear" />
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-hover table-striped table-bordered dataTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Phase Name</th>
+                                <th class="txtright">Amount (₦)</th>
+                                <th class="txtright">Processing Fee (₦)</th>
+                                <th class="txtright">Sanction Fee (₦)</th>
+                                <th class="txtright">Service Charge (₦)</th>
+                                <th class="txtcenter">Stage</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count() > 0)
+                            {
+                                int count = 0;
+                                foreach (var item in Model)
+                                {
+                                    string bgColor = (item.Deleted != null && item.Deleted.Value ? "danger" : "");
+                                    count++;
+                                    <tr class="@bgColor">
+                                        <td>@count</td>
+                                        <td><a href="#" class="">@item.Name</a></td>
+                                        <td class="txtright">
+
+                                            @if (item.PriceByVolume)
+                                            {
+                                                <span>0-7,500,000 ltrs = N150,000. Every 5000ltrs above this = N100.</span>
+                                            }
+                                            else
+                                            {
+                                                @item.Price.ToString("N2")
+                                            }
+                                        </td>
+                                        <td class="txtright">
+                                            @item.ProcessingFee.ToString("N2")
+                                            @if (item.ProcessingFeeByTank)
+                                            {
+                                                <span>/Tank</span>
+                                            }
+                                        </td>
+
+                                        <td class="txtright">@item.SanctionFee.GetValueOrDefault().ToString("#,###,##0.00")</td>
+
+                                        <td class="txtright">@item.ServiceCharge.ToString("#,###,##0.00")</td>
+                                        <td class="txtcenter">@item.Stage</td>
+                                        <td class="txtright">
+                                            <div class="btn-group">
+                                                @*<button class="btn btn-info btn-xs callModal" data-url="/Phase/CreatePhaseDocument/@item.Id"
+                                                            data-toggle="modal" data-target="#modalPopup" data-uid="2" data-itemname="@item.Name">
+                                                        Docs <span class="icon-docs"></span>
+                                                    </button>*@
+                                                <a href="/Phase/CreatePhaseDocument/@item.Id" class="btn btn-xs btn-info">Docs <span class="fa fa-files-o"></span></a>
+                                                <a href="/Phase/PhaseRule/@item.Id" class="btn btn-xs btn-success">Rules <span class="fa fa-redo"></span></a>
+                                                <button class="btn btn-warning btn-xs callModal" data-url="/Phase/EditPhase/@item.Id"
+                                                        data-toggle="modal" data-target="#modalPopup" data-uid="3" data-itemname="@item.Name">
+                                                    Edit <span class="fa fa-pencil"></span>
+                                                </button>
+                                                @if (item.Deleted != null && item.Deleted.Value)
+                                                {
+                                                    <button class="btn btn-primary btn-xs callModal" data-url="/Phase/DeletePhase/@item.Id?todo=add"
+                                                            data-toggle="modal" data-target="#modalPopup" data-uid="4" data-itemname="@item.Name">
+                                                        Re-Add <span class="fa fa-redo"></span>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-danger btn-xs callModal" data-url="/Phase/DeletePhase/@item.Id?todo=del"
+                                                            data-toggle="modal" data-target="#modalPopup" data-uid="4" data-itemname="@item.Name">
+                                                        Archive <span class="fa fa-trash"></span>
+                                                    </button>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Categories > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Service']").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            $(document.body).on("click", ".callModal", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-itemname");
+
+                $("#modal-body").html("");
+                if (uid == "1") {
+                    var headTitle = "Create New Phase";
+                } else if (uid == "2") {
+                    var headTitle = "Select required document for " + name + " category";
+                } else if (uid == "3") {
+                    var headTitle = "Edit Phase " + name;
+                } else if (uid == "4") {
+                    var headTitle = "Archive Phase " + name;
+                }
+
+                $(".modal-title").text(headTitle);        // find title for changr
+                $("#modal-body").html(Loading());
+                //Load the view
+                $.get(url, function (data) {
+                    $("#modal-body").html(data);
+                });
+
+            });
+
+            $(document.body).on("click", "#PriceByVolume", function () {
+                var chk = $(this);
+
+                if (chk.is(':checked')) {
+                    $("#Price").val(0);
+                    var lbl = '0-7,500,000 ltrs = N150,000. Every 5000ltrs above this = N100.';
+                    $("#PriceByVolumeLbl").text(lbl);
+                } else {
+                    $("#PriceByVolumeLbl").text('By Volume');
+                }
+            })
+        });
+    </script>
+}

@@ -1,0 +1,307 @@
+﻿
+@{
+    ViewData["Title"] = "Application Phase Configurations";
+    ViewData["BodyClass"] = "fix-header fix-sidebar";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+}
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <div class="card">
+        
+            <div class="card-body">
+
+                <h6 class="card-title"> Application Phases 
+                    <button style="float:right" class="btn btn-primary waves-effect waves-light" id="btnCreatePhase"> Create Phase </button>
+
+                </h6>
+               
+                <table id="TableAppPhase" class="table-responsive ui celled table table-hover" style="font-size:smaller">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Category Name
+                            </th>
+                            <th>
+                                Short Name
+                            </th>
+                            <th>
+                                Issue Type
+                            </th>
+                            <th>Flow Type</th>
+                            <th>
+                                Amount
+                            </th>
+                            <th>
+                                Price By Volume
+                            </th>
+                            <th>
+                                Processing Fee
+                            </th>
+                            <th>
+                                Processing Fee By Tank
+                            </th>
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Service Charge
+                            </th>
+
+                            <th>
+                                Created At
+                            </th>
+                            <th>
+                                Updated At
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+
+        <div class="card">
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Create Phase
+                </span>
+            </div>
+
+            <form action="#" id="FormCreateAppPhase">
+
+                <div class="form-group">
+
+                    <input name="txtAppPhaseName" id="txtAppPhaseName" class="form-control" placeholder="Phase Name ..." required />
+                    <br />
+                    <input name="txtPhaseShortName" id="txtPhaseShortName" class="form-control" placeholder="Phase Short Name... (Eg. SUI)" required />
+                    <br />
+                    <input name="txtDescription" id="txtDescription" class="form-control" placeholder="Phase Description" required />
+
+
+                </div>
+
+                <div class="form-group">
+                    <label class="content text-secondary">Category</label>
+                    <select name="txtAppCategoryName" id="txtAppCategoryName" class="form-control" required>
+                        <option></option>
+                        @foreach (var ph in ViewBag.Categories)
+                        {
+                            <option value="@ph.id">@ph.name</option>
+                        }
+                    </select>
+                    <br />
+                </div> 
+                <div class="form-group">
+                    <label class="content text-secondary">Issue Type</label>
+
+                    <select name="txtIssueType" id="txtIssueType" class="form-control" required>
+                        <option></option>
+                        <option>Approval</option>
+                        <option>License</option>
+                        <option>Clearance</option>
+                    </select>
+                    <br />
+                </div>
+                <div class="form-group">
+
+                    <select name="txtFlowType" id="txtFlowType" class="form-control" required>
+                        <option></option>
+                        <option>HQ Only</option>
+                        <option>Field_HQ</option>
+                    </select>
+                    <br />
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="content text-secondary"> Amount </label>
+                            <input name="txtPhaseAmount" type="number" step="1000" id="txtPrice" value="0" class="form-control" placeholder="Phase Amount ..." required />
+
+                            <br />
+
+                            <label class="content text-secondary"> Price Per Volume</label>
+                            <select name="txtPricePerVolume" id="txtPricePerVolume" class="form-control" required>
+                                <option></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                            <br />
+
+
+                            <label class="content text-secondary"> Service Charge </label>
+                            <input name="txtServiceCharge" type="number" step="500" id="txtServiceCharge" value="0" class="form-control" placeholder="Phase Amount ..." required />
+                            <br />
+
+                            <label class="content text-secondary"> Processing Fee By Tank</label>
+                            <select name="txtProcessingFee" id="txtProcessingFeeByTank" class="form-control" required>
+                                <option></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                            <br />
+
+                            <label class="content text-secondary"> Processing Fee </label>
+                            <input name="txtProcessingFee" type="number" step="500" id="txtProcessingFee" value="0" class="form-control" placeholder="Processing Fee ..." required />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Create Phase" class="btn btn-sm ui red button" />
+                </div>
+
+                <div id="CreateAppPhaseInfo"> </div>
+            </form>
+
+
+        </div>
+
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Edit Phase
+                </span>
+            </div>
+
+
+
+            <form action="#" id="FormEditAppPhase">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" id="txtEditAppPhaseID" />
+
+                <div class="form-group">
+
+                    <input name="txtEditAppPhaseName" id="txtEditAppPhaseName" class="form-control" placeholder="Name ..." required />
+                    <br />
+                    <label class="content text-secondary">ShortName</label>
+
+                    <input name="txtEditPhaseShortName" id="txtEditPhaseShortName" class="form-control" placeholder="Short Name... (Eg. SUI)" required />
+
+                    <label class="content text-secondary">Description</label>
+
+                    <input name="txtEditDescription" id="txtEditDescription" class="form-control" placeholder="" required />
+
+
+                </div>
+
+                <div class="form-group">
+                    <label class="content text-secondary">Category</label>
+
+
+                    <select name="txtEditCategoryName" id="txtEditCategoryName" class="form-control" required>
+                        <option selected id="txtEditCategoryNameVal"></option>
+                        @foreach (var ph in ViewBag.Categories)
+                        {
+                            <option value="@ph.id">@ph.name</option>
+                        }
+                    </select>
+                    <br />
+                </div>
+                <div class="form-group">
+                    <label class="content text-secondary">Issue Type</label>
+
+                    <select name="txtEditIssueType" id="txtEditIssueType" class="form-control" required>
+                        <option selected id="txtEditIssueTypeVal"></option>
+                        <option>Approval</option>
+                        <option>License</option>
+                        <option>Clearance</option>
+                    </select>
+                    <br />
+                </div>
+                <div class="form-group">
+                    <label class="content text-secondary">Flow Type</label>
+
+                    <select name="txtEditFlowType" id="txtEditFlowType" class="form-control" required>
+                        <option selected id="txtEditFlowTypeVal"></option>
+                        <option>HQ Only</option>
+                        <option>Field_HQ</option>
+                    </select>
+                    <br />
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="content text-secondary"> Amount </label>
+                            <input name="txtEditPhaseAmount" type="number" step="1000" id="txtEditPrice" value="0" class="form-control" placeholder="Phase Amount ..." required />
+
+                            <br />
+
+                            <label class="content text-secondary"> Price Per Volume</label>
+                            <select name="txtEditPricePerVolume" id="txtEditPricePerVolume" class="form-control" required>
+                                <option selected id="txtEditPricePerVolumeVal"></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                            <br />
+
+
+                            <label class="content text-secondary"> Service Charge </label>
+                            <input name="txtEditServiceCharge" type="number" step="500" id="txtEditServiceCharge" class="form-control" required />
+                            <br />
+
+                            <label class="content text-secondary"> Processing Fee By Tank</label>
+                            <select name="txtEditProcessingFee" id="txtEditProcessingFeeByTank" class="form-control" required>
+                                <option selected id="txtEditProcessingFeeByTankVal"></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                            <br />
+
+                            <label class="content text-secondary"> Processing Fee </label>
+                            <input name="txtEditProcessingFee" type="number" step="500" id="txtEditProcessingFee" value="0" class="form-control" placeholder="Processing Fee ..." required />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Edit Phase" class="btn btn-sm ui btn-info button" />
+                </div>
+
+                <div id="CreateAppPhaseInfo"> </div>
+            </form>
+
+            <div id="EditAppPhaseInfo"> </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+@section Scripts{
+
+    <script src="~/js/NewDepot Scripts/Configurations/AppPhase.js"></script>
+
+}

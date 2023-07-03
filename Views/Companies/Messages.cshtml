@@ -1,0 +1,113 @@
+﻿@model IEnumerable<NewDepot.Models.messages>
+@using NewDepot.Helpers;
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+
+    var top10 = Model.Take(10);
+    var i = 0;
+    var generalClass = new GeneralClass();
+
+}
+
+<div class="row" id="BackImage">
+
+    <br />
+    <h3 class="DashCompanyName">  My Messages </h3>
+    <hr />
+</div>
+<div class="marg50"></div>
+
+<table class="table table-hover table-bordered table-striped dataTable">
+    <thead>
+        <tr>
+
+            <th>
+
+            </th>
+            <th>
+                Subject
+            </th>
+
+            <th>
+                Date
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in top10)
+        {
+            var comp_id = generalClass.Encrypt(item.UserID.ToString());
+            var msg_id = generalClass.Encrypt(item.id.ToString());
+
+            <tr>
+                <td>
+
+                    @if (item.read == 1)
+                    {
+
+                        <i class="fa fa-envelope-open"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-envelope"></i>
+                    }
+                </td>
+                <td>@item.subject</td>
+                <td>
+
+                    @{
+                        var diff = DateTime.Now - item.date;
+                        if (diff.Value.Days >= 7)
+                        {
+                            var weeks = (int)(diff.Value.Days / 7);
+
+                            if (weeks > 1)
+                            {
+                                <span>@weeks weeks ago</span>
+                            }
+                            else if (weeks == 1)
+                            {
+                                <span>@weeks week ago</span>
+                            }
+                        }
+                        else if (diff.Value.Days >= 1)
+                        {
+                            if (diff.Value.Days > 1)
+                            {
+                                <span>@diff.Value.Days days ago</span>
+                            }
+                            else if (diff.Value.Days == 1)
+                            {
+                                <span>Yesterday</span>
+                            }
+                        }
+                        else if (diff.Value.Hours >= 1)
+                        {
+                            if (diff.Value.Hours > 1)
+                            {
+                                <span>@diff.Value.Hours Hours ago</span>
+                            }
+                            else if (diff.Value.Hours == 1)
+                            {
+                                <span>@diff.Value.Hours Hour ago</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>@diff.Value.Minutes Minutes ago</span>
+                        }
+                    }
+                </td>
+              
+                <td> 
+                <a class="btn btn-primary btn-sm" target="_blank" href="/Companies/Message/@comp_id/@msg_id"> <i class="fa fa-eye"> </i> View Message </a>
+                </td>
+             
+            </tr>
+        }
+    </tbody>
+
+ 
+</table>

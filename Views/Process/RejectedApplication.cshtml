@@ -1,0 +1,101 @@
+﻿@model NewDepot.Models.MyApps
+@using NewDepot.Helpers;
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = Model.CompanyName + "'s Rejected Application";
+    var generalClass = new GeneralClass();
+
+}
+<style>
+    td {
+        padding-bottom: 30px;
+        padding-left: 30px
+    }
+
+    table {
+        margin-top: 20px;
+    }
+
+    tr {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  Rejected Application </h3>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="widget">
+        <div class="widget-header">
+        </div>
+
+        <div class="widget-content">
+            <p class="text-left" style="padding:20px">
+                This is to inform you that your application with reference: <b>@Model.Reference</b> needs your attention to continue.
+                Please review and respond as soon as possible for the processing to continue.
+            </p>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 text-center">
+                    <div class="well">
+                        @*<h3 class="text-lg-center"><strong>Application Details</strong></h3>*@
+
+                        <table>
+                            <tr>
+                                <td class="text-left"><b>Application Category</b></td>
+                                <td class="text-left">@Model.CategoryName</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Application Type</b></td>
+                                <td class="text-left">@Model.Type.ToUpper()</td>
+                            <tr>
+                            <tr>
+                                <td class="text-left"><b>Application Date</b></td>
+                                <td class="text-left">@Model.DateSubmitted.ToShortDateString() (@Model.DateSubmitted.ToShortTimeString())</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Date Declined</b></td>
+                                <td class="text-left">@Model.appHistory.date.ToShortDateString() (@Model.appHistory.date.ToShortTimeString())</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Application Status</b></td>
+                                <td class="text-left"><span class="btn btn-sm btn-danger">Rejected <i class="glyphicon glyphicon-thumbs-down"></i></span></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left"><b>Message</b></td>
+                                <td class="text-left">
+                                    @if (!string.IsNullOrEmpty(Model.appHistory.comment))
+                                    {
+                                        @Html.DisplayFor(modelItem => Model.appHistory.comment)
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            Your application has been rejected, Please follow the instructions in the rejection e-mail that was sent to you.
+                                            <br />
+                                        </p>
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="clear"></div>
+            <div class="txtcenter" style="margin-top:15px">
+
+                Click here to <a href="/Application/ReUploadDocument/@generalClass.Encrypt(Model.appID.ToString())" class="btn btn-sm btn-warning">Resubmit Application</a> your application
+
+            </div>
+        </div>
+    </div>
+</div>
+

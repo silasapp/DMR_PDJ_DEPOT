@@ -1,0 +1,393 @@
+﻿@model NewDepot.Models.PermitViewModel
+@using NewDepot.Helpers
+@using NewDepot.Controllers 
+@{
+    Layout = null;
+    var prods = Model.Products.OrderBy(a => a.Value);
+    var prod = 1;
+    var cid =  Model.CompanyIdCode;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+
+    <style type="text/css">
+    </style>
+</head>
+<body style="font-size: 1.2em;">
+    @if (Model.PrintView == "Old View")
+    {
+        <div style="font-family:Calibri; page-break-inside: avoid">
+       
+            <div style=" font-family: Candara; position: relative; height: 100%; box-sizing: border-box;">
+
+                <div style="text-align: center;">
+                    <img src="~/OldDepotStyle/Content/Images/waterMark_preview.png" alt="Logo" style="height: 190px; display: block; margin: 0 auto 0px auto;" />
+                    <div>
+
+                        <h2 style="margin: 0; margin-top:10px;font-size: 1.4em">FEDERAL REPUBLIC OF NIGERIA</h2>
+                        <h2 style="margin: 0; margin-top: 5px;font-size: 1.4em">PETROLEUM ACT 1969 </h2>
+                        <h3 style="margin: 0; margin-top: 5px;font-size: 1.0em; color:#e40909;">Petroleum Depot License</h3>
+
+                    </div>
+                </div>
+
+                <div style="position: relative; box-sizing: border-box; top: 8px;">
+                    <div style="float: left; width: 50%;">
+                        &nbsp;
+                    </div>
+                    <div style="float:  right; width: 100%; font-size: 18px;">
+                        <div style="padding-top: 0; padding-right:10px; float:right">
+                            <div style="">License No: <span style="border-bottom: 2px dotted #888; font-weight:bold">@Model.PermitNo</span></div>
+
+                        </div>
+                        <div style="clear: both;"></div>
+                        <div style=" padding-top: 0; margin-top: 18px; padding-right:10px; float:right">
+                            <div style="">Facility Identification Code: <span style="border-bottom: 2px dotted #888;font-weight: bold; ">@Model.FacIdentitificationCode</span></div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+
+                <div style=" position: relative; box-sizing: border-box; top: 10px; ">
+
+                    <p style="font-size:20px;  ">
+                        License is hereby granted to: <span style="font-weight: bold; font-style: italic; font-size: 23px;" id="facLine1">@Model.CompanyNameL1.ToUpper() @Model.CompanyNameL2</span>
+                    </p>
+
+                    <p style="font-size:20px; padding-bottom:1em;">
+                        of  @Model.CoyAddL1 @Model.CoyAddL2 for the Storage of:
+
+                    </p>
+
+                    @{
+                        string fs = "";
+                        if (prods.Count() >= 6)
+                        {
+                            fs = "16px";
+                        }
+                        else if (prods.Count() >= 4)
+                        {
+                            fs = "18px";
+                        }
+                    }
+                    <table style="width:100%;padding-top:-5px;">
+                        @{
+                            var po = GeneralClass.ProductOrder.GetOrdered();
+                        }
+
+                        @foreach (var item in po)
+                        {
+                            var product = prods.Where(a => a.Key.ToLower() == item.product.ToLower()).FirstOrDefault();
+                            if (!product.Equals(default(KeyValuePair<string, double>)))
+                            {
+                                var value = product.Value;
+                                var num = GeneralClass.NumberToWords(value, "Litres").ToUpper();
+
+                                <tr>
+                                    <td style="padding:5px; ">@product.Key</td>
+                                    <td style="padding:5px">@value.ToString("N2")</td>
+                                    <td>(<span style="text-align:center; font-size: @fs; border-bottom:1px dotted #171717;">@num</span>)</td>
+                                </tr>
+                                prod++;
+                            }
+
+                        }
+
+                    </table>
+
+
+                    <table style="width: 100%; border-spacing: 0; position: relative; margin-top: -5px; font-size: 22px;">
+
+                        <tr>
+                            <td style=" padding: 5px 0 0;" colspan="2">
+                                at <span style="font-size:18px; border-bottom :1px dotted #171717; font-weight:bold" id="facAddress1">@Model.FacilityAddress1 @Model.FacilityAddress2</span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; font-size: 18px;">(Address of Premises)</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" style="font-size: 26px;">
+
+                                <div style="font-size:18px">
+                                    <p>
+                                        This License is issued subject to the conditions prescribed in the Petroleum
+                                        Act 1969 of which the License admits cognizance.
+                                   <br/>
+                                        This License shall expire on the 31st day of December next following the date
+                                        of issue hereof and may be renewed on application being made for this purpose
+                                        not later than 30 days previous to the date of expiry.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0 0;">
+                                Dated  <span style="font-weight: bold;font-size: 18px;" id="date1"><span style="border-bottom :1px dotted #171717"> @Model.IssueDate.DayOfWeek.ToString(), @Model.IssueDate.Day<sup>th</sup></span> </span>
+                                Day of <span style="font-weight: bold;font-size: 18px;" id="date2"> <span style="border-bottom :1px dotted #171717; text-transform:capitalize"> @GeneralClass.CalendarHelper.MonthOfTheYear(Model.IssueDate.Month) @Model.IssueDate.Year </span> </span>
+
+                                @*<div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+
+                                    </div>*@
+                            </td>
+                            <td style="padding: 2px 0 0;">
+
+                                @*<div style="display: inline-block; margin-bottom: -3px; background-color: #fff;padding: 5px 10px 5px 0;">
+                                        &nbsp; &nbsp;
+                                    </div>*@
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 2px 0 0;" colspan="2">
+                                @{ decimal amt = (decimal)Model.Fee;}
+                                FEE ₦:<span style="font-size: 18px;" id="fee1">@amt.ToString("#,###,##0.00") &nbsp; (@GeneralClass.NumberToWords(Convert.ToDouble(amt)))</span>
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <table style="width: 100%; position: relative;">
+                        <tr>
+                            <td style="height: 80px;" colspan="2">
+                                EXPIRY DATE: <span style="font-weight: bold;font-size: 18px" id="expdate">@Model.ExpiryDate.Day @GeneralClass.CalendarHelper.MonthOfTheYear(Model.ExpiryDate.Month), @Model.ExpiryDate.Year</span>
+                            </td>
+                        </tr>
+                        <tr style=" padding: 2px 0 0; margin-top: 0px;">
+                            <td style="vertical-align: central; padding-left:10px">
+                                @*<img src="/Content/Images/DPR.png" alt="Logo" style="height: 15px; display: block; margin: 0 auto 25px auto;" />*@
+
+                                <img height="200" style="top:0px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.QrCodeImg))" alt="Permit Number and Company Identification Number" />
+
+
+                            </td>
+
+                            <td>
+                                <div style=" margin-top:20px; text-align: right; max-width: 390px; float: right; height:5px;">
+                                    <!--<div style="position: inherit; height: 100px;">
+                                        @{
+                                            var startDate = new DateTime(2020, 1, 1);
+                                        }-->
+                                        @*@if (Model.IssueDate > startDate)
+                                        {
+                                            <img src="@Model.Signature" style="height: 135px; width: 235px; position: absolute; bottom: 25px; right: 50px;" />
+
+                                        }*@
+                                    <!--</div>
+                                    <div style="height: 5px; font-size: 1.3em; text-align:center; margin-bottom: 0; width: 390px; right: 0; border-top: 2px dotted #888;bottom: 0;">For: Minister of Petroleum Resources</div>-->
+
+
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="clear: both;"></div>
+
+                </div>
+
+            </div>
+        </div>
+    }
+    else
+    {
+       
+<div style="font-family:Calibri; page-break-inside: avoid">
+
+        <div style=" font-family: Candara; position: relative; height: 100%; box-sizing: border-box;">
+            <div style="width: 100%; text-align: center; position: relative; top: 450px!important;">
+                <img src="~/OldDepotStyle/Content/Images/waterMark_preview.png" alt="Logo" style="display: block; margin: 20px auto 10px auto; opacity: 0.2; width: 80%;" />
+            </div>
+            
+            <div style=" padding: 65px 67px;  position: relative; height: 100%;  margin-top: -600px;">
+                <div style="text-align: center;">
+                    <img src="~/images/nmdpra.png" alt="Logo" style="height: 190px; display: block; margin: 0 auto 0px auto;" />
+                    <div>
+
+                        <h2 style="margin: 0; margin-top:10px;font-size: 1.4em">FEDERAL REPUBLIC OF NIGERIA</h2>
+                        <h2 style="margin: 0; margin-top: 5px;font-size: 1.4em">PETROLEUM INDUSTRY ACT 2021 </h2>
+                        <h3 style="margin: 0; margin-top: 5px;font-size: 1.0em; color:#e40909;">Petroleum Depot License</h3>
+
+                    </div>
+                </div>
+
+                
+                <div style="position: relative; box-sizing: border-box; top: 8px;">
+                    <div style="float: left; width: 50%;">
+                        @if (prods.Count() < 4)
+                        {
+                            <p>&nbsp;</p>
+                        }
+                      
+                    </div>
+                    <div style="float:  right; width: 100%; font-size: 18px;">
+                        <div style="padding-top: 0; padding-right:10px; float:right">
+                            <div style="">License No: <span style="border-bottom: 2px dotted #888; font-weight:bold">@Model.PermitNo</span></div>
+
+                        </div>
+                        <div style=" padding-top: 0; margin-top: 18px; padding-right:10px; float:right">
+                            <div style="">Facility Identification Code: <span style="border-bottom: 2px dotted #888;font-weight: bold; ">@Model.FacIdentitificationCode</span></div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+
+                 <div style=" position: relative; box-sizing: border-box; top: 10px; ">
+
+                    <p style="font-size:20px;  ">
+                        License is hereby granted to: <span style="font-weight: bold; font-style: italic; font-size: 23px;" id="facLine1">@Model.CompanyNameL1.ToUpper() @Model.CompanyNameL2</span>
+                      <br/> of  @Model.CoyAddL1 @Model.CoyAddL2 for the Storage of:
+
+                    </p>
+
+                    @{
+                        string fs = "";
+                        if (prods.Count() >= 6)
+                        {
+                            fs = "16px";
+                        }
+                        else if (prods.Count() >= 4)
+                        {
+                            fs = "14px";
+                        }
+                    }
+                    <table style="width:100%;margin:-10px;">
+                        @{
+                            var po = GeneralClass.ProductOrder.GetOrdered();
+                        }
+
+                        @foreach (var item in po)
+                        {
+                            var product = prods.Where(a => a.Key.ToLower() == item.product.ToLower()).FirstOrDefault();
+                            if (!product.Equals(default(KeyValuePair<string, double>)))
+                            {
+                                var value = product.Value;
+                                var num = GeneralClass.NumberToWords(value, "Litres").ToUpper();
+
+                                <tr>
+                                    <td style="padding:5px; ">@product.Key</td>
+                                    <td style="padding:5px">@value.ToString("N2")</td>
+                                    <td>(<span style="text-align:center; font-size: @fs; border-bottom:1px dotted #171717;">@num</span>)</td>
+                                </tr>
+                                prod++;
+                            }
+
+                        }
+
+                    </table>
+
+
+                    <table style="width: 100%; border-spacing: 0; position: relative; margin-top: -5px; font-size: 22px;">
+
+                        <tr>
+
+                            <td style=" padding: 5px 0 0;" colspan="2">
+                                  @if (prods.Count() < 4)
+                                    {
+                                        <br/>
+                                    }
+                                at <span style="font-size:18px; border-bottom :1px dotted #171717; font-weight:bold" id="facAddress1">@Model.FacilityAddress1 @Model.FacilityAddress2</span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; font-size: 18px;">(Address of Premises)</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" style="font-size: 26px;">
+
+                                <div style="font-size:18px">
+                                    <p>
+                                        This License is issued subject to the conditions prescribed in the Petroleum
+                                        Act 1969 of which the License admits cognizance.
+                                    <br/>
+                                    <br/>
+                                        This License shall expire on the 31st day of December next following the date
+                                        of issue hereof and may be renewed on application being made for this purpose
+                                        not later than 30 days previous to the date of expiry.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0 0;">
+                                  @if (prods.Count() < 4)
+                                    {
+                                        <br/>
+                                    }
+                                Dated  <span style="font-weight: bold;font-size: 18px;" id="date1"><span style="border-bottom :1px dotted #171717"> @Model.IssueDate.DayOfWeek.ToString(), @Model.IssueDate.Day<sup>th</sup></span> </span>
+                                Day of <span style="font-weight: bold;font-size: 18px;" id="date2"> <span style="border-bottom :1px dotted #171717; text-transform:capitalize"> @GeneralClass.CalendarHelper.MonthOfTheYear(Model.IssueDate.Month) @Model.IssueDate.Year </span> </span>
+
+                            </td>
+                            <td style="padding: 2px 0 0;">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 2px 0 0;" colspan="2">
+                                @{ decimal amt = (decimal)Model.Fee;}
+                                FEE ₦:<span style="font-size: 18px;" id="fee1">@amt.ToString("#,###,##0.00") &nbsp; (@GeneralClass.NumberToWords(Convert.ToDouble(amt)))</span>
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <table style="width: 100%; position: relative;">
+                        <tr>
+                            <td style="height: 50px;" colspan="2">
+                                EXPIRY DATE: <span style="font-weight: bold;font-size: 18px" id="expdate">@Model.ExpiryDate.Day @GeneralClass.CalendarHelper.MonthOfTheYear(Model.ExpiryDate.Month), @Model.ExpiryDate.Year</span>
+                            </td>
+                        </tr>
+                        <tr style=" padding: 2px 0 0; margin-top: 0px;">
+                            <td style="vertical-align: central; padding-left:10px">
+
+                                <img height="150" style="top:0px" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.QrCodeImg)))" alt="Permit Number and Company Identification Number" />
+
+
+                            </td>
+
+                            <td>
+                                @*<div style=" margin-top:5px; text-align: right; max-width: 390px; float: right; height:3px;">
+                                    <div style="position: absolute;  right: 50px; top:45px;">
+                                        @{
+                                            var startDate = new DateTime(2020, 1, 1);
+                                        }
+                                        @if (Model.IssueDate > startDate)
+                                        {
+                                                var src =  Model.Signature_N != null ? Model.Signature_N.Replace("~", string.Empty) : "";
+                                                <img src="@src" style="height: 70px; width: 235px; " />
+
+                                        }
+                                    </div>
+                                    <div style="height: 3px; font-size: 1.3em; text-align:center; margin-bottom: 0; width: 390px; right: 0; border-top: 2px dotted #888;bottom: 0;">
+                                        Authority Chief Executive
+                                        </div>
+
+
+                                </div>*@
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="clear: both;"></div>
+
+                </div>
+
+            </div>
+    </div>
+</div>
+
+    }
+
+</body>
+</html>

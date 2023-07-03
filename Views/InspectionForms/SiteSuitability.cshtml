@@ -1,0 +1,325 @@
+﻿@using NewDepot.Controllers.Accounts;
+@model IEnumerable<LPGDepot.Models.SiteSuitability>
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "Site Suitability Inspection Form";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<div class="card">
+
+
+    <br />
+
+    <h4><b> SITE SUITABILITY INSPECTION SCHEDULE FOR LIQUEFIED PETROLEUM GAS DEPOT.</b></h4>
+    <hr />
+
+    <div class="alert alert-info">
+
+        <div>
+            <h5>Reference NO : @ViewData["RefNo"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Company Name : @ViewData["CompanyName"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Facility Name : @ViewData["FacilityName"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Facility Address : @ViewData["FacilityAddress"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Application : @ViewData["AppCategory"] </h5>
+        </div>
+
+    </div>
+
+    <p></p>
+
+    <hr />
+
+    <input type="text" hidden value="@ViewData["AppID"]" id="txtAppID" />
+
+    @if (Model.Count() <= 0)
+    {
+        <form role="form" id="FormSiteSuitability" method="post" action="#">
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Neighbouring Facility Present ? </b> </label>
+                        <input type="text" class="form-control" id="txtNeighbouringFacility" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Pipeline Right of Way ? </b> </label>
+                        <input type="text" class="form-control" id="txtRightOfWay" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> High Tension Present ? </b> </label>
+                        <input type="text" class="form-control" id="txtHighTension" />
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Accessibility to Site ? </b> </label>
+                        <input type="text" class="form-control" id="txtSiteAccessibility" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Neighbouring Facility Distance ? </b> </label>
+                        <input type="text" class="form-control" id="txtNeighbouringFacilityDistance" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Adjoining Facility ? </b> </label>
+                        <input type="text" class="form-control" id="txtAdjoiningFacility" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Setback to access roads ? </b> </label>
+                        <input type="text" class="form-control" id="txtSetBack" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4" hidden>
+                    <div class="form-group" hidden>
+                        <label class="control-label"><b> Travest Pipeline Right ? </b> </label>
+                        <input type="text" class="form-control" id="txtTravestRight" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Land Size ? </b> </label>
+                        <input type="text" class="form-control" id="txtLandSize" />
+                    </div>
+                    <br />
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label"><b> Other Comments ? </b> </label><br />
+                        <textarea id="txtSiteComment" style="max-width:95%" rows="7" cols="68" placeholder="Some comment here...Max(100)"></textarea>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="text-center">
+                <input type="submit" class="btn btn-primary" value="Save Site Suitability Form" />
+                &nbsp;
+                <input type="reset" class="btn btn-warning" value="Clear all" id="" />
+            </div>
+
+            <br />
+        </form>
+    }
+    else
+    {
+        <h3><b class="text-danger"> Images From SmartInspector </b></h3>
+
+        <p><br /></p>
+
+        <div class="row">
+
+            <div class="col-sm-3">
+
+                <b class="text-info">North Side Picture</b>
+
+                <hr />
+
+                <img class="img-thumbnail img-responsive" style="height:350px;" src="@Model.FirstOrDefault().NorthPicture" alt="North Side Image" />
+
+            </div>
+
+            <div class="col-sm-3">
+
+                <b class="text-info">West Side Picture</b>
+
+                <hr />
+
+                <img class="img-thumbnail img-responsive" style="height:350px;" src="@Model.FirstOrDefault().WestPicture" alt="West Side Image" />
+
+            </div>
+
+            <div class="col-sm-3">
+
+                <b class="text-info">East Side Picture</b>
+
+                <hr />
+
+                <img class="img-thumbnail img-responsive" style="height:350px;" src="@Model.FirstOrDefault().EastPicture" alt="East Side Image" />
+
+            </div>
+
+            <div class="col-sm-3">
+
+                <b class="text-info">South Side Picture</b>
+
+                <hr />
+
+                <img class="img-thumbnail img-responsive" style="height:350px;" src="@Model.FirstOrDefault().SouthPicture" alt="South Side Image" />
+
+            </div>
+
+        </div>
+
+        <p><hr /></p>
+
+        <form role="form" id="EFormSiteSuitability" method="post" action="#">
+
+            <input type="text" hidden value="@Model.FirstOrDefault().SuitId" id="txtSiteID" />
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Neighbouring Facility Present ? </b> </label>
+                        <input type="text" required class="form-control" id="EtxtNeighbouringFacility" value="@Model.FirstOrDefault().NeighbouringFacility" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Pipeline Right of Way ? </b> </label>
+                        <input type="text" required class="form-control" id="EtxtRightOfWay" value="@Model.FirstOrDefault().RightOfWay" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> High Tension Present ? </b> </label>
+                        <input type="text" required class="form-control" id="EtxtHighTension" value="@Model.FirstOrDefault().HighTension" />
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Accessibility to Site ? </b> </label>
+                        <input type="text" required class="form-control" id="EtxtSiteAccessibility" value="@Model.FirstOrDefault().SiteAccessibility" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Neighbouring Facility Distance ? </b> </label>
+                        <input type="text" required class="form-control" id="EtxtNeighbouringFacilityDistance" value="@Model.FirstOrDefault().NeighbouringFacilityDistance" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Adjoining Facility ? </b> </label>
+                        <input type="text" required class="form-control" id="EtxtAdjoiningFacility" value="@Model.FirstOrDefault().AdjoiningFacility" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Setback to access roads ? </b> </label>
+                        <input type="text" class="form-control" id="EtxtSetBack" value="@Model.FirstOrDefault().SiteSetBack" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4" hidden>
+                    <div class="form-group">
+                        <label class="control-label"><b> Travest Pipeline Right ? </b> </label>
+                        <input type="text" class="form-control" id="EtxtTravestRight" value="@Model.FirstOrDefault().TravestRight" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Land Size ? </b> </label>
+                        <input type="text" class="form-control" id="EtxtLandSize" value="@Model.FirstOrDefault().LandSize" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Longitude </b> </label>
+                        <input type="text" readonly disabled class="form-control" id="EtxtLongitude" value="@Model.FirstOrDefault().Longitude" />
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Latitude  </b> </label>
+                        <input type="text" readonly disabled class="form-control" id="EtxtLatitude" value="@Model.FirstOrDefault().Latitude" />
+                    </div>
+                    <br />
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label"><b> Other Comments ? </b> </label><br />
+                        <textarea id="EtxtSiteComment" value="" style="max-width:95%" rows="7" cols="68" placeholder="Some comment here...Max(100)">@Model.FirstOrDefault().OtherComments</textarea>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <br />
+
+            <hr />
+
+
+
+
+            @if (Model.FirstOrDefault().CreatedBy == Convert.ToInt32(generalClass.Decrypt(Context.Session.GetString("_sessionUserID"))))
+            {
+                <div class="text-center">
+                    <input type="submit" class="btn btn-primary" value="Update Site Suitability Form" />
+                </div>
+            }
+
+            <br />
+        </form>
+    }
+
+    <div id="SiteSuitabilityInfo"></div>
+</div>
+

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<NewDepot.Models.ApplicationForms>
+
+@{
+    Layout = null;
+}
+
+<div class="modal-body">
+    <div class="pad">
+        <div class="list-group">
+
+            @foreach (var item in Model)
+            {
+                var bg = (item.ManagerAccept.GetValueOrDefault() ? "active" : "");
+                if (ViewBag.Manager != null && ViewBag.Manager.ToLower() == "usemanager")
+                {
+                    <a class="list-group-item @bg" href="/Inspections/ApplicationForm/@item.Id" title="@item.FormTitle">
+                        @item.FormTitle
+                        <span class="righty"><i class="fa fa-location-arrow"></i></span>
+                    </a>
+                }
+                else
+                {
+                    <a class="list-group-item @bg" href="/Inspections/ApplicationForm/@item.Id" title="@item.FormTitle">
+                        @item.FormTitle
+                        <span class="righty"><i class="fa fa-location-arrow"></i></span>
+                    </a>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="txtcenter">
+        <input type="button" value="Close" class="btn btn-default" data-dismiss="modal" />
+    </div>
+</div>

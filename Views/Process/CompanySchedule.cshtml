@@ -1,0 +1,177 @@
+﻿@model NewDepot.Models.MeetingSchedules
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Meeting/Inspection Schedule";
+
+    var exp = Model.ScheduleExpired.GetValueOrDefault() == true ? "hide" : "";
+}
+
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title for Application: @ViewBag.Referene</h3>
+        <hr />
+    </div>
+</div>
+<p class="marg50"></p>
+<div class="">
+    @if (ViewBag.expired != null)
+    {
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Expired Alert!</strong> @ViewBag.expired
+            </div>
+        </div>
+    }
+    @if (ViewBag.accepted != null)
+    {
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>Alert!</strong> @ViewBag.accepted
+            </div>
+        </div>
+    }
+    <div class="row">
+    <div class="col-md-4"></div>
+    <form action="/Process/CompanySchedule" method="post" id="confirmSchFrm">
+
+        <table class="table">
+            <tr>
+                <td><b>@Html.DisplayNameFor(model => model.Venue)</b></td>
+                <td>
+                    @Html.DisplayFor(model => model.Venue) - (
+                    @Html.DisplayFor(model => model.Address))
+                </td>
+            </tr>
+            <tr>
+                <td><b>@Html.DisplayNameFor(model => model.Date)</b></td>
+                <td>@Html.DisplayFor(model => model.MeetingDate)</td>
+            </tr>
+            <tr>
+                <td>
+                    <b>@Html.DisplayNameFor(model => model.Message)</b>
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <b>@Html.HiddenFor(model => model.Accepted, new { @id = "actionType" })</b>
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Message)
+                </td>
+            </tr>
+            <tr id="msgContainer">
+                <td colspan="2">
+                    <span>
+                        Comment
+                        <br />
+                        <textarea name="message" id="confirmComment" required class="form-control"></textarea>
+                        <br />
+                    </span>
+                </td>
+            </tr>
+
+        </table>
+        <div class="row">
+            <div class="col-md-5"></div>
+            
+            @if (ViewBag.expired == null)
+            {
+
+            @if (Model.Accepted == null)
+            {
+                <input type="button" id="btnConfirm" class="btn btn-success" value="Confirm" />
+                <input type="button" name="decline" id="Cancel" value="Decline" class="btn btn-danger">
+                <input type="button" name="decline" id="btnDecline" value="Decline" class="hide btn btn-danger">
+
+            }
+            }
+            <br />
+        </div>
+        <div id="ModalInfo"> </div>
+
+    </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(function () {
+
+            $("#btnConfirm").on("click", function (e) {
+                e.preventDefault();
+
+                var frm = $("#confirmSchFrm");
+                 var txtComment = $("#confirmComment").val();
+                $("#actionType").val("true");
+
+                if (txtComment === "") {
+                    ErrorMessage("#ModalInfo", "Please enter a comment.");
+                    $("#confirmComment").focus();
+                }
+                else {
+
+
+                    $.confirm({
+                        text: "Are you sure you want to accept this schedule ?",
+                        confirm: function () {
+                            $(frm).addClass('Submitloader');
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+
+                }
+            });
+
+            $("#btnDecline").on("click", function (e) {
+                e.preventDefault();
+                var txtComment = $("#confirmComment").val();
+                $("#actionType").val("false");
+              
+                if (txtComment === "") {
+                    ErrorMessage("#ModalInfo", "Please enter a comment.");
+                    $("#confirmComment").focus();
+                }
+                else {
+                    var frm = $("#confirmSchFrm");
+
+                    $.confirm({
+                        text: "Are you sure you want to decline this schedule ?",
+                        confirm: function () {
+                            $("#confirmValue").val("");
+                            $(frm).addClass('Submitloader');
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+            $("#Cancel").click(function () {
+
+                $("#Cancel").addClass("hide");
+                $("#btnDecline").removeClass("hide");
+                $('#msgContainer').show();
+
+            });
+
+
+
+
+        });
+    </script>
+
+}

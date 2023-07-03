@@ -1,0 +1,141 @@
+﻿@using NewDepot.Models
+@model MyApps
+
+@{
+    Layout = null;
+    var app = (applications)ViewBag.Application;
+    var AppDocs = (List<PresentDocuments>)ViewBag.ApplicationDocs;
+    var extraDocs = (List<MissingDocument>)ViewBag.OtherDocuments;
+}
+
+<style type="text/css">
+    option[disabled] {
+        background: rgba(220, 220, 220, 0.46);
+    }
+</style>
+
+
+@using (Html.BeginForm("Reject", "Process", FormMethod.Post, new { @id = "RejFrm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.appHistory.id)
+    @Html.HiddenFor(model => model.appHistory.application_id)
+    <input hidden value="@Model.appID" name="application_id" />
+
+
+    <div class="modal-body">
+        <input hidden value="@Model.appID" name="application_idss" />
+        <div class="alert alert-info">
+            <div class="half">
+                <div class="">
+                    <input type="hidden" name="chckr" value="@ViewBag.checkerReject" />
+                    <h3>List of Application Files</h3>
+                    <hr />
+                    <h5>Please select the document you're rejecting (if any)</h5>
+                    <div style="max-height: 200px; overflow-y: scroll">
+                        <ul class="list-group" style="margin: 0 10px;">
+                            @if (AppDocs.Count > 0)
+                            {
+                                foreach (var item in AppDocs)
+                                {
+                                    if (item.Source.ToLower().EndsWith(".pdf"))
+                                    {
+                                        <a href="@item.Source" target="_blank" class="list-group-item">
+                                            @if (item.TypeName.ToLower() == "other document")
+                                            {
+                                                @item.TypeName <i class="fa fa-file-pdf-o"></i>
+                                            }
+                                            else
+                                            {
+                                                @item.TypeName <i class="fa fa-file-pdf-o"></i>
+                                            }
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@item.Source" target="_blank" class="list-group-item">
+                                            @if (item.TypeName.ToLower() == "other document")
+                                            {
+                                                @item.TypeName <i class="glyphicon glyphicon-picture"></i>
+                                            }
+                                            else
+                                            {
+                                                @item.TypeName <i class="glyphicon glyphicon-picture"></i>
+                                            }
+                                        </a>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <h4>No Document Was Submitted for this Application yet</h4>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <div class="">
+                    @if (ViewBag.AppFileNotSubmittedYet != null && ViewBag.AppFileNotSubmittedYet.Count > 0)
+                    {
+                        <h4 class="error">List of required Application Files not Submited</h4>
+                        <div style="max-height: 200px; overflow-y: scroll">
+                            <ul class="list-group" style="margin: 0 10px;">
+                                @foreach (var item in (List<MissingDocument>)ViewBag.AppFileNotSubmittedYet)
+                                {
+                                    <li class="list-group-item">@item.TypeName</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <h4>All application required document(s) have been uploaded.</h4>
+                    }
+                </div>
+            </div>
+            <div class="half">
+                <h3>Request New Document</h3>
+                <div class="form-group">
+                    <div class="">
+                        <select multiple name="newRequest" id="newRequest" style="width: 100%; min-height: 150px">
+                            @foreach (var item in extraDocs)
+                            {
+                                if (item != null)
+                                {
+                                    <option value="@item.DocTypeID">@item.TypeName</option>
+
+                                }
+                            }
+                        </select>
+                        <br />
+                        <small><b>NOTE:</b>Gray out Documents is already available on the company profile. Hold the <strong>Ctrl</strong> button on your keyboard for multiple selection</small>
+                    </div>
+                </div><hr />
+                <h3>Reason for Rejection/Comment:</h3>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.appHistory.id)
+                @Html.HiddenFor(model => model.appID)
+
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <div class="">
+                        <textarea class="" id="RejComment" name="comment" style="width:100%" rows="5" cols="68" placeholder="Some comment here..." required></textarea>
+
+                        @Html.ValidationMessageFor(model => model.appHistory.comment, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5"></div>
+            <input type="button" id="btnReject" value="Reject" class="btn btn-danger" />
+        </div>
+        <p></p>
+
+        <div id="RejectModalInfo"> </div>
+    </div>
+    <div class="clear"></div>
+   
+}

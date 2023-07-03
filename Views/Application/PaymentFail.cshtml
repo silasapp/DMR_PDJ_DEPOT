@@ -1,0 +1,52 @@
+﻿@using NewDepot.Helpers;
+@model IEnumerable<NewDepot.Models.applications>
+
+@{
+    ViewData["Title"] = "Payment Failed";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName"> @ViewData["Title"] </h3>
+        <hr />
+    </div>
+
+    <br />
+
+
+    @if (Model.Count() > 0)
+    {
+
+        var app_id = generalClass.Encrypt(Model.FirstOrDefault().id.ToString());
+
+        <div class="alert alert-danger text-center">
+            <br />
+
+            <h1 class="text-danger"> Payment Failed </h1>
+
+            <br />
+
+            <p>
+                Sorry, Something went wrong trying to process your payment... <br />
+
+                If this problem continues, please contact support.
+            </p>
+
+            <br />
+
+            <a href="/Application/ApplicationPayment/@app_id" class="btn btn-lg btn-danger"> <i class="fas fa-credit-card"></i> Go Back to Payment</a>
+
+            <br /><br />
+
+        </div>
+
+    }
+
+</div>
+
+

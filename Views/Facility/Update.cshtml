@@ -1,0 +1,128 @@
+﻿@using NewDepot.Helpers;
+@{
+    ViewData["Title"] = "Update Facility Information";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass genClass = new GeneralClass();
+    var appFac = genClass.FacWithApplication();
+    int i = 0;
+}
+
+
+<div !importantmportantlass="card-black">
+
+    <h3>@ViewData["Title"]</h3>
+
+    <br />
+
+
+       <table class="table table-hover table-bordered facTable">
+        <thead>
+        <tr>
+            <th>SN</th>
+            <th>
+                Name
+            </th>
+
+            <th>
+               Address
+            </th>
+            <th>
+                Contact Name
+            </th>
+            <th>
+                Facility Identification
+            </th>
+            <th>
+                Category Code/Year of Operation
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in appFac.OrderBy(x=> x.fac.IdentificationCode))
+        {
+            string style = "background-color:#E8F2F5";
+            i++;
+            if (string.IsNullOrEmpty(item.fac.IdentificationCode))
+            {
+                style = "";
+            }
+            <tr style="@style">
+                <td>@i</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fac.Name)
+                </td>
+
+                <td>
+                    @item.Address_1, @item.LGA, @item.StateName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fac.ContactName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fac.IdentificationCode)
+                </td>
+                <td>
+                    @item.fac.CategoryCode / @item.fac.FirstOperationYear
+                </td>
+                <td>
+                    <a class="text-primary btn btn-info" href="/Facility/UpdateForm/@item.fac.Id" style="color: white!important"><small> Update &nbsp; <i class="fa fa-edit"></i></small></a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+ </div>
+
+
+  @section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".facTable").dataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                    'copyHtml5',
+                    {
+                        extend: 'csvHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        footer: true,
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed two-column'
+                    }
+
+                ],
+
+                "aLengthMenu": [50, 100, 150, 200, 250],
+                'iDisplayLength': 200,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+        });
+    </script>
+}

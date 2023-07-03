@@ -1,0 +1,43 @@
+﻿@model NewDepot.Models.vPhaseRouting
+
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("DeletePhaseRule", "Phase", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+        @Html.ValidationSummary(true)
+
+        @if (ViewBag.Todo != null && ViewBag.Todo.ToLower() == "del")
+        {
+            <div>
+                <p>
+                    Are you sure you want to Archive this Phase Rule?
+                </p>
+                <p>
+                    This Rule will no longer be applicable to New Applications from this time on.
+                </p>
+            </div>
+        }
+        else
+        {
+            <div>
+                <p>
+                    Are you sure you want to Re-Add this Phase Rule?
+                </p>
+                <p>
+                    This Rule will now be avaiable and applicable to New Applications from this time on.
+                </p>
+            </div>
+        }
+    </div>
+    <hr class="clear" />
+    <div class="form-group">
+        <div class="txtcenter">
+            <input type="submit" value="Confirm Archive" class="btn btn-danger" />
+        </div>
+    </div>
+}

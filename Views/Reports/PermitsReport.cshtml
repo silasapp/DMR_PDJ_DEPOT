@@ -1,0 +1,222 @@
+﻿@model IEnumerable<NewDepot.Models.SearchList>;
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+@{
+    ViewData["Title"] = "Permits/Approval Reports";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<style>
+    p {
+        color: darkblue;
+        font-weight: bolder;
+        font-size: 10px;
+        width: 50px;
+    }
+
+        p > div {
+            font-size: 12px;
+            color: black;
+        }
+</style>
+<h2>@ViewData["Title"]</h2>
+
+<br />
+
+
+<div class="card-black" style="margin:-10px;">
+    <div class="" style="float:left; background-color: green; color:white; margin-left: 10px;height:80px; padding: 5px; text-align:center !important; font-weight: bold; border-radius: 5px;">
+        <div style="padding-top: 20px;">Total Permits</div>
+        <div style="font-size: large; "> @ViewBag.TotalPermit</div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"><h3>Status</h3></div>
+        <div class="row col-md-4">
+            <div class="col-md-2">
+                <p>Valid</p>
+                <div class="label label-rouded label-megna label-sm text-md-center" style="width:40px"> @ViewBag.ValidCount</div>
+            </div>
+
+            <div class="col-md-2">
+                <p>Expiry</p>
+                <div class="label label-rouded label-danger label-sm text-md-center" style="width:40px"> @ViewBag.ExpiryCount</div>
+            </div>
+        </div>
+        <div class="col-md-1"><h3>Type</h3></div>
+        <div class="col-md-6 row">
+            <div class="col-md-2">
+                <p>Approval</p>
+                <div class="label label-rouded label-megna label-sm text-md-center" style="width:40px"> @ViewBag.ApprovalCount</div>
+            </div>
+            <div class="col-md-2">
+                <p>License</p>
+                <div class="label label-rouded label-danger label-sm text-md-center" style="width:40px"> @ViewBag.LicenseCount</div>
+            </div>
+            <div class="col-md-2">
+                <p>Clearance</p>
+                <div class="label label-rouded label-inverse label-sm text-md-center" style="width:40px"> @ViewBag.ClearanceCount</div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-1">
+            <h3>Category </h3>
+        </div>
+        <div class="col-md-1">
+            <p>Suitability</p>
+            <div class="label label-rouded label-megna label-sm text-md-center" style="width:40px"> @ViewBag.SuitabilityCount</div>
+        </div>
+        <div class="col-md-1">
+            <p>ATC</p>
+            <div class="label label-rouded label-danger label-sm text-md-center" style="width:40px"> @ViewBag.ATCCount</div>
+        </div><div class="col-md-1">
+            <p>LTO</p>
+            <div class="label label-rouded label-inverse label-sm text-md-center" style="width:40px"> @ViewBag.LTOCount</div>
+        </div>
+        <div class="col-md-1">
+            <p>Calibration</p>
+            <div class="label label-rouded label-primary label-sm text-md-center" style="width:40px"> @ViewBag.CalibrationCount</div>
+        </div>
+        <div class="col-md-1">
+            <p>Recalibration</p>
+            <div class="label label-rouded label-warning label-sm text-md-center" style="width:40px"> @ViewBag.ReCalibrationCount</div>
+        </div>
+        <div class="col-md-1">
+            <p>Modification</p>
+            <div class="label label-rouded label-danger label-sm text-md-center" style="width:40px"> @ViewBag.ModificationCount</div>
+        </div>
+        <div class="col-md-1">
+            <p>Renewal</p>
+            <div class="label label-rouded label-primary label-sm text-md-center" style="width:40px"> @ViewBag.LRCount</div>
+        </div>
+        <div class="col-md-1">
+            <p>TakeOver</p>
+            <div class="label label-rouded label-success label-sm text-md-center" style="width:40px"> @ViewBag.TakeOverCount</div>
+        </div>
+        <div class="col-md-1 ">
+            <p>Reg</p>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.RegularizationCount</div>
+        </div>
+        <div class="col-md-1 ">
+            <p>Sanction</p>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.SanctionCount</div>
+        </div>
+
+
+    </div>
+
+    <hr />
+    <h3>Filter Search</h3>
+
+    <div class="row">
+        <div class="col-sm-11">
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <label>Issue Type</label>
+                    <div class="" style="">
+                        <select style="font-size:14px; width:100%" multiple placeholder="Select" name="txtSelType[]" id="PtxtSelType">
+
+                            <option value="Approval">Approval</option>
+                            <option value="License">License</option>
+                            <option value="Clearance">Clearance</option>
+
+
+                        </select>
+                    </div>
+                    <br />
+                </div>
+                <div class="col-sm-2">
+                    <label>Year</label>
+                    <div class="dropdown-sin-5" style="">
+                        <select style="font-size:14px; width:100%" multiple placeholder="Select" name="txtSelYear[]" id="PtxtSelYear">
+                            @foreach (var item in ViewBag.Year)
+                            {
+                                <option value="@item">@item</option>
+                            }
+
+                        </select>
+                    </div>
+                    <br />
+                </div>
+                <div class="col-sm-2" style="width: 100%;">
+                    <label>Category</label>
+                    <div class="" style="width: 100%;">
+                        <select style="font-size: 14px; width: 100%;" multiple placeholder="Select" name="txtSelCategory[]" id="PtxtSelCategory">
+                            @foreach (var a in Model.FirstOrDefault().phases)
+                            {
+                                <option value="@a.id">@a.name</option>
+}
+
+                        </select>
+                    </div>
+                    <br />
+                </div>
+                <div class="col-sm-2">
+                    <label for="comment"> Date From :</label>
+                    <br />
+                    <input type="text" style="border: 1px solid black; border-radius: 3px; height:30px;" id="PtxtApplicationReportFrom" value="" />
+                    <br />
+                </div>
+                <div class="col-sm-2">
+
+                    <label for="comment"> Date To :</label>
+                    <br />
+                    <input type="text" style="border: 1px solid black; border-radius: 3px; height:30px;" id="PtxtApplicationReportTo" value="" />
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-1" style="margin-left:-50px;">
+            <label><br /></label>
+            <button class="btn btn-outline-primary" id="btnPermitReportSearch"><i class="fas fa-search"> </i> Search</button>
+        </div>
+    </div>
+
+    <h2 class="">Search Results </h2>
+    <hr />
+    <br />
+
+    <div class="table-responsive">
+
+
+        <table class="table table-bordered table-hover" id="SearchPermitTabless" style="font-size:12px">
+
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>Permit NO</th>
+                    <th>Reference</th>
+                    <th>Company</th>
+                    <th>Facility</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>State</th>
+                    <th>LGA</th>
+                    <th>Issued Date</th>
+                    <th>Expiry Date</th>
+                    @*<th>Approved By</th>*@
+                    <th>Field Office</th>
+                    <th>Zonal Office</th>
+                    <th>Permit Type</th>
+                    <th>Print Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+@section Scripts{
+
+    <script src="~/js/NewDepot Scripts/Reportings.js"></script>
+
+
+}

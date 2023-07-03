@@ -1,0 +1,78 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body style="color: gray; font-size:14px; box-sizing: border-box;">
+    <font face="Helvetica, arial, sans-serif">
+        <div style=" width:700px;background-color: #ece8d4; padding: 5px 0;">
+            <img src="https://ddpr.gov.ng/Content/Images/mainlogo.png" alt="Logo" style="width: 98%; height: 120px; display: block; margin: 0 auto;" />
+        </div>
+
+        <div style="background-color: #ece8d4; width:700px; min-height:200px;">
+            <div style="padding: 10px 30px 30px 30px;">
+                <h3 style="text-align: center;font-weight: 300;padding-bottom: 10px; border-bottom: 1px solid #ddd;">{0}</h3>
+                <span style="text-align:right;display:block">Serial No: {1} </span>
+                <p>Dear {2},</p>
+
+                <p>
+                    <div class="" style="line-height: 1.5em; width: 100%; display: inline-block; padding: 5px; background-color: #fff; text-align: justify; padding: 5px; margin: 2px 0; box-sizing: border-box;">
+                        {3}
+                    </div>
+                </p>
+                <p>
+                    <h4>Application Details</h4>
+                    <table style="font-size: 14px; width: 100%; border-spacing: 0; border: 1px solid #ccc;">
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc;">Date Submitted:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{4}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc;">Tracking Number:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{5}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc;">Amount Paid:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{6}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc;">Application Period:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{7}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc;">Type:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{8}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc;">Application Category:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{9}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc; vertical-align: top;">Applicable Phase:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{10}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px; width: 140px; border-bottom: 1px solid #ccc; vertical-align: top;">Facility:</td>
+                            <td style="padding: 5px; border-bottom: 1px solid #ccc;">{11}</td>
+                        </tr>
+                    </table>
+                </p>
+                <p>
+                    Please <a href="https://depot.dpr.gov.ng">Login</a> to Depot portal to review your application and resubmit it
+                </p>
+
+                <p>
+                    &nbsp;
+                </p>
+                <p>
+                    Nigerian Midstream and Downstream Petroleum Regulatory Authority<br />
+                    (PDJ)
+                </p>
+            </div>
+        </div>
+        <div style="padding: 10px 0; text-align: center; background-color: #888; color: #f9f9f9; width:700px">
+            &copy; {12} Nigerian Midstream and Downstream Petroleum Regulatory Authority &minus; NMDPRA Nigeria
+        </div>
+    </font>
+</body>
+</html>

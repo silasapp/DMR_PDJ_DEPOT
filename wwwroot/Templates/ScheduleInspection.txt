@@ -1,0 +1,50 @@
+﻿<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body style="color: gray; font-size:14px; box-sizing: border-box;">
+    <font face="Helvetica, arial, sans-serif">
+        <div style=" width:700px;background-color: #ece8d4; padding: 5px 0 5px 0;">
+            <img src="~/images/nmdpra.png" alt="Logo" style="width: 98%; display: block; margin: 0 auto;" />
+        </div>
+
+        <div style="background-color: #ece8d4; width:700px; min-height:200px;">
+            <div style="padding: 10px 30px 30px 30px;">
+                <h3 style="text-align: center;font-weight: 300;padding-bottom: 10px; border-bottom: 1px solid #ddd;">{0}</h3>
+                <p>Dear {1},</p><p>
+                </p>
+                <p>
+                    You have been scheduled for an inspection by one of your application processing officers.<br/>
+                    Schedule details is as follows:
+                </p>
+                <p>
+                    <dl>
+                        <dt style="display: inline-block; width: 105px;">Venue:</dt>
+                        <dd style="display: inline-block;">{2}{6}</dd>
+                        <br />
+                        <dt style="display: inline-block; width: 105px;">Date &amp; Time:</dt>
+                        <dd style="display: inline-block;">{3}</dd>
+                        <br />
+                        <dt style="display: inline-block; width: 105px;">Comment:</dt>
+                        <dd style="display: inline-block;">{4}</dd>
+                    </dl>
+                </p>
+                <p>
+                <a href="{5}" style="display: inline-block; padding: 5px 10px; background-color: #419641; color: #FFF;">Please Click here</a> to respond to this notification <br/>
+                <br />
+                Also Note that you just have 72Hrs (3 day) to conrfirm this meeting.
+                    &nbsp;
+                </p>
+                <p>
+                    Nigerian Midstream and Downstream Petroleum Regulatory Authority<br />
+                    (PDJ)
+                </p>
+            </div>
+        </div>
+        <div style="padding: 10px 0; text-align: center; background-color: #888; color: #f9f9f9; width:700px">
+            &copy; 2015 Nigerian Midstream and Downstream Petroleum Regulatory Authority &minus; NMDPRA Nigeria
+        </div>
+    </font>
+</body>
+</html>

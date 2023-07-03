@@ -1,0 +1,230 @@
+﻿@using NewDepot.Helpers
+@using Microsoft.AspNetCore.Http;
+@using NewDepot.Controllers.Authentications;
+
+
+@{
+    ViewData["Title"] =  ViewData["CategoryName"].ToString() + " reports for your location";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<br /><hr /><br />
+
+<div class="">
+
+    <div class="row">
+
+        <div class="col-md-3">
+
+            <input type="text" value="@ViewData["CategoryName"].ToString()" hidden id="txtCategoryName" />
+
+            <div class="bg-inverse p-20">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <span><i class="fas fa-database f-s-30"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+                        <h2 class="color-white" id="" style="font-weight:bold">@ViewData["CategoryCount"].ToString() </h2>
+                        <small style="color:white">Total @ViewData["CategoryName"].ToString() Apps</small>
+                    </div>
+                </div>
+            </div>
+
+            <br /><br />
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="bg-theme p-20">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <span><i class="fas fa-database f-s-30"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+                        <h2 class="color-white" id="" style="font-weight:bold">@ViewData["ProcessingCount"].ToString() </h2>
+                        <small style="color:white">Total Processing Apps</small>
+                    </div>
+                </div>
+            </div>
+
+            <br /><br />
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="bg-youtube p-20">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <span><i class="fas fa-database f-s-30"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+                        <h2 class="color-white" id="" style="font-weight:bold">@ViewData["RejectionCount"].ToString() </h2>
+                        <small style="color:white">Total Rejected Apps</small>
+                    </div>
+                </div>
+            </div>
+
+            <br /><br />
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="bg-megna p-20">
+                <div class="media widget-ten">
+                    <div class="media-left meida media-middle">
+                        <span><i class="fas fa-database f-s-40"></i></span>
+                    </div>
+                    <div class="media-body media-text-right">
+                        <h2 class="color-white" id="" style="font-weight:bold">@ViewData["ApprovalCount"].ToString() </h2>
+                        <small style="color:white">Total Approved Apps</small>
+                    </div>
+                </div>
+            </div>
+
+            <br /><br />
+        </div>
+
+
+        <div class="col-md-8">
+
+            <div class="card-black">
+                <b>Number of Application types in Bar Chart</b>
+                <hr />
+                <div class="" id="GetApplicationTypesDiv" style="width: 100%; height: 350px;">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card-black">
+                <b>Number of Application types in Pie Chart</b>
+                <hr />
+                <div class="" id="GetApplicationTypesDivPie" style="width: 100%; height: 350px;">
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card-black">
+                <b>Number of Application stage in Bar chart</b>
+                <hr />
+                <div class="" id="GetApplicationStageDiv" style="width: 100%; height: 350px;">
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6">
+
+            <div class="card-black">
+                <b>All Application Status</b>
+                <hr />
+                <div class="" id="GetApplicationStatusDiv" style="width: 100%; height: 350px;">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card-black">
+                <b>Number of New Application with respective Status</b>
+                <hr />
+                <div class="" id="GetNewApplicationStatusDiv" style="width: 100%; height: 350px;">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+
+            <div class="card-black">
+                <b>Number of Renewal Application with respective Status</b>
+                <hr />
+                <div class="" id="GetRenewApplicationStatusDiv" style="width: 100%; height: 350px;">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card-black">
+                <b>Number of Integrity Test Application with respective Status</b>
+                <hr />
+                <div class="" id="GetITApplicationStatusDiv" style="width: 100%; height: 300px;">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card-black">
+                <b>Number of Modification Application with respective Status</b>
+                <hr />
+                <div class="" id="GetModApplicationStatusDiv" style="width: 100%; height: 300px;">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card-black">
+                <b>Number of Take Over Application with respective Status</b>
+                <hr />
+                <div class="" id="GetTakeApplicationStatusDiv" style="width: 100%; height: 300px;">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-12">
+
+            <div class="card-black">
+                <b>Number of  applied Application per day</b>
+                <hr />
+                <div class="" id="GetApplicationPerDay" style="width: 100%; height: 500px;">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-12">
+
+            <div class="card-black">
+                <b>Number of  Application stages and their status</b>
+                <hr />
+                <div class="" id="GetApplicationStageStatus" style="width: 100%; height: 500px;">
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+
+<script src="~/js/LNG Scripts/Reporting/DashboardCharts.js"></script>

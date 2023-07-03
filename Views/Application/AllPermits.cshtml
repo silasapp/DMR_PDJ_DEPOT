@@ -1,0 +1,230 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers
+@using System.Configuration
+
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<permitsModel>
+
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ViewBag.Title = "All Permits";
+    int count = 0;
+    var Category = (List<Categories>)ViewBag.Category;
+
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+
+}
+
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>AllPermits
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+<link href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
+<div class="widget-content">
+    <table class="table table-hover table-bordered table-striped dataTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>
+                    Permit Number
+                </th>
+                <th>
+                    Application Id
+                </th>
+                <th>
+                Company Name   
+                </th>
+                <th>Facility Name</th>
+                <th>
+                    Phase
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date_Issued)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date_Expire)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model.OrderByDescending(x=> x.Date_Issued))
+        {
+            var check = item.Date_Expire.AddDays(-30);
+            var now = DateTime.Now;
+            string color = string.Empty;
+
+            if (item.Date_Expire < now)
+            {
+                color = "danger";
+            }
+            else if (check <= now)
+            {
+                color = "warning";
+            }
+            count++;
+
+            <tr class="@color">
+                <td>@count</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Permit_No)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyName)
+                </td> 
+                <td>
+                    @Html.DisplayFor(modelItem => item.FacilityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhaseName)
+
+                    @if (item.ModifyType != "")
+                    {
+                        <small>( @item.ModifyType )</small>
+                    }
+                </td>
+                <td>
+                    @item.Date_Issued.ToShortDateString()
+                </td>
+                @if (item.CheckApprovalType == "Yes")
+                {
+                    <td>
+                        @item.Date_Expire.ToShortDateString()
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <b>Not Applicable</b>
+                    </td>
+                }
+                <td class="txtright">
+                    <div class="btn-group">
+
+
+                        @if (userRole == GeneralClass.ADPDJ || userRole == GeneralClass.SUPERVISOR || userRole == GeneralClass.PRINTER || userRole == GeneralClass.HDS || userRole == GeneralClass.INSPECTOR || userRole == GeneralClass.OOD)
+                        {
+                            <a href="/Application/ViewLicense/@item.Application_Id?type=preview&permitID=@item.Id" class="btn btn-xs btn-warning" target="_blank">Preview <i class="glyphicon glyphicon-file"></i></a>
+                            <a href="/Application/ViewLicense/@item.Application_Id?permitID=@item.Id" class="btn btn-xs btn-info" target="_blank">Print View <i class="glyphicon glyphicon-file"></i></a>
+                            <a href="/Application/ViewLicense/@item.Application_Id?type=new&field=yes&permitID=@item.Id" class="btn btn-xs btn-success" target="_blank">New Print View <i class="glyphicon glyphicon-file"></i></a>
+
+                        }
+                        else
+                        {
+                            <a href="/Application/ViewLicense/@item.Application_Id?type=preview&permitID=@item.Id" class="btn btn-xs btn-warning" target="_blank">Preview <i class="glyphicon glyphicon-file"></i></a>
+
+                            @if (item.Date_Expire < now && item.CheckApprovalType == "Yes" && item.Is_Renewed != "Completed")
+                            {
+                                <p class="text-danger">Expired</p>
+                            }
+                            
+                        }
+                        @if (userRole == GeneralClass.SUPER_ADMIN && @item.ApprovalType =="License To Operate" && @item.Date_Issued.Year>= DateTime.Now.Year)
+                        {
+                            <button class="btn btn-danger" id="deletePermit" onclick="DeletePermit('@item.Id')">Delete</button>
+                        
+                        }
+                    </div>
+                </td>
+
+            </tr>
+        }
+
+    </table>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $("#lnkPermits").addClass("active");
+
+            /*$('.dataTable').DataTable();*/
+            $(".dataTable").dataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                    'copyHtml5',
+                    {
+                        extend: 'csvHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        footer: true,
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed two-column'
+                    }
+
+                ],
+
+                "aLengthMenu": [50, 100, 150, 200, 250],
+                'iDisplayLength': 200,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+
+            });
+
+        });
+                    function DeletePermit(id) {
+            var msg = confirm("Are you sure you want to remove this license/approval ?");
+            if (msg === true) {
+                $.getJSON("/Application/DeleteP", { "Id": id }, function (response) {
+                    if ($.trim(response) === "Deleted") {
+                        alert("License/Approval has been deleted successfully...");
+                        window.location.reload();
+                    }
+                    else {
+                        alert(response);
+                    }
+                });
+            }
+        }
+
+    </script>
+}

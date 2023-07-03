@@ -1,0 +1,181 @@
+﻿
+@using NewDepot.Models
+@model List<ReportModel>
+
+
+@{
+    ViewBag.Title = "Application Report";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    int counter = 0;
+    int cnt = 0;
+    string[] alerttypes = new[] { "alert-info", "alert-success", "alert-warning", "alert-danger", "alert-info", "alert-success", "alert-warning", "alert-danger", "alert-info", "alert-success", "alert-warning", "alert-danger" };
+
+    var fgTotal = 0.0;
+    var dprTotal = 0.0;
+    var bo_mfTotal = 0.0;
+    var gTotal = 0.0;
+}
+<div class="row">
+    <div style="margin-bottom: 2em;">
+        <div class="title">
+            <h3>@ViewBag.Title</h3>
+        </div>
+        <div>
+            @using (Html.BeginForm("ApplicationSummary", "Reports", FormMethod.Post))
+            {
+                <fieldset>
+                    <legend class="w-auto scheduler-border">Search Criteria</legend>
+                    <div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <div class="input-group-addon" style="background-color:orange"><span class="glyphicon glyphicon-time"></span></div>
+                                <div><input class="form-control" type="text" id="mindate" name="mindate" placeholder="From date"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <div class="input-group-addon" style="background-color:yellowgreen"><span class="glyphicon glyphicon-time"></span></div>
+                                <div><input class="form-control" type="text" id="maxdate" name="maxdate" placeholder="End date"></div>
+                            </div>
+                        </div>
+                        @*<div class=" col-md-3">
+                                <select class="form-control" name="type">
+                                    <option value="">Select Payment Type</option>
+                                    <option value="application">Application Fee</option>
+                                    <option value="servicecharge">Service Charge</option>
+                                    <option value="combined">Total Paid</option>
+                                </select>
+                            </div>*@
+                        <div class=" col-md-3">
+                            <select class="form-control state" name="state" multiple>
+                                @foreach (var state in (Dictionary<string, string>)ViewData["Office"])
+                                {
+                                    <option value="@state.Key">@state.Key</option>
+                                }
+                            </select>
+                        </div>
+                        <div class=" col-md-3">
+                            <select class="form-control" name="category">
+                                <option value="">Select Category</option>
+                                <option value="New Depot License">New Depot License</option>
+                                <option value="License Renewal">License Renewal</option>
+                                <option value="Depot Modification">Depot Modification</option>
+                                <option value="Take Over">Take Over</option>
+                                <option value="Pay Sanction">Pay Sanction</option>
+                                <option value="Recalibration">Recalibration</option>
+
+                            </select>
+                        </div>
+                        <div class=" col-md-3">
+                            <select class="form-control" name="year">
+                                <option value="">Select Year</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+
+                            </select>
+                        </div>
+                        &nbsp;
+                        &nbsp;
+                        <input type="submit" value="Filter" class="btn btn-success" />
+
+                    </div>
+                </fieldset>
+
+            }
+        </div>
+    </div>
+</div>
+
+<div class="text-center" style="margin-left:30px">
+    @*foreach (var app in Model.FirstOrDefault().applications.GroupBy(x => x.CategoryName))*@
+    @foreach (var app in Model.FirstOrDefault().applications.GroupBy(x => x.category_id))
+    {
+        <div class="col-md-2 @alerttypes[cnt] " style="margin: 0.2em; padding: 5px; text-align:center !important; font-weight: bold; border-radius: 5px;">
+            <div style="font-size: small;">@app.Key</div>
+            <div style="font-size: large;">app.Key.Count()</div>
+
+        </div>
+        cnt++;
+    }
+
+    <div class="col-md-2" style="background-color: peru; color:white; margin-left: 10px; padding: 5px; text-align:center !important; font-weight: bold; border-radius: 5px;">
+        <div>Total Applications</div>
+        <div style="font-size: large;"> @Model.FirstOrDefault().applications.Count()</div>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-12" style="margin-top: 2em;">
+        <table class="table table-striped table-hover dataTable">
+            <thead>
+                <tr>
+                    <th>Reference Number</th>
+                    <th>ApplicationID</th>
+                    <th>Company Name</th>
+                    <th>Facility Name & Address</th>
+                    <th>State</th>
+                    <th>Category</th>
+                    @*<th>Current Desk</th>*@
+                    @*<th class="text-center">Total Amount (₦)</th>*@
+                    <th>Year</th>
+                    <th>Date Submitted</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.FirstOrDefault().appModel)
+
+                {
+                    counter++;
+                    <tr>
+                        <td>@item.Reference</td>
+                        <td>@item.Id</td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.FacilityName ('@item.FacilityFullAddress())</td>
+                        <td> @item.StateName</td>
+                        <td>@item.CategoryName</td>
+                        @*<td>@item.amm.ToString("N2")</td>*@
+                        @*<td>@item.CurrentDesk</td>*@
+                        <td>@item.Year</td>
+                        <td>@item.Date_Added</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/Content/select2.min.css" />
+<link rel="stylesheet" href="~/Content/bootstrap-datepicker.min.css" />
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+    <script src="@Url.Content("/Scripts/js/moment/moment.min.js")"></script>
+    <script src="@Url.Content("/Scripts/js/datepicker/daterangepicker.js")"></script>
+    <script src="~/Scripts/select2.min.js"></script>
+    <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+
+
+    <script>
+                $(document).ready(function () {
+                    $(".dataTable").dataTable({
+                        dom: 'Blfrtip',
+                    });
+
+                    $("#mindate,#maxdate").datepicker({
+                        "onSelect": function (date) {
+                        }, changeMonth: true, changeYear: true, dateFormat: "M d yy"
+                    });
+
+                    $(".state").select2({
+                        "placeholder": "Select single/multiple state(s)"
+                    });
+
+
+
+
+                });
+    </script>
+
+}

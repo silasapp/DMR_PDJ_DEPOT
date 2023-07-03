@@ -1,0 +1,47 @@
+﻿
+<partial name="_ElaHeader.cshtml" />
+
+<body class="fix-header fix-sidebar" >
+
+
+
+    <!-- Preloader - style you can find in spinners.css -->
+    
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+        </svg>
+    </div>
+    <!-- Main wrapper  -->
+    <div id="main-wrapper">
+
+            <!-- header header  -->
+            <!-- End header header -->
+            <!-- Left Sidebar  -->
+            <partial name="_ElaSideBar.cshtml" />
+            <!-- End Left Sidebar  -->
+            <!-- Page wrapper  -->
+            <div class="page-wrapper">
+                <br />
+              
+                <!-- Container fluid  -->
+                <div class="container-fluid">
+                    <!-- Start Page Content -->
+                    @RenderBody()
+                    <!-- End PAge Content -->
+                </div>
+                <!-- End Container fluid  -->
+                <!-- footer -->
+
+                <partial name="_ElaFooter.cshtml" />
+                <!-- End footer -->
+            </div>
+           
+        </div>
+        <!-- End Page wrapper  -->
+
+    <!-- End Wrapper -->
+    @RenderSection("Scripts", required: false)
+
+</body>
+

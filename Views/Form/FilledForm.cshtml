@@ -1,0 +1,68 @@
+﻿@model IEnumerable<NewDepot.Models.Forms>
+
+@{
+    ViewBag.Title = "Filled Forms";
+    Layout = null;
+}
+
+
+<section style="padding: 3px 0 0 0;">
+    <div class="wrap-c">
+        <div class="xrow">
+            <div id="ctrlSidebar">
+                <div class="clear"></div>
+            </div>
+            <div id="ctrlContent">
+                <div class="holder">
+                    <h3 class="wkt lefty">Select Form to View</h3>
+                    
+                    <hr class="clear" />
+                    
+                    <table class="itable hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Friendly Name</th>
+                                <th>Created By</th>
+                                <th>Created on</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink(item.Title, "DisplayForm", new { id = item.Id })
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FriendlyName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CreatedByUserId)
+                                    </td>
+                                    <td>
+                                        @item.CreatedOnDate.ToShortDateString()
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script type="text/javascript">
+
+    $(function () {
+        $("#mainCtrl").addClass("collapse");
+        $("#subCtrl").removeClass("close");
+        $("#forms").addClass("selected");
+        $("#lnkFilledForm").addClass("selected");
+    });
+</script>
+
+}

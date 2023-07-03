@@ -1,0 +1,272 @@
+﻿
+@using NewDepot.Helpers;
+@using NewDepot.Models;
+@model MyApps
+
+
+@{
+    GeneralClass generalClass = new GeneralClass();
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Permit Application Payment";
+}
+<div class="roww">
+
+    <div class="row" id="BackImage">
+
+        <h3 class="DashCompanyName col-md-5"> Application for Depot License </h3>
+
+
+        <div class="col-md-3"></div>
+        <div class="right col-md-4">
+            <ul>
+                <li>Step 1: <small>Select Application Type</small></li>
+                <li>Step 2: <small>Fill Application Form</small></li>
+                @*<li>Step 3</li>*@
+                <li>Step 3: <small>Upload Document</small></li>
+                <li class="selected">Step 4: <small>Make Payment (100%)</small></li>
+
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="marg25">
+
+    <p><b>Please Note:</b></p>
+    <p>1. Processing of your application shall commence upon confirmation of payment.</p>
+    <p>2. Kindly review the following information carefully before proceeding to make payment.</p>
+    <p>
+        3. Application information can not be changed after payment and submission have been completed.
+    </p>
+    <hr />
+    <h4 class="text-left"><b>Application Payment Details</b></h4>
+
+    <div class="">
+        <div class="mypanel-2leaf-h">
+            <div class="left-sde">
+                <div class="padd">
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <td class="text-left">
+                                <b>Reference No</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.reference
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b> Application Type</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.cat.name -  @Model.phs.name (  @Model.app.type.ToUpper()))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b> Payment Due</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.fee_payable.Value.ToString("₦ #,###,##.00")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b>  Service Charge</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.service_charge.Value.ToString("₦ #,###,##.00")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b>  Total Amount Due</b>
+                            </td>
+                            <td class="text-left">
+
+                                @{var ad = Model.app.fee_payable + @Model.app.service_charge;}
+                                @ad.Value.ToString("₦ #,###,##.00")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                <b>  Payment Description</b>
+                            </td>
+                            <td class="text-left">
+                                @Model.app.PaymentDescription
+                            </td>
+                        </tr>
+
+                    </table>
+                    <div class="row">
+                        <div class="col-md-6 offset-3 btn-group">
+                            <a class="btn btn-default" href="/Application/UploadApplicationDocument/@generalClass.Encrypt(Model.app.id.ToString())"><i class="fa fa-backward"></i>Go Back</a>
+
+                            <a class="btn btn-success" href="/Application/SubmitPayment/?apid=@generalClass.Encrypt(Model.app.id.ToString())&refCode=@generalClass.Encrypt(Model.app.reference)">Make Payment<i class="fa fa-paypal"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row xrow">
+    @*http://www.remitademo.net/remita/ecomm/init.reg*@
+    @*<form action="@System.Configuration.ConfigurationManager.AppSettings["interswitchUrl"]" id="PaymentForm" name="SubmitRemitaForm" method="post" class="form-horizontal">
+
+            <h4 class="page-header">Payment Options&nbsp; &nbsp;</h4>
+             <small>(Select you preferred payment option and click the Continue button)</small>
+             <hr class="clear" />
+             <input type="hidden" name="ApplicationId" value="@Model.Id" />
+             <input type="hidden" name="referenceCode" value="@Model.Reference" />
+
+
+
+             @if (ViewBag.Option3 != null && Convert.ToBoolean(ViewBag.Option3) == true)
+             {
+                 <div class="col-md-4">
+                     <div class="well">
+                         <label for="paymentTypeOnline">
+                             <input type="radio" id="paymentTypeOnline" name="paymentType" value="Online" style="width: 15px; height: 15px;" /> Pay online now
+                         </label><br /><small>Pay with Mastercard, Visa and Verve cards through Interswitch.</small><br /><br />
+                         <img src="~/Content/Images/Interswitch_Verve_Mastercard.gif" />
+                         @if (ViewBag.webPayData != null)
+                         {
+                             var wp = (WebPayItem)ViewBag.webPayData;
+                             <div>
+                                 <input type="hidden" value="@wp.txn_ref" name="txn_ref" id="txn_ref">
+                                 <input type="hidden" value="@wp.product_id" name="product_id" id="product_id">
+                                 <input type="hidden" value="@wp.pay_item_id" name="pay_item_id" id="pay_item_id">
+                                 <input type="hidden" value="@wp.amount" name="amount" id="amount">
+                                 <input type="hidden" value="@wp.site_redirect_url" name="site_redirect_url" id="site_redirect_url">
+                                 <input type="hidden" value="@wp.hash" name="hash" id="hash">
+                                 <input type="hidden" value="@wp.currency" name="currency" id="currency">
+                                 <input type="hidden" value="@wp.cust_id" name="cust_id" id="cust_id">
+                                 <input type="hidden" value="@wp.cust_name" name="cust_name" id="cust_name">
+                                 <input type="hidden" value="@wp.pay_item_name" name="pay_item_name" id="pay_item_name">
+                                 <input type="hidden" value="payment_split" name="payment_params" id="payment_params">
+                                 <input type="hidden" value="@wp.xml_data" name="xml_data" id="xml_data">
+                             </div>
+
+                         }
+                     </div>
+                 </div>
+                 <div class="col-md-4">
+                     <div class="well">
+                         <label for="paymentTypeBank">
+                             <input type="radio" id="paymentTypeBank" name="paymentType" value="Bank Payment" style="width: 15px; height: 15px;" /> Pay through Bank
+                         </label>
+                         <br />
+                         <small>Walk into any bank to pay with your reference code.</small><br /><br />
+
+                         <img src="~/Content/Images/zenith.jpg" style="height: 30px;" /> &nbsp;
+                         <img src="~/Content/Images/uba.jpg" style="height: 30px;" />
+                         <img src="~/Content/Images/firstbank.gif" style="height: 30px;" />
+                         <img src="~/Content/Images/Echo.jpg" style="height: 30px;" />
+                         <img src="~/Content/Images/fidelity.gif" style="height: 30px;" />
+                         <img src="~/Content/Images/hb.png" style="height: 30px;" />
+                     </div>
+                 </div>
+                 <div class="col-md-4">
+                     <div class="well">
+                         <label for="paymentTypeWallet">
+                             <input type="radio" id="paymentTypeWallet" name="paymentType" value="wallet" style="width: 15px; height: 15px;" /> Pay from Wallet
+                         </label>
+                         <br />
+                         <small>Pay using your Unused Balance on the portal</small><br /><br />
+
+                     </div>
+                 </div>
+                 <div class="clear"></div>
+             }
+             else
+             {
+                 <div class="col-md-6">
+                     <div class="well">
+                         <label for="paymentTypeOnline">
+                             <input type="radio" id="paymentTypeOnline" name="paymentTypeForm" value="Online" style="width: 15px; height: 15px;" /> Pay online now
+                         </label><br /><small>Pay with Mastercard, Visa and Verve cards through Interswitch.</small><br /><br />
+                         <img src="~/Content/Images/Interswitch_Verve_Mastercard.gif" style="height: 30px;" />
+                         @if (ViewBag.webPayData != null)
+                         {
+                             var wp = (WebPayItem)ViewBag.webPayData;
+                             <div>
+                                 <input type="hidden" value="@wp.txn_ref" name="txn_ref" id="txn_ref">
+                                 <input type="hidden" value="@wp.product_id" name="product_id" id="product_id">
+                                 <input type="hidden" value="@wp.pay_item_id" name="pay_item_id" id="pay_item_id">
+                                 <input type="hidden" value="@wp.amount" name="amount" id="amount">
+                                 <input type="hidden" value="@wp.site_redirect_url" name="site_redirect_url" id="site_redirect_url">
+                                 <input type="hidden" value="@wp.hash" name="hash" id="hash">
+                                 <input type="hidden" value="@wp.currency" name="currency" id="currency">
+                                 <input type="hidden" value="@wp.cust_id" name="cust_id" id="cust_id">
+                                 <input type="hidden" value="@wp.cust_name" name="cust_name" id="cust_name">
+                                 <input type="hidden" value="@wp.pay_item_name" name="pay_item_name" id="pay_item_name">
+                                 <input type="hidden" value="payment_split" name="payment_params" id="payment_params">
+                                 <input type="hidden" value="@wp.xml_data" name="xml_data" id="xml_data">
+
+                             </div>
+
+                         }
+                     </div>
+                 </div>
+                 <div class="col-md-6">
+                     <div class="well">
+                         <label for="paymentTypeBank">
+                             <input type="radio" id="paymentTypeBank" name="paymentTypeForm" value="Bank Payment" style="width: 15px; height: 15px;" /> Pay through Bank
+                         </label>
+                         <br />
+                         <small>Walk into any bank to pay with your reference code.</small><br /><br />
+
+                         <img src="~/Content/Images/zenith.jpg" style="height: 30px;" /> &nbsp;
+                         <img src="~/Content/Images/uba.jpg" style="height: 30px;" />
+                         <img src="~/Content/Images/firstbank.gif" style="height: 30px;" />
+                         <img src="~/Content/Images/Echo.jpg" style="height: 30px;" />
+                         <img src="~/Content/Images/fidelity.gif" style="height: 30px;" />
+                         <img src="~/Content/Images/hb.png" style="height: 30px;" />
+                     </div>
+                 </div>
+                 <div class="clear"></div>
+             }
+
+             <div class="col-md-12 txtcenter">
+                 <button type="button" class="btn btn-default">Cancel</button>
+                 <input type="submit" name="submit_btn" class="btn btn-success" value="Confirm Payment & Continue" />
+             </div>
+
+
+        </form>*@
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('#paymentTypeOnline').prop('checked', 'checked');
+
+            $('#paymentTypeBank').click(function () {
+
+                var pf = $('#PaymentForm');
+                pf.prop('action', '/Application/payment');
+
+            });
+
+            $('#paymentTypeWallet').click(function () {
+                var pf = $('#PaymentForm');
+                pf.prop('action', '/Application/Wallet');
+            });
+
+            $('#paymentTypeOnline').click(function () {
+                var pf = $('#PaymentForm');
+                //pf.prop('action', 'System.Configuration.ConfigurationManager.AppSettings["interswitchUrl"]');
+            });
+
+        });
+
+    </script>
+}

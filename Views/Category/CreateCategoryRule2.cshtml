@@ -1,0 +1,117 @@
+﻿
+@model NewDepot.Models.Inspection_Routing_Category
+
+@{
+    ViewBag.Title = "Approval Rule setting for \"" + ViewBag.Name + "\" category";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var xt = ((List<vInspection_Rule>)ViewBag.ExistingRule).OrderBy(a => a.SortOrder);
+    var rules = new SelectList(xt, "Id", "Display");
+
+    int CatId = Model.Category_Id;
+}
+
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+    <a href="/Category" class="btn btn-default righty">
+        Back &nbsp;<i class="icon-arrow-left"></i>
+    </a>
+    <hr class="clear" />
+    <div class="mypanel-2leaf-h">
+        <div class="">
+            <div class="left-side">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Category_Id)
+                    <div class="pad">
+
+                        @Html.ValidationSummary(true)
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Available Rule</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Inspection_Routing_Id, (SelectList)ViewBag.Rule, "Select Rule", new { @required="required", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Inspection_Routing_Id)
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Processing Location</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.ProcessingLocation, (SelectList)ViewBag.processLocation, "Select Location", new { @required = "required", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProcessingLocation)
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Position</label>
+                            <div class="col-md-8">
+                                <select name="position" id="position" class="form-control">
+                                    <option value="1">First</option>
+                                    <option value="2">Before</option>
+                                    <option value="3">After</option>
+                                    <option value="4" selected>End</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Sort Order</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.SortOrder, (SelectList)rules, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SortOrder)
+                            </div>
+                        </div>
+                        <br /><br />
+                        <div class="txtcenter">
+                            <input type="submit" value="Create Rule" class="btn btn-success" />
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="right-side">
+                <div class="pad">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                    <h4>List of Available Rules</h4>
+                        </div>
+                    <ul class="list-group">
+                        @foreach (var item in xt)
+                        {
+                                <li class="list-group-item">
+                                    @item.Display <button class="btn btn-xs btn-danger righty delBtn" data-toggle="modal" data-target="#modalPopup" data-id="@item.Id">
+                                        <span class="fa fa-times"></span>
+                                    </button>
+                                </li>
+                        }
+                    </ul>
+                </div>
+
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Categories > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Category']").addClass("selected");
+
+            $(".delBtn").click(function (e) {
+                e.preventDefault();
+
+                $(".modal-title").text("Delete Rule");        // find title for changr
+                $("#modal-body").html("");
+                $("#modal-body").html(Loading());
+                //Load the view
+                $.get("/Category/DeleteCategoryRule", { id: $(this).data("id"), CatId: @CatId }, function (data) {
+                    $("#modal-body").html(data);
+                });
+            });
+        });
+    </script>
+}

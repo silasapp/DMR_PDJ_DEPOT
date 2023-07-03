@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Depot_Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{79ea1dd2-4088-4f7a-8118-2050219530b5}</ProjectGuid>
+    <!--<DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>-->
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Depot_Database</RootNamespace>
+    <AssemblyName>Depot_Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Snapshots" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="Security\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="dbo\Stored Procedures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Snapshots\Depot_Database_20210824_15-19-28.dacpac" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\ZoneStates.sql" />
+    <Build Include="dbo\Tables\ZonalOffice.sql" />
+    <Build Include="dbo\Tables\ZonalFieldOffice.sql" />
+    <Build Include="dbo\Tables\WorkRoles.sql" />
+    <Build Include="dbo\Tables\WorkProccess.sql" />
+    <Build Include="dbo\Tables\WorkFlows.sql" />
+    <Build Include="dbo\Tables\Waivers.sql" />
+    <Build Include="dbo\Tables\UserRoles.sql" />
+    <Build Include="dbo\Tables\UserBranches.sql" />
+    <Build Include="dbo\Tables\TrainingPrograms.sql" />
+    <Build Include="dbo\Tables\Tanks.sql" />
+    <Build Include="dbo\Tables\TankLeakTests.sql" />
+    <Build Include="dbo\Tables\TankInspections.sql" />
+    <Build Include="dbo\Tables\TakeOvers.sql" />
+    <Build Include="dbo\Tables\SuitabilityInspections.sql" />
+    <Build Include="dbo\Tables\SubmittedDocuments.sql" />
+    <Build Include="dbo\Tables\States.sql" />
+    <Build Include="dbo\Tables\Staff.sql" />
+    <Build Include="dbo\Tables\Signatories.sql" />
+    <Build Include="dbo\Tables\ScheduleTransactions.sql" />
+    <Build Include="dbo\Tables\Schedules.sql" />
+    <Build Include="dbo\Tables\Sanctions.sql" />
+    <Build Include="dbo\Tables\RunTimes.sql" />
+    <Build Include="dbo\Tables\reversal_transactions.sql" />
+    <Build Include="dbo\Tables\Reports.sql" />
+    <Build Include="dbo\Tables\RemitaPaymentStatuses.sql" />
+    <Build Include="dbo\Tables\remita_transactions.sql" />
+    <Build Include="dbo\Tables\Receipts.sql" />
+    <Build Include="dbo\Tables\Pumps.sql" />
+    <Build Include="dbo\Tables\Products.sql" />
+    <Build Include="dbo\Tables\ProcessingRules.sql" />
+    <Build Include="dbo\Tables\Phases.sql" />
+    <Build Include="dbo\Tables\PhaseRoutings.sql" />
+    <Build Include="dbo\Tables\PhaseFacilityDocuments.sql" />
+    <Build Include="dbo\Tables\permits.sql" />
+    <Build Include="dbo\Tables\PaymentApprovals.sql" />
+    <Build Include="dbo\Tables\payment_transactions.sql" />
+    <Build Include="dbo\Tables\pages.sql" />
+    <Build Include="dbo\Tables\OutOfOffice.sql" />
+    <Build Include="dbo\Tables\OilTerminals.sql" />
+    <Build Include="dbo\Tables\Notifications.sql" />
+    <Build Include="dbo\Tables\MyDesk.sql" />
+    <Build Include="dbo\Tables\Multi_Inspections.sql" />
+    <Build Include="dbo\Tables\MistdoStaff.sql" />
+    <Build Include="dbo\Tables\messages.sql" />
+    <Build Include="dbo\Tables\MeetingSchedules.sql" />
+    <Build Include="dbo\Tables\MarketingCompanies.sql" />
+    <Build Include="dbo\Tables\ManualRemitaValues.sql" />
+    <Build Include="dbo\Tables\ManagerScheduleMeetings.sql" />
+    <Build Include="dbo\Tables\ManagerReminders.sql" />
+    <Build Include="dbo\Tables\Logs.sql" />
+    <Build Include="dbo\Tables\Logins.sql" />
+    <Build Include="dbo\Tables\Location.sql" />
+    <Build Include="dbo\Tables\Lgas.sql" />
+    <Build Include="dbo\Tables\Legacies.sql" />
+    <Build Include="dbo\Tables\Leaves.sql" />
+    <Build Include="dbo\Tables\key_staff_certificates.sql" />
+    <Build Include="dbo\Tables\JointApplications.sql" />
+    <Build Include="dbo\Tables\JointAccountStaffs.sql" />
+    <Build Include="dbo\Tables\JointAccounts.sql" />
+    <Build Include="dbo\Tables\JointAccountReports.sql" />
+    <Build Include="dbo\Tables\invoices.sql" />
+    <Build Include="dbo\Tables\InspectionSchedules.sql" />
+    <Build Include="dbo\Tables\InspectionMeetingAttendees.sql" />
+    <Build Include="dbo\Tables\Forms.sql" />
+    <Build Include="dbo\Tables\files.sql" />
+    <Build Include="dbo\Tables\FieldValues.sql" />
+    <Build Include="dbo\Tables\Fields.sql" />
+    <Build Include="dbo\Tables\FieldOfficeStates.sql" />
+    <Build Include="dbo\Tables\FieldOffices.sql" />
+    <Build Include="dbo\Tables\faqs.sql" />
+    <Build Include="dbo\Tables\faq_description.sql" />
+    <Build Include="dbo\Tables\FacilityTankModifications.sql" />
+    <Build Include="dbo\Tables\FacilityPermit.sql" />
+    <Build Include="dbo\Tables\FacilityModifications.sql" />
+    <Build Include="dbo\Tables\FacilityConditions.sql" />
+    <Build Include="dbo\Tables\Facilities.sql" />
+    <Build Include="dbo\Tables\ExpiredScheduledMeetings.sql" />
+    <Build Include="dbo\Tables\document_types.sql" />
+    <Build Include="dbo\Tables\document_type_categories.sql" />
+    <Build Include="dbo\Tables\Document_Type_Applications.sql" />
+    <Build Include="dbo\Tables\Departments.sql" />
+    <Build Include="dbo\Tables\currencies.sql" />
+    <Build Include="dbo\Tables\CrudeStreams.sql" />
+    <Build Include="dbo\Tables\countries.sql" />
+    <Build Include="dbo\Tables\CompanyTechnicalAllowances.sql" />
+    <Build Include="dbo\Tables\company_technical_agreements.sql" />
+    <Build Include="dbo\Tables\company_proffessionals.sql" />
+    <Build Include="dbo\Tables\company_nsitfs.sql" />
+    <Build Include="dbo\Tables\company_medicals.sql" />
+    <Build Include="dbo\Tables\company_key_staffs.sql" />
+    <Build Include="dbo\Tables\company_expatriate_quotas.sql" />
+    <Build Include="dbo\Tables\company_documents.sql" />
+    <Build Include="dbo\Tables\company_directors.sql" />
+    <Build Include="dbo\Tables\companies.sql" />
+    <Build Include="dbo\Tables\CategoryRoutings.sql" />
+    <Build Include="dbo\Tables\Categories.sql" />
+    <Build Include="dbo\Tables\branches.sql" />
+    <Build Include="dbo\Tables\AuditLogs.sql" />
+    <Build Include="dbo\Tables\ATGs.sql" />
+    <Build Include="dbo\Tables\ATCs.sql" />
+    <Build Include="dbo\Tables\ATCCompanies.sql" />
+    <Build Include="dbo\Tables\AspNetUsers.sql" />
+    <Build Include="dbo\Tables\AspNetUserRoles.sql" />
+    <Build Include="dbo\Tables\AspNetUserLogins.sql" />
+    <Build Include="dbo\Tables\AspNetUserClaims.sql" />
+    <Build Include="dbo\Tables\AspNetRoles.sql" />
+    <Build Include="dbo\Tables\AppPhaseDocuments.sql" />
+    <Build Include="dbo\Tables\ApplicationTanks.sql" />
+    <Build Include="dbo\Tables\applications.sql" />
+    <Build Include="dbo\Tables\ApplicationJobSpecPresentations.sql" />
+    <Build Include="dbo\Tables\ApplicationHistories.sql" />
+    <Build Include="dbo\Tables\ApplicationForms.sql" />
+    <Build Include="dbo\Tables\ApplicationExtraPayments.sql" />
+    <Build Include="dbo\Tables\ApplicationDocuments.sql" />
+    <Build Include="dbo\Tables\application_services.sql" />
+    <Build Include="dbo\Tables\application_Processings.sql" />
+    <Build Include="dbo\Tables\application_documents.sql" />
+    <Build Include="dbo\Tables\application_desk_histories.sql" />
+    <Build Include="dbo\Tables\addresses.sql" />
+    <Build Include="dbo\Tables\Accounts.sql" />
+    <Build Include="dbo\Tables\__MigrationHistory.sql" />
+    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
+    <Build Include="Security\usrDprStaff.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="dbo\Tables\ZoneFieldOffice.sql" />
+    <Build Include="dbo\Tables\States_UT.sql" />
+    <Build Include="dbo\Tables\Staffs.sql" />
+    <Build Include="dbo\Tables\Schdules.sql" />
+    <Build Include="dbo\Tables\AuditTrail.sql" />
+    <Build Include="dbo\Tables\ApplicationRequest.sql" />
+    <Build Include="dbo\Tables\ApplicationProccess.sql" />
+    <Build Include="dbo\Tables\AppDeskHistory.sql" />
+    <Build Include="dbo\Tables\zones.sql" />
+    <Build Include="dbo\Views\vZones.sql" />
+    <Build Include="dbo\Views\vUserBranches.sql" />
+    <Build Include="dbo\Views\vTanks.sql" />
+    <Build Include="dbo\Views\vRequiredFiles.sql" />
+    <Build Include="dbo\Views\vReceipts.sql" />
+    <Build Include="dbo\Views\vProcessingRules.sql" />
+    <Build Include="dbo\Views\vPhaseRoutings.sql" />
+    <Build Include="dbo\Views\vPermits.sql" />
+    <Build Include="dbo\Views\vMeetingScheduleApplications.sql" />
+    <Build Include="dbo\Views\vMarketingCompanies.sql" />
+    <Build Include="dbo\Views\vManagerScheduleMeetings.sql" />
+    <Build Include="dbo\Views\vJointApplications.sql" />
+    <Build Include="dbo\Views\vJointAccountStaffs.sql" />
+    <Build Include="dbo\Views\vJointAccountReports.sql" />
+    <Build Include="dbo\Views\vInspectionScheduleApplications.sql" />
+    <Build Include="dbo\Views\vFormValues.sql" />
+    <Build Include="dbo\Views\vFormFields.sql" />
+    <Build Include="dbo\Views\vFacilityTankModifications.sql" />
+    <Build Include="dbo\Views\vFacilitiesWithAtleasOneApplications.sql" />
+    <Build Include="dbo\Views\vFacilities.sql" />
+    <Build Include="dbo\Views\vCompanyTechnicalAgreements.sql" />
+    <Build Include="dbo\Views\vCompanyProffessionals.sql" />
+    <Build Include="dbo\Views\vCompanyNsitfs.sql" />
+    <Build Include="dbo\Views\vCompanyMedicals.sql" />
+    <Build Include="dbo\Views\vCompanyfiles.sql" />
+    <Build Include="dbo\Views\vCompanyFile2.sql" />
+    <Build Include="dbo\Views\vCompanyExpatriateQuotas.sql" />
+    <Build Include="dbo\Views\vCompanyDirectors.sql" />
+    <Build Include="dbo\Views\vCompanyAspUsers.sql" />
+    <Build Include="dbo\Views\vCompanies.sql" />
+    <Build Include="dbo\Views\vCompAddressesU.sql" />
+    <Build Include="dbo\Views\vCategoryRoutings.sql" />
+    <Build Include="dbo\Views\vCategoryDocuments.sql" />
+    <Build Include="dbo\Views\vApplicationTanks.sql" />
+    <Build Include="dbo\Views\vApplications.sql" />
+    <Build Include="dbo\Views\vApplicationProcessingRules.sql" />
+    <Build Include="dbo\Views\vApplicationForms.sql" />
+    <Build Include="dbo\Views\vApplicationDocuments.sql" />
+    <Build Include="dbo\Views\vApplicationDeskHistories.sql" />
+    <Build Include="dbo\Views\vApplicationAddresses.sql" />
+    <Build Include="dbo\Views\vApplication_Processings.sql" />
+    <Build Include="dbo\Views\vAddresses.sql" />
+    <Build Include="dbo\Views\FacilityPermits.sql" />
+    <Build Include="dbo\Tables\GeoPoliticalZone.sql" />
+    <Build Include="dbo\Tables\GeoPoliticalStates.sql" />
+    <Build Include="dbo\Stored Procedures\Applications_Field_Zone.sql" />
+    <Build Include="dbo\Stored Procedures\AllPayments.sql" />
+    <Build Include="dbo\Stored Procedures\AllApplications.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Depot_Database.refactorlog" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,26 @@
+﻿<p><u>RE: APPROVAL FOR SITE SUITABILITY INSPECTION FOR A PETROLEUM PRODUCT DEPOT</u></p
+<div style="font-size: 1.3em; ">
+<p style="text-align: justify;">
+	We refer to your application in respect to the above subject dated {0}, and the subsequent inspection
+	of the proposed site by a team of NMDPRA officials from the Head offce and {1}.
+    
+</p>
+<p style="text-align: justify;">
+	The inspection and assessment exercise conducted revealed the site is suitable for the proposed purpose
+	and you may proceed to apply online for Approval to Construct (ATC).
+	List of requirements for Approval to Construct (ATC) can be found on the Depot online portal (https://depot.dpr.gov.ng).
+
+</p>
+
+<p style="text-align: justify;">
+	Please note that you will make a technical presentation to the Department on the approved design,
+	construction and operations plan for the proposed Depot. Kindly communicate a tentative date for the
+	presentation within one (1) month of receipt of this letter.
+    
+</p>
+<p style="text-align: justify;">
+	We wish to reiterate that <b>no construction work</b> should commence at the site until Approval to Construct is granted by the Department.
+
+</p>
+</div>
+<br/>

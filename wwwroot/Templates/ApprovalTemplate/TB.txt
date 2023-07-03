@@ -1,0 +1,44 @@
+﻿<p>Dear Sir</p>
+<p><u>WITNESSING OF Calibration/Integrity Tests(NDTs) OF STORAGE TANKS</u></p>
+<p>
+    We write to confirm the witnessing of Calibration/Integrity Tests(NDTs) of storage tanks at your petrol station located along 
+	<strong>{0}</strong> by our staff.
+</p>
+
+<p>
+    Consequent upon the satisfactory conduct of the exercise which took place on {1}, approval is hereby granted to 
+	your company to reflect the numbers as stated below in your subsequent applications for petroleum storage and sales 
+	license.
+</p>
+<p>
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>No. of Tanks</th>
+				<th>Tank Capacities (Litres)</th>
+				<th>Total Capacity (Litres)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{2}</td>
+				<td>{3}</td>
+				<td>{4}</td>
+				<td>{5}</td>
+			</tr>
+			<tr>
+				<td>{6}</td>
+				<td>{7}</td>
+				<td>{8}</td>
+				<td>{9}</td>
+			</tr>
+			<tr>
+				<td>{10}</td>
+				<td>{11}</td>
+				<td>{12}</td>
+				<td>{13}</td>
+			</tr>
+		</tbody>
+	</table>
+</p>

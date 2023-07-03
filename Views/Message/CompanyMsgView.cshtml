@@ -1,0 +1,65 @@
+﻿@*@model NewDepot.Models.messages
+
+@{
+    ViewBag.Title = "CompanyMsgView";
+}
+
+<h2>CompanyMsgView</h2>
+
+<div>
+    <h4>Message</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.subject)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.subject)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.content)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Read)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Read)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Company_Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Company_Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.sender_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.sender_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+</div>
+<p>    
+    @Html.ActionLink("Back to List", "ListByCompany", new { id = @Model.Company_Id }) 
+</p>*@

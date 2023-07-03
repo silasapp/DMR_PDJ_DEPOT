@@ -1,0 +1,96 @@
+﻿@using NewDepot.Helpers;
+
+
+@{
+    ViewBag.Title = "Remita Payment Transactions";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+    <hr class="clear" />
+    @if (ViewBag.Alert != null)
+    {
+        AlertBox alert = (AlertBox)ViewBag.Alert;
+        string alerttype = ((int)alert.ButtonType == 4 ? "alert-danger"
+        : ((int)alert.ButtonType == 3 ? "alert-warning"
+        : ((int)alert.ButtonType == 2 ? "alert-info" : "alert-success")));
+
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@alert.Title</strong> @alert.Message
+            </div>
+        </div>
+    }
+    <table class="table customDT">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Transaction Date </th>
+                <th>Approved Amount</th>
+                <th>Application Reference</th>
+                <th>RRR</th>
+                <th>Type</th>
+                <th>Transaction Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-payment > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Payment/Remitalist']").addClass("selected");
+
+
+        });
+
+        $(document).ready(function () {
+            $('.customDT').dataTable({
+
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("LazyLoadRemitaQuery", "Payment")',
+                "bProcessing": true,
+                "pageLength": 50,
+                "aoColumns": [
+
+                        { "sName": "Customer_Name" },
+                        { "sName": "Transaction_Date" },
+                        { "sName": "Approved_amount" },
+                        { "sName": "Reference" },
+                        { "sName": "RRR" },
+                        { "sName": "Type" },
+                        { "sName": "Response_code" },
+                        {
+                            "sName": "Id",
+                            "bSearchable": false,
+                            "bSortable": false,
+                            "mRender": function (data, type, oObj) {
+                                if (!oObj[7])
+                                {
+                                    return '<a class="btn btn-xs btn-success" disabled href="/Application/RemitaTransactionDetail/' + oObj[7] + '">' + 'Request Status ' + '<i class="icon-login"></i></a>';
+                                }
+                                else {
+                                    return '<a class="btn btn-xs btn-success" href="/Application/RemitaTransactionDetail/' + oObj[7] + '">' + 'Request Status ' + '<i class="icon-login"></i></a>';
+
+
+                                }
+                            }
+                        }
+                        //<th>Transaction Date </th>
+                        //<th>Approved Amount</th>
+                        //<th>Application Reference</th>
+                        //<th>RRR</th>
+                        //<th>Type</th>
+                        //<th>Transaction Status</th>
+                        //<th></th>
+                ]
+            });
+        });
+    </script>
+}

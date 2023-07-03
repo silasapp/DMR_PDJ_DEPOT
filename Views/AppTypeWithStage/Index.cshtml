@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewData["Title"] = "Application Type & Stages Configuration";
+    ViewData["BodyClass"] = "fix-header fix-sidebar";
+}
+
+
+<div class="row">
+
+    <div class="col-sm-4">
+
+        <div class="card">
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Create App Type & Stage
+                </span>
+            </div>
+
+            <form action="#" id="FormCreateTypeStage">
+
+                <div class="form-group">
+
+                    <label class="control-label"> Step Counter </label>
+                    <input type="number" name="txtStepCounter" id="txtStepCounter" class="form-control col-sm-6" required/>
+
+                    <br />
+
+                    <label class="control-label"> Type </label>
+                    <select name="txtTypes" id="txtTypes" class="form-control" required></select>
+
+                    <br />
+
+                    <label class="control-label"> Stage </label>
+                    <select name="txtStages" id="txtStages" class="form-control" required></select>
+
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create Type & Stage" class="ui yellow small button" />
+                </div>
+
+                <div id="TypeStageInfo"> </div>
+            </form>
+
+
+        </div>
+
+        <br />
+
+        <div class="ui yellow segment">
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Edit Type & Stage 
+                </span>
+            </div>
+
+            <form asp-action="#" id="FormEditTypeStage">
+
+                <input type="hidden" id="txtEditTypeStageID" />
+                <br />
+                <div class="text-sm-left" id="relationshipStatus"> </div>
+
+                <br />
+
+                <label class="control-label"> Step Counter </label>
+                <input type="number" name="txtEditStepCounter" id="txtEditStepCounter" class="form-control col-sm-6" required />
+
+                <br />
+
+                <label class="control-label">Select New Type </label>
+                <select name="txtEditTypes" id="txtEditTypes" class="form-control" required></select>
+
+                <br />
+
+                <label class="control-label">Select New Stage </label>
+                <select name="txtEditStages" id="txtEditStages" class="form-control" required></select>
+
+                <br />
+
+                <div class="form-group">
+                    <input type="submit" value="Save Edit" class="ui yellow small button" />
+                    <input type="reset" id="FormEditTypeStageReset" class="ui grey small button" />
+                </div>
+            </form>
+
+            <div id="EditTypeStageInfo"> </div>
+        </div>
+
+           
+    </div>
+
+    <div class="col-sm-8">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h4 class="card-title"> @ViewBag.Title</h4>
+                <h6 class="card-subtitle"> List of all created @ViewBag.Title </h6>
+
+
+                <table id="TableTypeStage" class="ui celled table table-hover" style="font-size:smaller">
+                    <thead>
+                        <tr>
+                            <th>
+                                TypeStage ID
+                            </th>
+                            <th>
+                                Type ID
+                            </th>
+                            <th>
+                                Stage ID
+                            </th>
+                            <th>
+                                App Type
+                            </th>
+                            <th>
+                                App Stage
+                            </th>
+                            <th>
+                                Short Name
+                            </th>
+                            <th>
+                                Counter
+                            </th>
+
+                            <th>
+                                Stage Amount
+                            </th>
+                            <th>
+                                Service Charge
+                            </th>
+
+                            <th>
+                                Created At
+                            </th>
+                            <th>
+                                Updated At
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

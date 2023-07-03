@@ -1,0 +1,107 @@
+﻿@model NewDepot.Models.PhaseDocuments
+
+@{
+    ViewBag.Title = "Documents for \"" + Model.Phase.Name + "\" Phase";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style type="text/css">
+    .list-group-item [type='checkbox'] {
+        width: 16px;
+        height: 16px;
+        float: left;
+        position: absolute;
+        margin-top: 3px !important;
+    }
+
+    .list-group-item span {
+        width: 100%;
+        padding-left: 26px;
+        float: left;
+    }
+</style>
+
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+
+    <div class="righty">
+        <a href="/Phase" class="btn btn-default">
+            Back &nbsp;<i class="icon-arrow-left"></i>
+        </a>
+    </div>
+    <hr class="clear" />
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-6">
+                <div class="well well-sm">
+                    @Html.HiddenFor(c => c.Phase.Id)
+                    @Html.HiddenFor(c => c.Phase.Category_Id)
+
+                    @*@for (int i = 0; i < @Model.documents.Count; i++)
+                        {
+                            if (Model.documents[i].ParentSelected == true)
+                            {
+                                @Html.CheckBoxFor(c => c.documents[i].Selected, new { disabled = "disabled" })
+                                <label>@Model.documents[i].Name</label><br />
+                                @Html.HiddenFor(c => c.documents[i].Id)
+                            }
+                            else
+                            {
+                                @Html.CheckBoxFor(c => c.documents[i].Selected) <label>@Model.documents[i].Name</label> <br />
+                                @Html.HiddenFor(c => c.documents[i].Id)
+                            }
+                        }*@
+                    <ul class="list-group">
+                        @for (int i = 0; i < @Model.documents.Count; i++)
+                        {
+                        @Html.HiddenFor(c => c.documents[i].Id)
+                        <li class="list-group-item clearfix">
+                            @if (Model.documents[i].ParentSelected == true)
+                                {
+                                @Html.CheckBoxFor(c => c.documents[i].Selected, new { disabled = "disabled" })
+                                <span>@Model.documents[i].Name</span>
+                                }
+                                else
+                                {
+                                @Html.CheckBoxFor(c => c.documents[i].Selected) <span>@Model.documents[i].Name</span>
+                                }
+                        </li>
+                        }
+                    </ul>
+                    @Html.ValidationSummary(true)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="well well-sm">
+                    <h4>Document relating to Facility</h4>
+                    <small>Company can have multiple of these documents</small>
+                    <ul class="list-group">
+                        @for (int i = 0; i < @Model.PhaseFacDocuments.Count; i++)
+                        {
+                        @Html.HiddenFor(c => c.PhaseFacDocuments[i].Id)
+                        <li class="list-group-item clearfix">
+                            @if (Model.PhaseFacDocuments[i].ParentSelected == true)
+                                {
+                                @Html.CheckBoxFor(c => c.PhaseFacDocuments[i].Selected, new { disabled = "disabled" })
+                                <span>@Model.PhaseFacDocuments[i].Name</span>
+                                }
+                                else
+                                {
+                                @Html.CheckBoxFor(c => c.PhaseFacDocuments[i].Selected) <span>@Model.PhaseFacDocuments[i].Name</span>
+                                }
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr class="clear" />
+        <div class="">
+            <div class="txtcenter">
+                <a href="/Phase" class="btn btn-default">Cancel</a>
+                <input type="submit" value="Save & Continue" class="btn btn-success" />
+            </div>
+        </div>
+    }
+</div>

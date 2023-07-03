@@ -1,0 +1,30 @@
+﻿@model NewDepot.Models.Page
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li>@Model.Title</li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+
+<div class="">
+    <div class="padd inner-ul-push">
+        @Html.Raw(Model.Content)
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+}

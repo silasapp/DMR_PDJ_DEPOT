@@ -1,0 +1,169 @@
+﻿@using NewDepot.Models
+
+@model MyApps
+
+@{
+    Layout = "~/Views/Shared/_Layoutt.cshtml";
+    ViewBag.Title = "Permit Search Result";
+
+
+}
+
+
+<div class="container">
+
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  Verify License </h3>
+        <div class="righty" style="float: right; border-left: 1px solid yellow">
+            <div>
+                <p><a href="/" style="color:lightblue">Home</a></p>
+
+                <p>Verify Permit</p>
+            </div>
+        </div>
+        <hr />
+    </div>
+    @if (ViewBag.Msg != null)
+    {
+        string alerttype = (ViewBag.MsgType.ToLower() == "fail" ? "alert-danger" : (ViewBag.MsgType.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+        string head = (ViewBag.MsgType.ToLower() == "fail" ? "Search Error!" : (ViewBag.MsgType.ToLower() == "warn" ? "Alert!" : "Search Result!"));
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@head</strong> @ViewBag.Msg
+            </div>
+        </div>
+        <hr style="margin: 0 0 10px 0; padding: 0;" />
+    }
+
+
+    <div class="row">
+        <br/><br/>
+        <div class="col-md-8 col-md-offset-2">
+            @if (Model != null)
+            {
+                <div class="well" style="width:100%">
+                    @if (Model.AppPermit != null)
+                    {
+                        <dl class="dl-horizontal lt">
+                            <dt>
+                                Permit/License Number
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.AppPermit.permit_no)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.CompanyName)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.CompanyName)
+                            </dd>
+
+                            <dt>
+                                Facility
+                            </dt>
+                            <dd>
+                                @Model.FacilityName (@Model.Address_1, @Model.LGA, @Model.StateName .)
+                            </dd>
+
+                            <dt>
+                                CategoryName
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.CategoryName)
+
+                                @if (Model.ModifyType != "")
+                                {
+                                    <small>( @Model.ModifyType ) </small>
+                                }
+                            </dd>
+
+
+                            <dt>
+                                Fees
+                            </dt>
+                            <dd>
+                                @Model.app.fee_payable.Value.ToString("₦ ###,##0.00")
+                            </dd>
+
+                            <dt>
+                                Date Issued
+                            </dt>
+                            <dd>
+                                @Model.AppPermit.date_issued.ToLongDateString()
+                            </dd>
+
+                            @if (Model.PhaseId != 1 || Model.PhaseId != 2 || Model.PhaseId != 5 || Model.PhaseId != 8)
+                            {
+                                <dt>
+                                    Date Expired
+                                </dt>
+                                <dd>
+                                    @if (Model.AppPermit.date_expire < DateTime.Now)
+                                    {
+                                        <span class="btn btn-danger">@Model.AppPermit.date_expire.ToLongDateString()</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-success">@Model.AppPermit.date_expire.ToLongDateString()</span>
+                                    }
+                                </dd>
+                            }
+
+
+                        </dl>
+
+                    }
+                    else
+                    {
+                        if (Model.legaciess != null)
+                        {
+
+                            <dl class="dl-horizontal lt">
+                                <dt>
+                                    Permit No
+                                </dt>
+                                <dd>
+                                    @Model.legaciess.LicenseNo
+                                </dd>
+
+                                <dt>
+                                    Company Name
+                                </dt>
+                                <dd>
+                                    @Model.CompanyName
+                                </dd>
+
+                                <dt>
+                                    Facility
+                                </dt>
+                                <dd>
+                                    @Model.Address_1, @Model.LGA, @Model.StateName
+                                </dd>
+
+                                <dt>
+                                    Exp Date
+                                </dt>
+                                <dd>
+                                    @Model.legaciess.Exp_Date
+                                </dd>
+                            </dl>
+                        }
+                    }
+
+                </div>
+            }
+            else
+            {
+                <p class="text-danger txtcenter">Sorry, permit was not found.</p>
+            }
+            <div class="clear txtcenter">
+                <a href="/Validate" class="btn btn-primary">Search for another permit</a>
+            </div>
+        </div>
+    </div>
+</div>

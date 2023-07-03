@@ -1,0 +1,91 @@
+﻿@using NewDepot.Models
+
+@{
+    ViewBag.Title = "Transaction Successful";
+    var vapp = (MyApps)ViewBag.vApp;
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+<center>
+
+    <div style="max-width:700px; padding:20px" class="text-left card" id="PaymentDiv">
+
+
+        <div style="background:seagreen; padding:20px;">
+            <big class="" style="color:white"><b> Transaction Approved</b></big>
+        </div>
+
+        <p>
+        <p>You have successfully made payment on NMDPRA DEPOT portal, <a href="@Url.Action("Dashboard", "Companies")" class="btn btn-success btn-sm">Click here</a> to continue to your dashboard.</p>
+
+        <div id="DivPaymentInfo"> </div>
+        <hr />
+
+
+        <div class="alert" style="line-height:40px">
+            <h4>Remita Retrieval Reference: <b>@ViewBag.RRR</b></h4>
+            <h4>Your Order ID: @ViewBag.OrderId</h4>
+            <h4>Category: @vapp.CategoryName</h4>
+
+            <h4>Application Type: @vapp.PhaseName</h4>
+
+            <h4>Facility: @vapp.FacilityDetails (@vapp.Address_1)</h4>
+            <br /><br /><br />
+
+            <div class="alert alert-primary">
+                <div class="text-sm-left">
+                    <span>Order ID: <b> @ViewBag.OrderId</b> </span>
+                </div>
+                <div class="text-sm-left">
+                    <span>Application Category : <b> @vapp.CategoryName</b> </span>
+                </div>
+                <div class="text-sm-left">
+                    <span>Application Type : <b> @vapp.PhaseName</b> </span>
+                </div>
+
+                <div class="text-sm-left">
+                    <span>Facility Name : <b> @Model.FacilityDetails</b> </span>
+                </div>
+
+                <div class="text-sm-left">
+                    <span>Facility Location : <b>@vapp.Address_1, @vapp.LGA @vapp.StateName .</b>  </span>
+                </div>
+            </div>
+
+            <div>
+                <span>Application Status : <b class="text-success"> Payment Completed</b> </span>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+</center>
+
+
+
+
+

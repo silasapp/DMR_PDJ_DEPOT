@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MyApps>
+@{
+    Layout = null;
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Company
+        </th>
+        <th>
+            Reference
+        </th>
+        <th>
+            App Type
+        </th>
+        <th>
+            Facility
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fee_Payable)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Service_Charge)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.OrderBy(a => a.CompanyName))
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reference)
+            </td>
+            <td>
+                @item.CategoryName (@item.PhaseName)
+            </td>
+            <td>
+                @item.FacilityName (@item.FacilityAddress())
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fee_Payable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Service_Charge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <button class="btn btn-xs btn-success giveVal" value="@item.Reference" type="button">Give Value</button>
+
+            </td>
+        </tr>
+    }
+
+</table>

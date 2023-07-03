@@ -1,0 +1,165 @@
+﻿@model IEnumerable<NewDepot.Models.messages>
+@using NewDepot.Helpers;
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+
+    var i = 0;
+    var generalClass = new GeneralClass();
+
+}
+
+<div class="row" id="BackImage">
+
+    <br />
+    <h3 class="DashCompanyName">  My Messages </h3>
+</div>
+<div class="marg50"></div>
+
+<table class="table" id="msgTable">
+    <thead>
+        <tr>
+
+            <th>
+
+            </th>
+            <th>
+                Subject
+            </th>
+
+            <th>
+                Date
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var comp_id = generalClass.Encrypt(item.UserID.ToString());
+            var msg_id = generalClass.Encrypt(item.id.ToString());
+
+            <tr>
+                <td>
+
+                    @if (item.read == 1)
+                    {
+
+                        <i class="fa fa-envelope-open"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-envelope"></i>
+                    }
+                </td>
+                <td>@item.subject</td>
+                <td>
+
+                    @{
+                        var diff = DateTime.Now - item.date;
+                        if (diff.Value.Days >= 7)
+                        {
+                            var weeks = (int)(diff.Value.Days / 7);
+
+                            if (weeks > 1)
+                            {
+                                <span>@weeks weeks ago</span>
+                            }
+                            else if (weeks == 1)
+                            {
+                                <span>@weeks week ago</span>
+                            }
+                        }
+                        else if (diff.Value.Days >= 1)
+                        {
+                            if (diff.Value.Days > 1)
+                            {
+                                <span>@diff.Value.Days days ago</span>
+                            }
+                            else if (diff.Value.Days == 1)
+                            {
+                                <span>Yesterday</span>
+                            }
+                        }
+                        else if (diff.Value.Hours >= 1)
+                        {
+                            if (diff.Value.Hours > 1)
+                            {
+                                <span>@diff.Value.Hours Hours ago</span>
+                            }
+                            else if (diff.Value.Hours == 1)
+                            {
+                                <span>@diff.Value.Hours Hour ago</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>@diff.Value.Minutes Minutes ago</span>
+                        }
+                    }
+                </td>
+
+                <td>
+                    <a class="btn btn-primary btn-sm" target="_blank" href="/Staffs/ViewMessage/@comp_id/@msg_id"> <i class="fa fa-eye"> </i> View Message </a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+@section Scripts{
+    <script type="text/javascript">$(function () {
+                $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+                $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+                $("#msgTable").dataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'pageLength',
+                        'copyHtml5',
+                        {
+                            extend: 'csvHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print all',
+                            footer: true,
+                            exportOptions: {
+                                modifier: {
+                                    selected: null
+                                }
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            collectionLayout: 'fixed two-column'
+                        }
+
+                    ],
+
+                    "aLengthMenu": [25, 50, 75, 100, 200],
+                    'iDisplayLength': 50,
+                    columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                    "language": {
+                        "lengthMenu": "Display  _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    },
+                    "order": [[5, "desc"]]
+                });
+            });</script>
+}

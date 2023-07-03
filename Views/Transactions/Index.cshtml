@@ -1,0 +1,94 @@
+﻿@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.TransactionsModel>
+
+@{
+    ViewData["Title"] =  ViewData["TransViewType"];
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+
+<h1>@ViewData["Title"].ToString()</h1>
+
+<br />
+
+<div class="card-black">
+
+    <div class="table-responsive">
+
+        <div>
+            <b class="text-danger">Show/Hide : </b> <button class="toggle-vis btn btn-sm btn-primary" data-column="16">Show/Hide Description</button> - <button class="toggle-vis btn btn-sm btn-primary" data-column="13">Show/Hide Zone</button> - <button class="toggle-vis btn btn-sm btn-primary" data-column="14">Show/Hide Field Office</button>
+        </div>
+
+        <br />
+
+        <table class="table table-bordered table-hover" id="MyTransactionTable" style="font-size:11px">
+
+            <thead>
+                <tr>
+                    <th>Ref. No.</th>
+                    <th>Company</th>
+                    <th>Facility</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Stage</th>
+                    <th>Status</th>
+                    <th>RRR</th>
+                    <th>Amt. Paid</th>
+                    <th>Servic Charge</th>
+                    <th>Total Amt.</th>
+                    <th>Trans. Type</th>
+                    <th>Trans. Date</th>
+                    <th>Field Office</th>
+                    <th>Zonal Office</th>
+                    <th>State</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (Model.Count() > 0)
+                {
+                    for (int a = 0; a < Model.Count(); a++)
+                    {
+                        var app_id = generalClass.Encrypt(Model.ToList()[a].AppId.ToString());
+
+                        var colors = Model.ToList()[a].TransStatus == GeneralClass.PaymentPending ? "badge-danger" :
+                                     Model.ToList()[a].TransStatus == GeneralClass.PaymentCompleted ? "badge-primary" : "badge-dark";
+
+                        <tr>
+                            <td>  <b class="">@Model.ToList()[a].RefNo</b> </td>
+                            <td>  <b class="text-primary">@Model.ToList()[a].CompanyName</b></td>
+                            <td>  <b class="text-primary">@Model.ToList()[a].Facilities</b></td>
+                            <td>  @Model.ToList()[a].Category </td>
+                            <td>  @Model.ToList()[a].AppType </td>
+                            <td>  @Model.ToList()[a].AppStage </td>
+                            <td>  <h5> <span class="badge @colors">@Model.ToList()[a].TransStatus</span></h5> </td>
+                            <td>  <b>@Model.ToList()[a].RRR</b> </td>
+                            <td>  ₦@string.Format("{0:N}", Model.ToList()[a].Amount)</td>
+                            <td>  ₦@string.Format("{0:N}", Model.ToList()[a].ServiceCharge) </td>
+                            <td>  ₦@string.Format("{0:N}", Model.ToList()[a].TotalAmount) </td>
+                            <td>  @Model.ToList()[a].TransType </td>
+                            <td>  @Model.ToList()[a].TransDate.ToShortDateString() </td>
+                            <td>  @Model.ToList()[a].FieldOffice </td>
+                            <td>  @Model.ToList()[a].ZonalOffice </td>
+                            <td>  @Model.ToList()[a].State </td>
+
+                            <td>  <small>@Model.ToList()[a].Description</small> </td>
+                            <td>
+                                <a href="/Applications/Apps/@app_id" target="_blank" class="btn btn-primary btn-sm"> <i class="fa fa-eye"> </i> View </a>
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+

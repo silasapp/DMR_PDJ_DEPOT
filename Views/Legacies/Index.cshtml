@@ -1,0 +1,210 @@
+﻿@*@model IEnumerable<NewDepot.Models.Legacy>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PermitNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IssuedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpiryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LinkId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FacilityName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FacilityAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lga)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LandMeters)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPipeLine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsHighTention)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsHighWay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactPhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeleteStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApprovedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppDocId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompElpsDocId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocSource)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DropStaffId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApprovedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PermitNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IssuedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpiryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LinkId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FacilityName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FacilityAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lga)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LandMeters)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPipeLine)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsHighTention)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsHighWay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactPhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Products)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeleteStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApprovedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppDocId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompElpsDocId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocSource)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DropStaffId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApprovedAt)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LegacyId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LegacyId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LegacyId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@

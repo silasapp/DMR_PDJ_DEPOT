@@ -1,0 +1,51 @@
+﻿@model IEnumerable<NewDepot.Models.ZonalOfficeBranchMapping>
+
+@{
+    ViewBag.Title = "ZoneBranches";
+}
+
+<h2>Zone Branches</h2>
+
+<p>
+    @Html.ActionLink("Create New", "MapZoneToBranch")
+</p>
+<table class="table table-bordered">
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.ZoneId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchId)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.ZoneName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ZoneName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BranchName)
+                <ul>
+                    @foreach (var itm in item.brStates)
+                    {
+                        <li>@itm.StateName</li>
+                    }
+                </ul>
+            </td>
+            <td>
+
+                @Html.ActionLink("Delete", "DeleteBranchZone", new { id = item.Id }, new { @id = "DeleteBranchZone" })
+            </td>
+        </tr>
+    }
+
+</table>

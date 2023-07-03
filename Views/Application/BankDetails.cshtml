@@ -1,0 +1,116 @@
+﻿@model NewDepot.Models.MyApps
+
+@{
+    ViewBag.Title = "BankDetails";
+}
+<style type="text/css">
+    .list-group-item {
+        background-color: transparent;
+    }
+
+
+    </style>
+
+<div class="receipt">
+    @*@if (pageType.ToLower() != "resubmitted")
+    {
+        <div class="watermark">
+            <h1>Depot Payment Details</h1>
+            <h3>This is not a Permit!</h3>
+        </div>
+    }*@
+
+    <div class="body">
+     
+            <p>
+                You have just taken your first step in submitting your application online. Your application processing shall commence upon confirmation of payment.
+                <br />The following information is required to make payment for this application.
+            </p>
+        
+     
+        <hr />
+        <div class="">
+            <div class="mypanel-2leaf-h">
+                <div class="left-side">
+                    <div class="padd">
+                        <dl class="dl-horizontal lt">
+                            <dt>
+                                Reference No
+                            </dt>
+                            <dd class="">
+                                @Html.DisplayFor(model => model.Reference)
+                            </dd>
+
+                            <dt>
+                                Statutory Permit Fee
+                            </dt>
+                            <dd class="">
+                                @Model.Fee_Payable.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Service Charge
+                            </dt>
+                            <dd class="">
+                                @Model.Service_Charge.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Total Amount Due
+                            </dt>
+                            <dd class="">
+                                @{var ad = Model.Fee_Payable + Model.Service_Charge;}
+                                @ad.ToString("₦ #,###,##.00")
+                            </dd>
+
+                            <dt>
+                                Payment Method
+                            </dt>
+                            <dd class="">
+                                @ViewBag.PaymentMethod
+                            </dd>
+
+                        
+
+                        </dl>
+                    </div>
+                </div>
+                <div class="right-side">
+                    <div class="padd">
+                        <dl class="dl-horizontal lt">
+                            <dt>Permit Category</dt>
+                            <dd>@Model.CategoryName</dd>
+                            <dt>
+                                Service(s)
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in Model.AppServices)
+                                    {
+                                        <li class="list-group-item">@item.service_id</li>
+                                    }
+                                </ul>
+                            </dd>
+
+                            <dt>
+                                Job Specification(s)
+                            </dt>
+                            <dd>
+                                <ul class="list-group">
+                                    @foreach (var item in Model.AppJobSpecs)
+                                    {
+                                        @*<li class="list-group-item">@item.Job_SpecificationName</li>*@
+                                    }
+                                </ul>
+                            </dd>
+                            
+                        </dl>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="clear"><hr /></div>
+        
+    </div>
+</div>

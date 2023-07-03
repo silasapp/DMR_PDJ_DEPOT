@@ -1,0 +1,186 @@
+﻿@using NewDepot.Models
+
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Facility Tank Configuration";
+    var fac = (Facilities)ViewBag.facility;
+    var tnks = (List<Tanks>)ViewBag.tnks;
+}
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName"> @ViewBag.Title for @ViewBag.PhaseName </h3>
+        <hr />
+    </div>
+</div>
+<div class="marg25"></div>
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+<div class="widget">
+    <h3 class="text-center">@fac.Name Tank Setup</h3>
+    <form action="/LTO/AddTanks" method="post">
+        <input type="hidden" name="facilityId" value="@fac.Id" />
+        <input type="hidden" name="review" value="@ViewBag.review" />
+        <input type="hidden" name="phaseId" value="@ViewBag.phaseId" />
+        <input type="hidden" name="PermitNo" value="@ViewBag.permitNo" />
+        <input type="hidden" name="frmlegacy" value="@ViewBag.frmlegacy" />
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <table class="table table-hover table-striped" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tank Name</th>
+                            <th>Max. Capacity</th>
+                            <th>Product</th>
+                            <th>Position</th>
+                            <th>Has ATG</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tankContainer" class="special-control">
+                        @* if facility already have tanks, *@
+                        @if (tnks.Count > 0)
+                        {
+                            for (int i = 0; i < tnks.Count; i++)
+                            {
+
+                                var did = "document" + i;
+                                var id = "tnks[" + i + "].id";
+                                var Name = "tnks[" + i + "].Name";
+                                var HasATG = "tnks[" + i + "].HasATG";
+                                var MaxCapacity = "tnks[" + i + "].MaxCapacity";
+                                var ProductId = "tnks[" + i + "].ProductId";
+                                var Position = "tnks[" + i + "].Position";
+                                var pds = (List<Products>)ViewBag.products;
+                                var pn = pds.Where(a => a.Id == tnks[i].ProductId).FirstOrDefault();
+                                var indx = i + 1;
+                                <tr id="@did" class="tnks">
+                                    <td style="display: table-cell; vertical-align: middle">@indx</td>
+                                    <td>
+                                        <input type="hidden" name="@id" value="@tnks[i].Id" />
+                                        <input type="text" required name="@Name" class="form-control" value="@tnks[i].Name" placeholder="e.g. PMS Tank A" />
+                                    </td>
+                                    <td>
+                                        <input type="number" required name="@MaxCapacity" class="form-control" value="@tnks[i].MaxCapacity" placeholder="e.g. 33000" />
+                                    </td>
+                                    <td>
+                                        <select required name="@ProductId" class="form-control">
+                                            <option value="">Select Product</option>
+                                            @foreach (var item in pds)
+                                            {
+                                                if (item.Id == tnks[i].ProductId)
+                                                {
+                                                    <option value="@item.Id" selected>@item.Name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="@Position" class="form-control">
+                                            <option value="@tnks[i].Position">@tnks[i].Position</option>
+                                            <option value="Aboveground">Surface Tank</option>
+                                        </select>
+                                    </td>
+                                    <td class="txtcenter" style="display: table-cell; vertical-align: middle">
+                                        <label><input type="checkbox" class="hasAtg" name="@HasATG" value="1" /></label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+
+                        @for (int i = 0; i < 3 - tnks.Count; i++)
+                        {
+                            var a = i + tnks.Count;
+                            var did = "document" + a;
+                            var Name = "tnks[" + a + "].Name";
+                            var HasATG = "tnks[" + a + "].HasATG";
+                            var MaxCapacity = "tnks[" + a + "].MaxCapacity";
+                            var ProductId = "tnks[" + a + "].ProductId";
+                            var Position = "tnks[" + a + "].Position";
+                            var indx = a + 1;
+                            <tr id="@did" class="tnks">
+                                <td style="display: table-cell; vertical-align: middle">@indx</td>
+                                <td>
+                                    <input type="text" required name="@Name" class="form-control" value="" placeholder="e.g. PMS Tank A" />
+                                </td>
+                                <td>
+                                    <input type="text" required name="@MaxCapacity" class="form-control" value="" placeholder="e.g. 33000" />
+                                </td>
+                                <td>
+                                    <select required name="@ProductId" class="form-control">
+                                        <option value="">Select Product</option>
+                                        @foreach (var item in ViewBag.products)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="@Position" class="form-control">
+                                        <option value="Aboveground">Above Ground</option>
+                                    </select>
+                                </td>
+                                <td class="txtcenter" style="display: table-cell; vertical-align: middle">
+                                    <input type="checkbox" class="hasAtg" id="chk_@a" name="@HasATG" value="1" />
+                                    <label for="chk_@a"></label>
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+    <div id="hasAtgDiv" style="display:none" class="special-control">
+        <div class="col-md-12"><h4>ATG Functionalities</h4></div>
+        <div class="col-md-4">
+            <input type="checkbox" name="Parameters" value="Temprature" id="param1" />
+            <label for="param1">Can Measure Temprature</label>
+        </div>
+        <div class="col-md-4">
+            <input type="checkbox" name="Parameters" value="Density" id="param2" />
+            <label for="param2">Can Measure Density</label>
+        </div>
+        <div class="col-md-4">
+            <input type="checkbox" name="Parameters" value="Water Level" id="param3" />
+            <label for="param3">Can Measure Water level</label>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-5"></div>
+        <a href="@Url.Action("AddPumps", new {id = fac.Id, phaseId = ViewBag.phaseId })" class="btn btn-primary btn-success">Add Loading Arms</a>
+        @*<input type="button" id="btnLTONext" class="col-md-2 btn btn-md btn-success" value="Add Loading Arms" />*@
+    </div>
+</div>
+
+
+
+<div style="clear:both"></div>
+@section Scripts {
+
+    <script src="~/Scripts/LTO.js"></script>
+}

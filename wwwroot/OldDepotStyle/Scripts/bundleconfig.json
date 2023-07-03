@@ -1,0 +1,37 @@
+//[
+//  {
+//    "outputFileName": "wwwroot/css/site.min.css",
+//    // An array of relative input file paths. Globbing patterns supported
+//    "inputFiles": [
+//      "wwwroot/css/site.css"
+//    ]
+//  },
+//  {
+//    "outputFileName": "wwwroot/js/bundles.min.js",
+//    "inputFiles": [
+//      //Flot section
+//      "wwwroot/OldDepotStyle/Scripts//lot/Flot/jquery.flot.js",
+//      "wwwroot/OldDepotStyle/Scripts//lot/Flot/jquery.flot.pie.js",
+//      "wwwroot/OldDepotStyle/Scripts//lot/Flot/jquery.flot.time.js",
+//      "wwwroot/OldDepotStyle/Scripts//lot/Flot/jquery.flot.stack.js",
+//      "wwwroot/OldDepotStyle/Scripts//lot/Flot/jquery.flot.resize.js",
+
+
+
+//      "wwwroot/OldDepotStyle/Scripts/jquery.min.js",
+//      "wwwroot/OldDepotStyle/Scripts/bootstrap.min.js",
+//      "wwwroot/OldDepotStyle/Scripts/respond.js",
+//      "wwwroot/OldDepotStyle/Scripts/mainscript.js"
+
+//    ],
+//    // Optionally specify minification options
+//    "minify": {
+//      "enabled": true,
+//      "renameLocals": true
+//    },
+//    // Optionally generate .map file
+//    "sourceMap": false
+//  }
+//]
+
+

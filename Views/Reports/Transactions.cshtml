@@ -1,0 +1,125 @@
+﻿@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "Transactions Report";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<div class="card">
+
+
+    <div class="row">
+
+        <div class="col-sm-2">
+            <label>Select Type</label>
+            <div class="dropdown-sin-3">
+                <select style="" multiple placeholder="Select" name="txtSelType[]" id="TtxtSelType">
+                    @foreach (var a in Model.FirstOrDefault().types)
+                    {
+                        <option value="@a.AppTypeId">@a.TypeName</option>
+                    }
+
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-4">
+            <label>Select Transaction Status</label>
+            <div class="dropdown-sin-5">
+                <select style="" multiple placeholder="Select" name="txtSelStatus[]" id="TtxtSelStatus">
+                    <option value="@GeneralClass.PaymentPending">@GeneralClass.PaymentPending</option>
+                    <option value="@GeneralClass.PaymentCompleted">@GeneralClass.PaymentCompleted</option>
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-2">
+            <label>Select State</label>
+            <div class="dropdown-sin-3">
+                <select style="" multiple placeholder="Select" name="txtSelState[]" id="txtSelState">
+                    @foreach (var a in Model.FirstOrDefault().states)
+                    {
+                        <option value="@a.StateId">@a.StateName</option>
+                    }
+
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-4">
+            <label for="comment">Select Date From :</label>
+            <br />
+            <input type="text" class="form-control" id="txtApplicationReportFrom" value="" />
+        </div>
+
+        <div class="col-sm-4">
+            <label for="comment">Select Date To :</label>
+            <br />
+            <input type="text" class="form-control" id="txtApplicationReportTo" value="" />
+        </div>
+
+
+        <div class="col-sm-2">
+            <label><br /><br /> </label>
+            <button class="btn btn-outline-primary" id="btnTransactionReportSearch"><i class="fas fa-search"> </i> Search</button>
+        </div>
+
+    </div>
+
+    <h2 class="">Search Results </h2>
+    <hr />
+    <br />
+
+    <div class="table-responsive">
+
+        <button id='btnRtable2' class="btn btn-danger btn-sm">Export Excel</button>
+
+        <p></p>
+
+        <table class="table table-bordered table-hover" id="SearchTransactionTabless" style="font-size:12px">
+
+            <thead>
+                <tr>
+                    <th>Reference NO</th>
+                    <th>RRR</th>
+                    <th>Company</th>
+                    <th>Facility Name</th>
+                    <th>Facility Address</th>
+                    <th>Type</th>
+                    <th>Stage</th>
+                    <th>Status</th>
+                    <th>State</th>
+                    <th>LGA</th>
+                    <th>Amount</th>
+                    <th>Servic Charge</th>
+                    <th>Total Amt.</th>
+                    <th>Trans. Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+            <tfoot>
+                <tr style="color:crimson">
+                    <th colspan="10" class="text-center" style="text-align:right">Total Sum :</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+                </tr>
+
+            </tfoot>
+
+        </table>
+
+    </div>
+
+
+</div>

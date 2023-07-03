@@ -1,0 +1,65 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "The Legal Stuff";
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+    <div class="container" style="padding:20px; margin-top:10px">
+
+        <h1 style="font-family:'Segoe UI Light';"> <img src="~/images/coa.png" style="height:60px; padding:1px" />Terms & Conditions</h1>
+        <hr />
+
+        <div style="line-height:33px; font-size:19px; font-family:Calibri">
+
+            <br />
+
+            <div class="text-center">
+                <b class="text-danger">Copyright :</b> All  rights  reserved.  This  document  is  the  property  of  the  Department  of  Petroleum Resources (NMDPRA), and the copyright thereof is vested in the NMDPRA. The use of any part of this document as a quote or in any publication shall be acknowledged and/or referenced.
+            </div>
+
+            <br />
+
+            <div class="text-center">
+                <b>GUIDELINES FOR THE GRANT OF APPROVAL FOR DEPOT.</b>
+                <hr />
+            </div>
+
+            <div class="text-center">
+                <p>These guidelines are made in pursuant to the provisions of the Petroleum (Amendment) Act No. 37 of 1977.</p>
+
+                <br />
+
+                <p>
+                    By clicking the <b>AGREE</b> button - you accept the <a href="https://www.dpr.gov.ng/dpr-guidelines/" target="_blank"> Terms & Conditions </a> that govern the grant for approval
+                    of Depot.
+                </p>
+            </div>
+
+        </div>
+        <br />
+        <hr />
+
+        <br />
+
+        <div class="text-center">
+
+            <form action="/Companies/AcceptLegal" method="post">
+                <input type="text" hidden value="@ViewData["cid"]" name="CompanyID" id="CompanyID" />
+                <a class="btn btn-success text-capitalize" href="/Companies/AcceptLegal/@ViewData["cid"]" id="btnAcceptLegal">Yes, I agree </a>
+                &nbsp;
+                <a class="btn btn-danger text-capitalize" href="/Home" id="btnRejectLegal"> No, i don't agree </a>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>
+
+

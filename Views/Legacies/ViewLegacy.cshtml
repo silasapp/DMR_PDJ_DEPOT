@@ -1,0 +1,176 @@
+﻿@using NewDepot.Helpers
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<NewDepot.Models.LegacyModel>
+
+@{
+    ViewData["Title"] = ViewData["LegacyViewTitle"];
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<div>
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewData["Title"] </h3>
+        <hr />
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        <div style="margin:20px">
+
+            @*<h3 class="text-danger">Kindly Verify that this submitted Legacy details are correct. </h3>*@
+            <br />
+            <div class="card-title"> License Number : <b class="text-dark">  @Model.FirstOrDefault().Legacy.LicenseNo </b> </div>
+
+            <hr />
+
+            <div class="row">
+
+                <div class="col-sm-7">
+
+                    <b class="text-primary"> Legacy & Facility Information </b>
+                    <br />
+                    <br />
+
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td> Company Name </td>
+                                <td class="text-left">
+                                    <b>@Model.FirstOrDefault().Company.name</b>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td> Category </td>
+                                <td class="text-left">
+                                    <b> @Model.FirstOrDefault().Category</b>
+                                </td>
+                            </tr>
+
+                            @*<tr>
+                                <td> Products </td>
+                                <td class="text-left">
+                                    <b>@ViewData["Products"]</b>
+                                </td>
+                            </tr>*@
+
+                            <tr>
+                                <td> Licence Number</td>
+                                <td class="text-left">
+                                    <b class=""> @Model.FirstOrDefault().Legacy.LicenseNo</b>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td> Status </td>
+                                <td class="text-left">
+                                    <b class="text-primary"> @Model.FirstOrDefault().Legacy.Status</b>
+                                </td>
+                            </tr>
+
+                            <tr style="">
+                                <td> Issued Date </td>
+                                <td class="text-left text-success">
+                                    <b> @Model.FirstOrDefault().Legacy.Issue_Date.ToString() </b>
+                                </td>
+                            </tr>
+
+                            <tr style="">
+                                <td> Expiry Date </td>
+                                <td class="text-left text-danger">
+                                    <b> @Model.FirstOrDefault().Legacy.Exp_Date.ToString()</b>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td> Facility Name </td>
+                                <td class="text-left">
+                                    <b> @Model.FirstOrDefault().Legacy.FacilityName</b>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td> Address </td>
+                                <td class="text-left">
+                                    <b> <small> @Model.FirstOrDefault().Legacy.FacilityAddress </small> </b>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <b>
+                                        <span> LGA </span>,
+                                        <span> CITY </span>,
+                                        <span> STATE </span>
+                                    </b>
+                                </td>
+                                <td class="text-left">
+                                    <b>
+                                        <span> @Model.FirstOrDefault().Legacy.LGA </span>,
+                                        <span> @Model.FirstOrDefault().Legacy.City </span>,
+                                        <span> @Model.FirstOrDefault().State.StateName </span>
+                                    </b>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td> Contact Person </td>
+                                <td class="text-left">
+                                    <b>  @Model.FirstOrDefault().Legacy.ContactName -  @Model.FirstOrDefault().Legacy.ContactPhone  </b>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+                    <br />
+
+                </div>
+
+                <div class="col-sm-5">
+
+
+                    <b class="text-danger">Attached Document</b>
+                    <br /><br />
+
+                    @if (Model.FirstOrDefault().Legacy.DocSource != null)
+                    {
+                        <a href="@Model.FirstOrDefault().Legacy.DocSource" target="_blank">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <i class="fa fa-file-alt fa-3x text-dark"> </i>
+                                </div>
+                                <div class="col-sm-10">
+                                    <b> Attached Legacy Document</b>
+                                    <br />
+                                    <div>
+                                        Click to View
+
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <b>No document attached</b>
+                    }
+
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    }
+
+
+</div>
+

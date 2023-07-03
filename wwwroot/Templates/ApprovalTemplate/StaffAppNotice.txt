@@ -1,0 +1,34 @@
+﻿<p>Dear {0}</p>
+<p>
+	You have a new PDJ Application submitted to your desk for processing on the PDJ Portal. 
+	<br />
+	Details of the Application is as follows:
+</p>
+	<table>
+		<tbody>
+			<tr>
+				<td>Application Ref. No</td>
+				<td>{1}</td>
+			</tr>
+			<tr>
+				<td>Application Category</td>
+				<td>{2}</td>
+			</tr>
+			<tr>
+				<td>Application Phase</td>
+				<td>{3}</td>
+			</tr>
+			<tr>
+				<td>Facility</td>
+				<td>{4}</td>
+			</tr>
+			<tr>
+				<td>Marketer</td>
+				<td>{5}</td>
+			</tr>
+		</tbody>
+	</table>
+
+<p>
+    Please login to your account on the ROM Portal to process the application.
+</p>

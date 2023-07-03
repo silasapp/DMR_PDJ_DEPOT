@@ -1,0 +1,194 @@
+﻿@model IEnumerable<NewDepot.Models.SearchList>;
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+@{ ViewData["Title"] = ViewBag.Title;
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    var MyApps = (List<MyApps>)ViewBag.MyApps;
+    int i = 0;
+ }
+
+
+<h2>@ViewData["Title"]</h2>
+
+<br />
+
+
+<div class="card-black">
+    <div class="row">
+        <div class="col-md-2" style="background-color: green; color:white; margin-left: 10px;height:80px; padding: 5px; text-align:center !important; font-weight: bold; border-radius: 5px;">
+            <div style="padding-top: 20px;">Total Applications</div>
+            <div style="font-size: large; "> @ViewBag.ApplicationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>Suitability</div>
+            <div class="label label-rouded label-megna label-sm text-md-center" style="width:40px"> @ViewBag.SuitabilityCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>ATC</div>
+            <div class="label label-rouded label-danger label-sm text-md-center" style="width:40px"> @ViewBag.ATCCount</div>
+        </div><div class="col-md-1">
+            <div>LTO</div>
+            <div class="label label-rouded label-inverse label-sm text-md-center" style="width:40px"> @ViewBag.LTOCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>Calibration</div>
+            <div class="label label-rouded label-primary label-sm text-md-center" style="width:40px"> @ViewBag.CalibrationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>Recalibration</div>
+            <div class="label label-rouded label-warning label-sm text-md-center" style="width:40px"> @ViewBag.ReCalibrationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>Modification</div>
+            <div class="label label-rouded label-danger label-sm text-md-center" style="width:40px"> @ViewBag.ModificationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>Renewal</div>
+            <div class="label label-rouded label-primary label-sm text-md-center" style="width:40px"> @ViewBag.LRCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>TakeOver</div>
+            <div class="label label-rouded label-success label-sm text-md-center" style="width:40px"> @ViewBag.TakeOverCount</div>
+        </div>
+        <div class="col-md-1 ">
+            <div>Regularization</div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.RegularizationCount</div>
+        </div>
+
+    </div>
+
+
+
+    <div class="table-responsive">
+        <p></p>
+
+        <table class="table table-bordered table-hover" id="dataTable" style="font-size:10px">
+
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Reference NO</th>
+                    <th>Company</th>
+                    <th>Facility</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Year</th>
+                    <th>Status</th>
+                    @*<th>Current Desk</th>*@
+                    <th>State</th>
+                    <th>LGA</th>
+                    @if (ViewBag.HQ == true)
+                    {
+        <th>Field Office</th>
+                        <th>Zonal Office</th>
+}
+                    <th>Date Applied</th>
+                    <th>Date Submitted</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var x in MyApps)
+                {
+                    i++;
+                    string alertx = string.Empty;
+                    if (x.Status.ToLower() == "approved") { alertx = "alert-success"; }
+                    else if (x.Status.ToLower() == "processing") { alertx = "alert-info"; }
+                    else if ((x.Status.ToLower() == "pending") || (x.Status.ToLower() == "payment pending")) { alertx = "alert-warning"; }
+                    else { alertx = "alert-danger"; }
+
+
+
+
+                <tr>
+                    <td>@i</td>
+                    <td>@x.Reference</td>
+                    <td>@x.CompanyName</td>
+                    <td>@x.FacilityDetails</td>
+                    <td>@x.PhaseName</td>
+                    <td>@x.Type.ToUpper()</td>
+                    <td>@x.Year</td>
+                    <td>
+                        <div class="btn btn-sm @alertx">
+                            <strong>@Html.DisplayFor(model => x.Status)</strong>
+                        </div>
+                    </td>
+    @*<td>@x.CurrentStaff</td>*@
+                    <td>@x.StateName</td>
+                    <td>@x.LGA</td>
+                    @if (ViewBag.HQ == true)
+                    {
+                <tD>@x.OfficeName</tD>
+                                    <tD>@x.ZoneName</tD>}
+                    <td>@x.Date_Added </td>
+                    <td>@x.DateSubmitted </td>
+                    <td>
+                        <a href="/Application/ViewApplication/@x.appID" class="btn btn-xs btn-info">View <i class="icon-eye"></i></a>
+                    </td>
+                </tr>            }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+            $(function () {
+                $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+                $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+                $("#dataTable").dataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'pageLength',
+                        'copyHtml5',
+                        {
+                            extend: 'csvHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print all',
+                            footer: true,
+                            exportOptions: {
+                                modifier: {
+                                    selected: null
+                                }
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            collectionLayout: 'fixed two-column'
+                        }
+
+                    ],
+
+                    "aLengthMenu": [25, 50, 75, 100, 200],
+                    'iDisplayLength': 50,
+                    columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                    "language": {
+                        "lengthMenu": "Display  _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    },
+                    "order": [[5, "desc"]]
+                });
+            });
+    </script>
+}

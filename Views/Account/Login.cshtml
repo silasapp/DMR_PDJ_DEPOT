@@ -1,0 +1,194 @@
+﻿@model NewDepot.Models.LoginViewModel
+@using NewDepot.Helpers
+@using System.Configuration
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Log in";
+    var body = "";
+    if (ViewBag.InProgress != null && (bool)ViewBag.InProgress)
+    {
+        using (var sr = new StreamReader(Server.MapPath(@"\\App_Data\\Templates\") + "UpgradeMessage.txt"))
+        {
+            body = sr.ReadToEnd();
+        }
+    }
+
+    var elpsBase = ConfigurationManager.AppSettings["elpsBaseUrl"];
+
+    bool um = Boolean.Parse(ConfigurationManager.AppSettings["UnderMaintainance"]);
+}
+
+
+
+<div class="col-md-12">
+    <div class="col-md-5 form-signin extForm">
+        <div class="padd">
+            <h1 class="form-signin-heading text-center">DPR</h1>
+            <h4 class="txtcenter">DEPOT LICENSE PORTAL</h4>
+            @if (um)
+            {
+                <div class="page-header">
+                    <h1 style="text-transform:uppercase;font-size:3em;padding:20px">Maitainance going on here, Please check back in a while.</h1>
+                </div>
+            }
+            else
+            {
+
+                <a class="homebutton btn btn-lg btn-info btn-block textUpper" href="/validate/">Click here to Verify Permit</a>
+                <br />
+                <a href="@elpsBase/Account/Login?appId=@ELPSAPIHelper.PublicKey" class="homebutton btn btn-lg btn-success btn-block textUpper">LOGIN</a>
+                <br />
+                <a href="@elpsBase/Account/Register?appId=@ELPSAPIHelper.PublicKey" class="homebutton btn btn-lg btn-success btn-block textUpper">REGISTER</a>
+                <br />
+                <p class="txtcenter">
+                    <a href="@elpsBase/Account/ForgotPassword?appId=@ELPSAPIHelper.PublicKey" class="btn-link">Forgot Password</a>
+                </p>
+            }
+                <br />
+                <strong>Payment Processor:</strong>
+                <br />
+                <div class="">
+                    <img src="@Url.Content("/Content/Images/remita-logo.png")" alt="Remita" title="REMITA" style="" />
+                </div>
+                <br /><br />
+                <strong>Payment Options:</strong>
+                <br />
+                <ul class="paymentOptions">
+                    <li><i class="fa fa-check"></i> &nbsp; Cash Deposit</li>
+                    <li><i class="fa fa-check"></i> &nbsp; Bank Draft</li>
+                    <li><i class="fa fa-check"></i> &nbsp; Card Payment: MasterCard, Verve Card</li>
+                    <li><i class="fa fa-check"></i> &nbsp; Quick Teller</li>
+                </ul>
+                <div class="well">
+                    
+
+                    <img height="200" style="top:0px" src="data:image/jpg;base64, @ViewBag.QrCodeImg" alt="Permit Number and Company Identification Number" />
+
+
+                </div>
+            </div>
+    </div>
+
+    <div class="col-md-7 adv bg1">
+        <div class="col-md-12">
+            <h2 class="txtcenter">Getting Started</h2>
+        </div>
+        <div class="howto">
+            <div class="col-md-5">
+                <div class="icon">
+                    <img src="~/Content/Images/icon-lg1.png" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h3>User Guide</h3>
+                <a href="@ConfigurationManager.AppSettings["guidelineUrl"]" target="_blank" class="white">Online Application Guide</a><br />
+                <a href="@Url.Action("FeeSchedule", "Home")" target="_blank" class="white">Permit Fee Schedules</a><br />
+                <a href="#" class="white">Online Permit Printing Guide</a><br />
+                <a href="@elpsBase/Account/ResendEmailActivation?appId=@ELPSAPIHelper.PublicKey" class="white">Resend Activation Email</a><br />
+                <a href="/validate/" class="white">Verify a Permit</a><br />
+                <a href="/faq" class="white">FAQ</a><br />
+            </div>
+        </div>
+        <br class="clear" /><br />
+        <div class="howto">
+            <div class="col-md-5">
+                <div class="icon">
+                    <img src="~/Content/Images/icon-lg2.png" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h3>
+                    <a href="@elpsBase/Account/Register?appId=@ELPSAPIHelper.PublicKey" class="white">Company Account Creation</a>
+                </h3>
+                <p>
+                    Create account to use resources on this portal. Note that Account creation
+                    is not required to validate a permit.
+                </p>
+            </div>
+        </div>
+        <br class="clear" /><br />
+        <div class="howto">
+            <div class="col-md-5">
+                <div class="icon">
+                    <img src="~/Content/Images/icon-lg3.png" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h3><a href="/login/" class="white">Manage Licenses</a></h3>
+                <p>Login to apply for a new Licenses, renew or manage your Licenses</p>
+            </div>
+        </div>
+        <div class="clear"><br /><br /></div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(function () {
+
+            if ('@ViewBag.Message'.length > 0) {
+                //alert('@ViewBag.Message');
+
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-title').text('Email Confirmed');
+                    modal.find('.modal-body').text('@ViewBag.Message');
+                });
+                $("#modalPopup").modal('show');
+            }
+
+            if ('@ViewBag.InProgress' === 'True') {
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-title').text('Update Notification');
+                    modal.find('.modal-body').html('@Html.Raw(body)');
+                    modal.find('.modal-footer').html('<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>');
+                });
+                $("#modalPopup").modal('show');
+            }
+
+            if ('@ViewBag.LoginIssue' === 'True') {
+                $("#modalPopup").on('show.bs.modal', function () {
+                    var modal = $(this);
+                    modal.find('.modal-content').html($("#LoginErrorClear").html());
+                });
+                $("#modalPopup").modal('show');
+            }
+
+            $(document).on("submit", "#frmLoginCorrect1", function(){
+                console.log("Correct Login");
+                return true;
+            });
+        });
+    </script>
+    <script type="text/x-handlebars-template" id="LoginErrorClear">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel" class="modal-title">Login Issue</h3>
+        </div>
+        <div id="modalBody">
+            @using (Html.BeginForm("LogOffResolver", "Account", FormMethod.Post, new { id = "frmLoginCorrect" }))
+            {
+                <div class="modal-body">
+                    <p>
+                        Seems you are having problem Login into your account. Please Click Resolve button below to correct
+                        any issue causing it and try logging in again.
+                    </p>
+                    <p>
+                        Sorry for any inconvenience.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning btn-sm">Resolve</button>
+                </div>
+            }
+        </div>
+    </script>
+
+}

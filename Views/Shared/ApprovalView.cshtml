@@ -1,0 +1,123 @@
+﻿@model NewDepot.Models.SuitabilityLetterModel
+@{
+    Layout = null;
+    //var f = Model.PermitFor.ToLower();
+    //var hColor = f == "b" ? "#ea0202" : "rgb(0, 0, 128)";
+    string siFont = "1.4em;";
+    if (Model.PhaseShortName!="SI")
+    {
+        siFont = "1.14em;";
+    }
+}
+
+<html>
+<head>
+
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+
+    <style type="text/css">
+    </style>
+</head>
+<body style=" font-family: Candara;">
+
+    <div style="width: 1100px; margin: 0px auto;box-sizing: border-box; padding: 5px; position: relative;">
+
+
+        <div style="position: absolute; width: 100%; top: 50%; margin-top: -300px; text-align: center; opacity: 0.15;">
+            <img src="~/images/nmdpra.png" alt="Logo" style="height: 150px; width: 120px; display: block; margin: 0 auto"  />
+
+            <h1>Ministry of Petroleum Resources</h1>
+            <h3 style="color: #00a900;">Federal Republic of Nigeria</h3>
+        </div>
+        <div style="border: 2px solid #888; padding: 20px; font-family: Candara; height: 1560px; position: relative;">
+            <div style="text-align: center;">
+                <h1 style="margin: 0; margin-top:0px; font-size: 30px; color: #00a900;">MINISTRY OF PETROLEUM RESOURCES</h1>
+                <h2 style="margin: 0; margin-top: 12px; font-size: 20px; color: #00a900;">NIGERIAN MIDSTREAM and DOWNSTREAM PETROLEUM REGULATORY AUTHORITY</h2>
+                <h4 style="margin: 0; margin-top: 7px; border-bottom: 2px dotted #00a900; display: inline-block; padding-bottom: 6px; font-family: Calibri; font-weight: 400;">
+                    @Model.Office
+                </h4>
+            </div>
+
+            <div style="padding: 25px 20px 20px;">
+                <table style="width: 100%; border-spacing: 0;">
+                    <tr>
+                        <td style="width: 33.333%;" valign="top">
+                            <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0;">
+                                <p style="display: inline-block; margin-bottom: -3px; background-color: #FFF; padding: 3px 10px 3px 0; color: #00a900;">P.M.B. No:</p>
+                                &nbsp;<span style="font-family: Calibri;">12650, LAGOS</span>
+                            </div>
+                            <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0;">
+                                <p style="display: inline-block; margin-bottom: -3px; background-color: #FFF; padding: 3px 10px 3px 0; color: #00a900;">Telephone:</p>
+                                &nbsp;<span style="font-family: Calibri;">2970000, 4611777</span>
+                            </div>
+                         
+                        </td>
+                        <td style="width: 33.333%;">
+                            <img src="~/images/nmdpra.png" alt="Logo" style="height: 100px; display: block; margin: 0 auto" />
+                        </td>
+                        <td style="width: 33.333%;" valign="top">
+                            <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0;">
+                                <p style="display: inline-block; margin-bottom: -3px; background-color: #FFF; padding: 3px 10px 3px 0; color: #00a900;">Ref. No:</p>
+                                &nbsp;<span style="font-family: Calibri;">@Model.RefNo</span>
+                            </div>
+                            <div style="border-bottom: dotted 2px #00a900;padding: 5px 0 0;">
+                                <p style="display: inline-block; margin-bottom: -3px; background-color: #FFF; padding: 3px 10px 3px 0; color: #00a900;">Date:</p>
+                                &nbsp;<span style="font-family: Calibri;">@Model.Date</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; border-spacing: 0; margin-top: 20px;">
+                    <tr>
+                        <td style="padding: 5px 0 0;">
+                            <p style="text-transform: uppercase; font-family: Arial; font-size: 1.0em; line-height: 1.2;">
+                                The managing director,<br />
+                                @*@Model.CompanyName,<br />
+                                @Model.Address,<br />
+                                @Model.City,<br />
+                                @Model.State State.*@
+                            </p>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-family: Calibri; padding-top: 10px; font-size:@siFont">
+                            @Html.Raw(Model.Body)
+
+
+                            <p style="font-size:1.5em">
+                                Yours faithfully,
+                                <br />
+                                @if (Model.PhaseShortName != "SI")
+                                {
+                                    @*<strong>@Model.SignedBy</strong>*@
+                                    <img src="@Model.Signature" style="height: 105px; width: 235px; margin-top: 7px;" />
+                                }
+                                else
+                                {
+                                    <strong>B.A Sadiq</strong>
+                                }
+
+                                <br />
+                                Director/CEO, Nigerian Midstream and Downstream Petroleum Regulatory Authority
+                                <br />
+                                <br />
+                                <span style="font-size:0.8em">
+                                    cc: @Model.ZonalOrFeild Operations Controller
+                                </span>
+                                <br />
+                                <span style="font-size:0.8em">
+                                    Please nominate a staff to participate in the project and inform us accordingly.
+                                </span>
+                            </p>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

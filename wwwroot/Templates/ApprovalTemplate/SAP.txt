@@ -1,0 +1,18 @@
+﻿<p style="font-size: 1.5em; "><u>RE: SANCTION PAYMENT- (Selling Above Ex-Deport Price)</u></p
+<div style="font-size: 1.2em; ">
+<p>
+    Your Application dated {0} on the above subject matter, please.
+</p>
+<p>
+    Consequently, you are to contact NMDPRA accredited E.I.A. consultant who will carry out 
+	<strong>Base Line Studies</strong> on your site.
+</p> 
+<p>
+    Thereafter, you are Expected to <b>Apply</b> for the grant of Approval to Construct <b>(ATC)</b> which is needed to start Contruction on the Site.
+</p>
+<p>
+    Failure to Adhere to these Procedure will attractions <b>Sanctions</b> to your Faccility.
+</p>
+</div>
+<div style="height: 300; ">
+</div>

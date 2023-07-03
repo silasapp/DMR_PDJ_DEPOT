@@ -1,0 +1,129 @@
+﻿@*@using NewDepot.Controllers.Authentication;
+@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.SearchList>
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "Permits Report";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<div class="card">
+
+
+    <div class="row">
+        <div class="col-sm-2">
+            <label>Permit Type</label>
+            <div class="dropdown-sin-1">
+                <select style="display:none" multiple placeholder="Select" name="txtSelPermitType[]" id="txtSelPermitType">
+
+                    <option value="1">Legacy</option>
+                    <option value="0">Non-Legacy</option>
+
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-2">
+            <label>Select Type</label>
+            <div class="dropdown-sin-2">
+                <select style="display:none" multiple placeholder="Select" name="txtSelType[]" id="txtSelType">
+                    @foreach (var a in Model.FirstOrDefault().types)
+                    {
+                        <option value="@a.AppTypeId">@a.TypeName</option>
+                    }
+
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-6">
+            <label>Select Stage</label>
+            <div class="dropdown-sin-4">
+                <select style="display:none" multiple placeholder="Select" name="txtSelStage[]" id="txtSelStage">
+                    @foreach (var a in Model.FirstOrDefault().stages)
+                    {
+                        <option value="@a.AppStageId">@a.StageName</option>
+                    }
+
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-2">
+            <label>Select State</label>
+            <div class="dropdown-sin-3">
+                <select style="display:none" multiple placeholder="Select" name="txtSelState[]" id="txtSelState">
+                    @foreach (var a in Model.FirstOrDefault().states)
+                    {
+                        <option value="@a.StateId">@a.StateName</option>
+                    }
+
+                </select>
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-4">
+            <label for="comment">Select Date From :</label>
+            <br />
+            <input type="text" class="form-control" id="txtApplicationReportFrom" value="" />
+        </div>
+
+        <div class="col-sm-4">
+            <label for="comment">Select Date To :</label>
+            <br />
+            <input type="text" class="form-control" id="txtApplicationReportTo" value="" />
+        </div>
+
+
+        <div class="col-sm-2">
+            <label><br /><br /> </label>
+            <button class="btn btn-outline-primary" id="btnPermitReportSearch"><i class="fas fa-search"> </i> Search</button>
+        </div>
+
+    </div>
+
+    <h2 class="">Search Results </h2>
+    <hr />
+    <br />
+
+    <div class="table-responsive">
+
+        <button id='btnRtable3' class="btn btn-danger btn-sm">Export Excel</button>
+
+        <p></p>
+
+        <table class="table table-bordered table-hover" id="SearchPermitTabless" style="font-size:12px">
+
+            <thead>
+                <tr>
+                    <th>Permit NO</th>
+                    <th>Ref. NO</th>
+                    <th>Company</th>
+                    <th>Facility Name</th>
+                    <th>Facility Address</th>
+                    <th>Type</th>
+                    <th>Stage</th>
+                    <th>State</th>
+                    <th>LGA</th>
+                    <th>Issued Date</th>
+                    <th>Expiry Date</th>
+                    <th>Permit Type</th>
+                    <th>Printed Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>*@

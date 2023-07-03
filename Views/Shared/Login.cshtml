@@ -1,0 +1,42 @@
+﻿@model IdentitySample.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = null;
+}
+
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="input-group">
+        <span class="input-group-addon covertop"><i class="glyphicon glyphicon-envelope"></i></span>
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control covertop", @autofocus = "autofocus", @placeholder = "Email address" })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        @*<input class="form-control"  name="UserLogin[username]" id="UserLogin_username" type="text" />*@
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        @*<input class="form-control" name="UserLogin[password]" id="UserLogin_password"  type="password" />*@
+    </div>
+    <div class="marg25">
+        @Html.ActionLink("Forget your password?", "ForgotPassword", null, new { @class = "col-md-7 btn btn-link loginTopButtons" })
+        <button class="col-md-5 btn btn-lg btn-success pull-right buttonRadius1" type="submit">Login</button>
+        <div class="clearfix"></div>
+    </div>
+    
+    @*<p>
+        @Html.ActionLink("Register a new user?", "Register")
+    </p>
+    <p>
+        
+    </p>*@
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

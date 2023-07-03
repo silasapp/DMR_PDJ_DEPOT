@@ -1,0 +1,261 @@
+﻿@model IEnumerable<NewDepot.Models.SearchList>;
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+@{ ViewData["Title"] = "Applications Reports";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml"; }
+
+
+
+<style>
+    .label-info {
+        background-color: white !important;
+    }
+
+    .label-sm {
+        color: black;
+        font-weight: bolder;
+    }
+</style>
+<h2>@ViewData["Title"]</h2>
+
+<br />
+
+
+<div class="card-black">
+    <div class="row">
+        <div class="col-md-2" style="background-color: saddlebrown;  width:100%; color:white; margin-left: 0px;height:80px; padding: 2px; text-align:center !important; font-weight: bold; border-radius: 5px;">
+            <div style="padding-top: 20px;">Total Applications</div>
+            <div style="font-size: small; "> @ViewBag.ApplicationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div><b>Suitability</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.SuitabilityCount</div>
+        </div>
+        <div class="col-md-1">
+            <div><b>ATC</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.ATCCount</div>
+        </div><div class="col-md-1">
+            <div><b>LTO</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.LTOCount</div>
+        </div>
+        <div class="col-md-1">
+            <div><b>Calibration</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.CalibrationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div><b>Recalibration</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.ReCalibrationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div>
+                <b>Modification</b>
+            </div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.ModificationCount</div>
+        </div>
+        <div class="col-md-1">
+            <div><b>Renewal</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.LRCount</div>
+        </div>
+        <div class="col-md-1">
+            <div><b>TakeOver</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.TakeOverCount</div>
+        </div>
+        <div class="col-md-1 ">
+            <div><b>Reg</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.RegularizationCount</div>
+        </div>
+        <div class="col-md-1 ">
+            <div><b>Sanction</b></div>
+            <div class="label label-rouded label-info label-sm text-md-center" style="width:40px"> @ViewBag.SanctionCount</div>
+        </div>
+
+    </div>
+
+
+    <h4>Filter Search</h4>
+
+    <div class="row">
+        <div class="col-sm-11">
+            <div class="row">
+
+                <div class="col-sm-1">
+                    <label>Year</label>
+                    <div class="dropdown-sin-5" style="">
+                        <select style="font-size:14px; width:80px" multiple placeholder="Select" name="txtSelYear[]" id="txtSelYear">
+                            @foreach (var item in ViewBag.Year)
+                            {
+                                <option value="@item">@item</option>
+                            }
+
+                        </select>
+                    </div>
+                    <br />
+                </div>
+                <div class="col-sm-2" style="width: 100%;">
+                    <label>Category</label>
+                    <div class="" style="width: 100%;">
+                        <select style="font-size: 14px; width: 100%;" multiple placeholder="Select" name="txtSelCategory[]" id="txtSelCategory">
+                            @foreach (var a in Model.FirstOrDefault().phases)
+                            {
+                                <option value="@a.id">@a.name</option>
+                            }
+
+                        </select>
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-2" style="width: 100%;">
+                    <label>Application Status</label>
+                    <div class="">
+                        <select style="" multiple placeholder="Select" name="txtSelStatus[]" id="txtSelStatus">
+                            <option value="@GeneralClass.Processing">@GeneralClass.Processing</option>
+                            <option value="@GeneralClass.Approved">@GeneralClass.Approved</option>
+                            <option value="@GeneralClass.Rejected">@GeneralClass.Rejected</option>
+                            <option value="@GeneralClass.PaymentPending">@GeneralClass.PaymentPending</option>
+                            <option value="@GeneralClass.PaymentCompleted">@GeneralClass.PaymentCompleted</option>
+                            <option value="@GeneralClass.TanksRequired">@GeneralClass.TanksRequired</option>
+                            <option value="@GeneralClass.DocumentsRequired">@GeneralClass.DocumentsRequired</option>
+                        </select>
+                    </div>
+                    <br />
+                </div>
+
+
+
+                <div class="col-sm-2" style="width: 100%;">
+                    <label>Field Office</label>
+                    <div class="" style="width: 100%;">
+                        <select style="" class="form-control" multiple placeholder="Select" name="txtSelOffice[]" id="txtSelOffice">
+                            @foreach (var a in Model.FirstOrDefault().offices)
+                            {
+                                <option value="@a.OfficeName.ToUpper()">@a.OfficeName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-2" style="width: 100%;">
+                    <label>Zonal Office</label>
+                    <div class="" style="width: 100%;">
+                        <select style="" class="form-control" multiple placeholder="Select" name="txtSelZone[]" id="txtSelZone">
+                            @foreach (var a in Model.FirstOrDefault().zonalOffices)
+                            {
+                                <option value="@a.ZoneName.ToUpper()">@a.ZoneName</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                </div>
+
+                <div class="col-sm-2">
+                    <label for="comment"> Date From :</label>
+                    <br />
+                    <input type="text" style="height:25px; border-radius:5px" id="txtApplicationReportFrom" value="" />
+                    <br />
+                    <label for="comment"> Date To :</label>
+                    <br />
+                    <input type="text" style="height:25px; border-radius:5px" id="txtApplicationReportTo" value="" />
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-1" style="margin-left:-20px;">
+            <label><br /></label>
+            <button class="btn btn-outline-primary" id="btnApplicationReportSearch"><i class="fas fa-search"> </i> Search</button>
+        </div>
+    </div>
+    <button style="margin-right:-10px;" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AppChartsModal"> See Charts  </button>
+
+    <h2 class="">Search Results </h2>
+    <hr />
+    <br />
+
+    <div class="table-responsive">
+
+
+
+        <table class="table table-bordered table-hover" id="SearchTabless" style="font-size:10px">
+
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>Reference NO</th>
+                    <th>Company</th>
+                    <th>Facility</th>
+                    <th>Facility Address</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Year</th>
+                    <th>Status</th>
+                    <th>Products</th>
+                    <th>Current Desk</th>
+                    <th>Total Days</th>
+                    <th>State</th>
+                    <th>LGA</th>
+                    <th>Field Office</th>
+                    <th>Zonal Office</th>
+                    <th>Date Applied</th>
+                    <th>Date Submitted</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+<div class="modal" id="AppChartsModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"> Application Charts </h3>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+                    <h4 class="text-info text-center">
+                        <i class="fa fa-pie-chart text-center"></i>Application Pie Chart According To Category
+                    </h4>
+                    <div id="PieAppReport" style="width:100%; height:500px"></div>
+
+                    <h4 class="text-info text-center">
+                        <i class="fa fa-bar-chart text-center"></i>Application Bar Chart According To Status
+                    </h4>
+
+                    <div id="DashboardGraph" style="width:100%; height:400px"></div>
+
+                    <h4 class="text-info text-center">
+                        <i class="fa fa-pie-chart text-center"></i>Application Pie Chart According To State
+                    </h4>
+                    <div id="PieStateAppReport" style="width:100%; height:500px"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+
+    <script src="~/js/NewDepot Scripts/Reportings.js"></script>
+
+
+}

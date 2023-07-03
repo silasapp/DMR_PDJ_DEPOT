@@ -1,0 +1,183 @@
+﻿@model IEnumerable<NewDepot.Models.TankModel>;
+@using Microsoft.AspNetCore.Http;
+@using NewDepot.Helpers;
+
+@{
+    ViewData["Title"] = "Update Application Tanks for " + ViewData["AppDetails"].ToString();
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    NewDepot.Helpers.GeneralClass generalClass = new NewDepot.Helpers.GeneralClass();
+    decimal capacity = 0;
+    var unit = "";
+    var units = "";
+}
+
+<h1>
+    @ViewData["Title"]
+</h1>
+
+<br />
+
+<div class="card-black">
+
+    @{
+        var disable = "";
+    }
+    <input type="text" hidden id="txtFacilityID" value="@ViewData["FacilityID"]" />
+    <input type="text" hidden id="txtAppId" value="@ViewData["AppId"]" />
+    <br />
+
+
+    <div class="text-center">
+        <button class="btn btn-primary" id="btnAddMoreTanks" onclick="AddTanks()"> <i class="fa fa-plus"> </i> Add More Tanks </button>
+    </div>
+    <br />
+
+
+
+    <form id="FormUpdateAppsTanks" action="#" method="post">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover" style="font-size:smaller">
+
+                <thead>
+                    <tr>
+                        <th> Tank Name</th>
+                        <th> Max. Capacity (Unit) </th>
+                        <th> Position </th>
+                        <th> Product </th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody id="AppendTanks">
+
+                    @foreach (var t in Model)
+                    {
+                        var tankID = generalClass.Encrypt(t.Id.ToString());
+
+
+                    <tr id="tanks_@t.Id">
+                        <td>
+                            <input type="text" required class="form-control" value="@t.Name" id="txtTankName[]" name="txtTankName[]" />
+                            <input type="text" hidden disabled required class="form-control" value="@t.Id" id="txtTankID[]" name="txtTankID[]" />
+                        </td>
+
+                        <td>
+                            <input type="number" step="any" @disable class="form-control" placeholder="(@units)" value="@capacity" id="txtTankCapacity[]" name="txtTankCapacity[]" />
+                            <small><b class="text-danger">@unit</b></small>
+                        </td>
+
+                        @*<td>
+                            <select class="form-control" @disable required id="txtPosition[]" name="txtPosition[]">
+                                <option value="@t.Position">@t.Position</option>
+                                <option value="Underground Tank">Underground Tank</option>
+                                <option value="Surface Tank">Surface Tank</option>
+                            </select>
+                        </td>*@
+
+                        <td>
+                            <select class="form-control" @disable required id="txtTankProduct[]" name="txtTankProduct[]">
+
+                                <option value="@t.ProductId">@t.Name</option>
+
+                                @if ((ViewBag.Products as List<NewDepot.Models.Products>).Count() > 0)
+                                {
+                                    foreach (var p in (ViewBag.Products as List<NewDepot.Models.Products>))
+                                    {
+                                        <option value="@p.Id">@p.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option></option>
+                                }
+                            </select>
+                        </td>
+
+                        <td>
+                            @if (generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.SUPPORT || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.SUPER_ADMIN || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.IT_ADMIN || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.ADMIN || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.ICT_ADMIN)
+                            {
+                                <button class="btn btn-sm btn-danger" onclick="DeleteAppsTanks('@tankID')"> <i class="ti-trash"> </i> Bin </button>
+                            }
+                        </td>
+
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <br />
+
+        <div class="text-center">
+
+            <div id="SaveTankInfo"> </div>
+
+            <br />
+
+            @if (generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.SUPPORT || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.SUPER_ADMIN || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.ICT_ADMIN || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.ADMIN)
+            {
+                <button type="submit" class="btn btn-info" id="btnUpdateAppTanks"> <i class="fa fa-arrow-right"> </i> Update Tanks </button>
+
+                <input type="reset" value="Clear" class="btn btn-warning" />
+            }
+        </div>
+
+    </form>
+
+    <br />
+
+</div>
+
+
+<div class="copyaaaaTanks" style="display:none">
+
+</div>
+
+<script>
+
+    var Tanks_i = 1;
+
+    function AddTanks() {
+        Tanks_i++;
+
+        var html = "<tr id='Remove" + Tanks_i + "'>  <td> <input type='text' required class='form-control' id='txtTankName[]' name='txtTankName[]' /> <input type='text' hidden required class='form-control' value='0' id='txtTankID[]' name='txtTankID[]' /> </td>";
+        html += "<td> <input type='number' class='form-control' step='any' placeholder='(MT/SCM)'  id='txtTankCapacity[]'required name='txtTankCapacity[]' /> </td>";
+      //html += "<td><select class='form-control' required id='txtPosition[]' name='txtPosition[]'><option></option><option value='Underground Tank'>Underground Tank</option><option value='Surface Tank'>Surface Tank</option></select></td>";
+
+        html += "<td><select class='form-control' id='txtTankProduct[]' required name='txtTankProduct[]'><option></option>@if ((ViewBag.Products as List<NewDepot.Models.Products>).Count() > 0){foreach (var p in (ViewBag.Products as List<NewDepot.Models.Products>)){<option value='@p.Id'>@p.Name</option>}}else{ <option></option>}</select ></td > ";
+        html += "<td> <button class='btn btn-danger btn-xs' onclick='RemoveTank();'> <i class='fa fa-trash'> </i> </button> </td> </tr >";
+
+        $("#AppendTanks tr:last").after(html);
+    }
+
+
+    function RemoveTank() {
+        $("#Remove" + Tanks_i).remove();
+        Tanks_i--;
+    }
+
+
+    function DeleteAppsTanks(id) {
+
+        var msg = confirm("Are you sure you want to remove this application tank?");
+        if (msg === true) {
+
+            $.post("/Applications/DeleteAppsTank", { "TankID": id }, function (response) {
+
+                if ($.trim(response) === "Tank Removed") {
+                    alert("Application Tank successfully removed.");
+                    location.reload(true);
+                }
+                else {
+                    alert(response);
+                }
+            });
+        }
+    }
+
+</script>

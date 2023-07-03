@@ -1,0 +1,354 @@
+﻿
+@model IEnumerable<Fields>
+@{
+    ViewBag.Title = "Application Inspection Form";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    var frm = (Forms)ViewBag.Forms;
+}
+
+
+<script src="~/scripts/jquery.validate.js"></script>
+<div class="content">
+    @using (Html.BeginForm("Index", "Form", FormMethod.Post, new { @Id = "DynamicForm", @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <h3>@frm.FriendlyName</h3>
+        <hr />
+        <div class="row xrow og_form">
+            <div class="col-md-10">
+                <div class="well form-horizontal">
+                    @foreach (var item in Model)
+                    {
+                        var req = item.IsRequired ? "required=\"required\"" : "";
+
+                        if (item.DataType == "hidden")
+                        {
+                            <input type="hidden" name="@item.Label" id="@item.Label" value="@item.OptionValue" />
+                        }
+                        else if (item.DataType.ToLower() == "header")
+                        {
+                            <h3>@item.Label</h3>
+                        }
+                        else if (item.DataType.ToLower() == "table".ToLower())
+                        {
+                            if (!string.IsNullOrEmpty(item.OptionValue))
+                            {
+                                List<string> options = item.OptionValue.Split('|').ToList();
+                                var _cols = options[0].Trim();
+                                var cols = _cols.Split('=')[1].Split(';');
+                                var _rows = options[1].Trim();
+
+                                <h4>@item.Label</h4>
+                                <div class="">
+                                    @if (_rows.Split('=')[1].StartsWith("-1"))
+                                    {
+                                        //Dynamic
+                                        // Rows=-1; Total No. of Tanks
+                                        var rows = _rows.Split('=');
+
+                                        <div class="form-group">
+                                            <label class="col-md-4">@rows[1].Split(';')[1]</label>
+                                            <div class="col-md-4">
+                                                <input type="text" id="rowsToCreate" class="form-control" data-fid="@item.Id" data-cols="@cols.Count()" />
+                                            </div>
+                                        </div><br /><br />
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                @foreach (var th in cols)
+                                                                {
+                                                                    <th>@th</th>
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="background-color: #fbfbfb;" id="dyTable">
+                                                            <tr>
+                                                                <td colspan="@cols.Count()">&nbsp;</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        // Normal row
+                                        int r = 0;
+                                        int c = 0;
+                                        var rows = _rows.Split('=')[1].Split(';');
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                @foreach (var th in cols)
+                                                                {
+                                                                    <th>@th</th>
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="background-color: #fbfbfb;">
+                                                            @foreach (var tr in rows)
+                                                            {
+                                                                <tr>
+                                                                    <td><b>@tr</b></td>
+                                                                    @for (int xi = 1; xi < cols.Count(); xi++)
+                                                                    {
+                                                                        var lname = item.Id + "_R" + r + "_C" + xi;
+                                                                        <td>
+                                                                            <input type="text" name="@lname" id="@lname" class="form-control" />
+                                                                        </td>
+                                                                    }
+                                                                </tr>
+                                                                r++;
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                        else if (item.DataType.ToLower() == "image")
+                        {
+                            if (!string.IsNullOrEmpty(item.OptionValue))
+                            {
+                                //Max=5;Min=2;Dynamic
+                                List<string> options = item.OptionValue.Split(';').ToList();
+                                var iType = options[2];
+                                var min = Convert.ToInt16(options[1].Split('=')[1]);
+                                var max = Convert.ToInt16(options[0].Split('=')[1]);
+                                <h4><b>@item.Label</b></h4>
+                                <div class="row">
+                                    @if (iType.ToLower() == "dynamic")
+                                    {
+                                        // Dynamic: Show per request
+                                        <div class="col-md-12">
+                                            <div class="row" id="dyImgHolder">
+                                                @for (int i = 0; i < min; i++)
+                                                {
+                                                    var name = "img_" + item.Id + "_" + i;
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <input type="file" class="file_@item.Id" required name="@name" />
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <button type="button" class="btnAddImg btn btn-info btn-xs" data-max="@max" data-target="@item.Id"><i class="fa fa-plus"></i> New Image</button>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        int minCounter = 0;
+                                        //Normal: Showing all
+                                        for (int i = 0; i < max; i++)
+                                        {
+                                            var _req = minCounter < min ? "required" : "";
+                                            var name = "img_" + item.Id + "_" + i;
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="file" @_req name="@name" />
+                                                </div>
+                                            </div>
+                                            minCounter++;
+                                        }
+                                    }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="">
+                                <div class="form-group">
+                                    @if (item.Label != "ApplicationId" && item.Label != "CompanyId")
+                                    {
+                                        if (item.DataType.ToLower() != "description")
+                                        {
+                                            if (!string.IsNullOrEmpty(item.DisplayLabel))
+                                            {
+                                                <label class="control-label col-md-4">@item.DisplayLabel</label>
+                                            }
+                                            else
+                                            {
+                                                <label class="control-label col-md-4">@item.Label</label>
+                                            }
+                                        }
+                                    }
+
+                                    <div class="col-md-8">
+                                        @if (item.DataType.ToLower() == "One line Text".ToLower())
+                                        {
+                                            <input type="text" id="@item.Label" class="form-control" name="@item.Label" @req value="@item.OptionValue" placeholder="@item.Description" />
+                                        }
+                                        else if (item.DataType.ToLower() == "MultiLine Text".ToLower())
+                                        {
+                                            <textarea id="@item.Label" class="form-control" name="@item.Label" @req placeholder="@item.Description">@item.OptionValue</textarea>
+                                        }
+                                        else if (item.DataType.ToLower() == "Date".ToLower())
+                                        {
+                                            <input type="date" class="form-control" id="@item.Label" name="@item.Label" @req value="@item.OptionValue" />
+                                        }
+                                        else if (item.DataType.ToLower() == "Options".ToLower())
+                                        {
+                                            if (!string.IsNullOrEmpty(item.OptionValue))
+                                            {
+                                                List<string> options = item.OptionValue.Split(',').ToList();
+                                                <select name="@item.Label" class="form-control" @req>
+                                                    <option value="">Select @item.Label</option>
+                                                    @foreach (var option in options)
+                                                    {
+                                                        <option value="@option">@option</option>
+                                                    }
+                                                </select>
+                                            }
+                                        }
+                                        else if (item.DataType.ToLower() == "CheckBox".ToLower())
+                                        {
+                                            int ix = 0;
+                                            <div class="special-control">
+                                                @if (!string.IsNullOrEmpty(item.OptionValue))
+                                                {
+                                                    List<string> options = item.OptionValue.Split(',').ToList();
+                                                    foreach (var option in options)
+                                                    {
+                                                        var cid = item.Id + "_" + ix;
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" name="@item.Label" id="@cid" />
+                                                            <label for="@cid">@option</label>
+                                                            @*<label>
+                                                                <input type="checkbox" name="@item.Label" value="@option" />&nbsp; @option
+                                                            </label>*@
+                                                        </div>
+                                                        ix++;
+                                                    }
+                                                }
+
+                                                
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    <hr />
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">Inspector's Recommendation</label>
+                            <div class="col-md-8 special-control">
+                                @if (ViewBag.Recommend != null)
+                                {
+                                    if ((bool)ViewBag.Recommend == true)
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" id="recYes" value="yes" required checked /> 
+                                            <label for="recYes">Recommend</label>
+                                            &nbsp; &nbsp;
+                                            <input type="radio" name="recommend" id="recNo" value="no" required /> 
+                                            <label for="recNo">Not Recommend</label>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" id="recYes" value="yes" required />
+                                            <label for="recYes"> Recommend</label>
+                                            &nbsp; &nbsp;
+                                            <input type="radio" name="recommend" id="recNo" value="no" required checked />
+                                            <label for="recNo">Not Recommend</label>
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>
+                                        <input type="radio" name="recommend" id="recYes" value="yes" required />
+                                        <label for="recYes"> Recommend</label>
+                                        &nbsp; &nbsp;
+                                        <input type="radio" name="recommend" id="recNo" value="no" required />
+                                        <label for="recNo">Not Recommend</label>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">Inspector's reason for recommendation</label>
+                            <div class="col-md-8">
+                                <textarea name="reason" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group marg25">
+                        <div class="txtcenter">
+                            @*<button type="reset" class="btn btn-default">Cancel</button>*@
+                            <input type="submit" value="Submit" class="btn btn-success" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(function () {
+            $("#DynamicForm").validate();
+
+            $("#rowsToCreate").on("change", function () {
+                $("#dyTable").html('<tr><td colspan="' + cols + '"><p style="padding: 15px 10px; text-align: center;">Please Wait...</p></td></tr>');
+                var cols = $(this).data("cols");
+                var fid = $(this).data("fid");
+                var rows = $(this).val();
+
+                var tbody = "";
+                for (var i = 0; i < rows; i++) {
+                    tbody += '<tr>';
+                    for (var j = 0; j < cols; j++) {
+                        var label = fid + '_R' + i + '_C' + j;
+                        tbody += '<td><input type="text" name="' + label + '" id="' + label + '" class="form-control" /></td>';
+                    }
+                    tbody += '</tr>';
+                }
+                $("#dyTable").html(tbody);
+            });
+
+            $(".btnAddImg").on("click", function () {
+                var max = $(this).data("max");
+                var count = 0;
+                var target = '.file_' + $(this).data('target');
+                $(target).each(function () {
+                    count += 1;
+                });
+                alert(max + " File uploader allowed >>> " + count + " file uploader is shown currently");
+                if (count < max) {
+                    var name = 'img_' + $(this).data('target') + "_" + count;
+                    $("#dyImgHolder").append('<div class="col-md-4"><div class="form-group"><input type="file" class="file_' + $(this).data('target') + '" name="' + name + '" /></div></div>');
+                }
+            });
+        });
+    </script>
+}
+

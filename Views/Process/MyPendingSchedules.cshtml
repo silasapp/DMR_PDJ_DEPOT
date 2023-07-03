@@ -1,0 +1,419 @@
+﻿@using NewDepot.Models;
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewBag.Title = "Schedules";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var userEmail = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionEmail));
+
+    Waivers realWaver = new Waivers();
+    string wFor = string.Empty;
+
+
+}
+
+<div class="content">
+
+    @if (ViewBag.Message != null)
+    {
+        string alerttype = (ViewBag.MsgType.ToLower() == "fail" ? "alert-danger" : (ViewBag.MsgType.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+        string head = (ViewBag.MsgType.ToLower() == "fail" ? "Application Error!" : (ViewBag.MsgType.ToLower() == "warn" ? "Alert!" : "Success"));
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@head</strong> @ViewBag.Message
+            </div>
+        </div>
+    }
+
+    @if (userRole == GeneralClass.SUPERVISOR || userRole == GeneralClass.ADPDJ) {
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Application Schedules Awaiting Approval</h2>
+        </div>
+        @if (ViewBag.managerSchmeeting != null)
+        {
+            var mangerSchedule = (List<MeetingSchedulesModel>)ViewBag.managerSchmeeting;
+            if (mangerSchedule.Count > 0)
+            {
+                int counter = 0;
+                <div class=" col-md-12 ">
+                    <div class="">
+                        <table class="table table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Company Name</th>
+                                    <th>Facility Details</th>
+                                    <th>Permit Category</th>
+                                    <th>Scheduler</th>
+                                    <th>Scheduled Date</th>
+                                    <th>Updated At</th>
+                                    <th>Meeting Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in mangerSchedule)
+                                {
+                                    counter++;
+                                    int waiverType = (item.WaiverRequest != null && item.WaiverRequest.Value ? 1 : 0);
+
+                                <tr>
+                                    <td>@counter</td>
+                                    <td>
+                                        <a href="/Companies/FullCompanyProfile/@generalClass.Encrypt(item.CompanyId.ToString())" target="_blank" title="View Company Profile">@item.CompanyName</a>
+                                    </td>
+                                    <td>@item.FacilityName</td>
+
+                                    <td>
+                                        @item.CategoryName
+                                    </td>
+
+                                    <td>@item.StaffUserName</td>
+                                    <td>@item.Date.ToString()</td>
+                                    <td>@item.UpdatedAt</td>
+                                    <td>@item.MeetingDate</td>
+                                    <td class="txtright">
+                                        <a href="/Application/ViewApplication/@item.ApplicationId" class="btn btn-xs btn-primary" target="_blank">View Application</a>
+                                        @if (item.Approved == null && item.ScheduleExpired!= true )
+                                        {
+                                            <a href="#" data-target="#modalPopup" data-toggle="modal" data-url="/process/ManagerSchedule/@item.Id"
+                                               class="btn btn-xs btn-success meetup" data-name="@item.CompanyName" data-uid="1" data-w="@waiverType">Endorse</a>
+                                        }
+                                        @*<button class="btn btn-success btn-xs" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ScheduleConfirmModal">Approve <i class="fa fa-check"></i></button>*@
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {<div class="col-md-12">
+                    <h4>No Application in waiting.</h4>
+                </div>}
+        }
+        else
+        {
+            <div class="col-md-12">
+                <h4>No Application in waiting.</h4>
+            </div>
+        }
+    </div>
+    } 
+    else { 
+    <div class="row">
+        <div class="col-md-12">
+            <h2>My Pending Schedules</h2>
+        </div>
+        @if (ViewBag.managerSchmeeting != null)
+        {
+            var mangerSchedule = (List<MeetingSchedulesModel>)ViewBag.managerSchmeeting;
+            if (mangerSchedule.Count > 0)
+            {
+                int counter = 0;
+                <div class=" col-md-12 ">
+                    <div class="">
+                        <table class="table table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Company Name</th>
+                                    <th>Facility Details</th>
+                                    <th>Permit Category</th>
+                                    <th>Scheduled Date</th>
+                                    <th>Updated At</th>
+                                    <th>Meeting Date</th>
+                                    <th>Approver Response/Comment</th>
+                                    <th>Customer Response/Comment</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in mangerSchedule)
+                                {
+                                    counter++;
+                                    int waiverType = (item.WaiverRequest != null && item.WaiverRequest.Value ? 1 : 0);
+
+                                <tr>
+                                    <td>@counter</td>
+                                    <td>
+                                        <a href="/Company/Detail/@item.CompanyId" target="_blank" title="View Company Profile">@item.CompanyName</a>
+                                    </td>
+                                    <td>@item.FacilityName</td>
+
+                                    <td>
+                                        @item.CategoryName
+                                    </td>
+                                    <td>@item.Date.ToString()</td>
+                                    <td>@item.UpdatedAt</td>
+                                    <td>@item.MeetingDate</td>
+                                    <td>
+                                        <b> Response</b> : <br/>
+                                            @if (item.Approved == null)
+                                            {
+                                                <span>Awaiting Approval</span>
+                                            }
+                                            else
+                                            {
+                                                if (item.Approved == true)
+                                                {
+                                                    <span class="text-primary">Approved.</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-primary">Declined.</span>
+                                                }
+                                            }<br/>
+                                         <b>Comment:</b>
+                                        @if (item.FinalComment == null)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            if (item.FinalComment != null || item.Approved != true)
+                                            {
+                                                <span class="text-danger">@item.FinalComment</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-primary">Approved.</span>
+                                            }
+                                        }
+
+                                    </td>
+                                    <td>
+                                        <b>Response :</b> <br />
+
+                                        @if (item.Accepted == null)
+                                        {
+                                            <span class="">Awaiting Acceptance</span>
+                                        }
+                                        else if (item.Accepted == true)
+                                            if (item.Accepted.GetValueOrDefault() == true)
+                                            {
+                                                <span class="">Accepted</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="">Declined</span>
+                                            }
+                                        <br />
+
+                                        <b> Comment :</b>  <br/>
+                                            @if (item.Accepted == null)
+                                            {
+
+                                            }
+                                            else if (item.Accepted == true)
+                                            {
+                                                <span class="">Accepted</span>
+                                            }
+
+                                            else
+                                            {
+                                                <span class="">@item.DeclineReason</span>
+                                            }
+                                        <br/>
+                                    </td>
+                                    <td>
+                                        @if (item.ScheduleExpired.GetValueOrDefault())
+                                        {
+                                            <span class="btn btn-xs btn-danger">Expired</span>
+
+                                        }
+                                        else
+                                        {
+
+                                            if (item.Approved == null)
+                                            {
+                                                <span class="btn btn-xs btn-default">Awaiting Approval</span>
+                                            }
+                                            else
+                                            if (item.Approved.GetValueOrDefault() == true)
+                                            {
+                                                <span class="btn btn-xs btn-success">Approved</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-xs btn-danger">Declined</span>
+                                            }
+
+                                            if (item.Accepted == null)
+                                            {
+                                                <span class="btn btn-xs btn-default">Awaiting marketer's acceptance</span>
+                                            }
+                                            else
+                                            if (item.Accepted.GetValueOrDefault() == true)
+                                            {
+                                                <span class="btn btn-xs btn-success">Accepted</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="btn btn-xs btn-danger">Marketer Declined</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td class="txtright">
+
+                                        <a href="/Application/ViewApplication/@item.ApplicationId" class="btn btn-xs btn-primary" target="_blank">View Application</a>
+                                        @if (item.Approved == null && item.ScheduleExpired != true)
+                                        {
+                                            <a href="#" data-target="#modalPopup" data-toggle="modal" data-url="/process/ManagerSchedule/@item.Id"
+                                               class="btn btn-xs btn-success meetup" data-name="@item.CompanyName" data-uid="1" data-w="@waiverType">Endorse</a>
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {<div class="col-md-12">
+                    <h4>No Application in waiting.</h4>
+                </div>}
+        }
+        else
+        {
+            <div class="col-md-12">
+                <h4>No Application in waiting.</h4>
+            </div>
+        }
+    </div>
+    }
+</div>
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+          
+
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ targets: [0, -1], orderable: false }],
+
+                    "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "No record found",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No Application on your Desk Currently",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            //,
+            //"order": [[7, "desc"]]
+        });
+            $(document).on("click", ".ApproveSchedule", function (e) {
+
+                e.preventDefault();
+              
+                $("#Action").val("Approve");
+                var txtComment = $("#txtActionComment").val();
+
+                var confirmTxt = "Are you sure you want to approve this Schedule ?";
+
+                var frm = $("#endorseSchFrm");
+                console.log(frm);
+
+                $.confirm({
+                    text: confirmTxt,
+                    confirm: function () {
+                        $("#Loadder").addClass('Submitloader');
+
+                        $(frm).submit();
+
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+            });
+
+
+            //disapprove schedule
+            $(document).on("click", ".DisapproveSchedule", function () {
+
+                $("#Action").val("");
+                var txtComment = $("#txtActionComment").val();
+
+                if (txtComment === "") {
+                    ErrorMessage("#ScheduleModalInfo", "Please enter reason for disapproving schedule.");
+                    $("#txtActionComment").focus();
+                }
+                else {
+                    var confirmTxt = "Are you sure you want to disapprove this Schedule ?";
+
+                    var frm = $("#endorseSchFrm");
+                    console.log(frm);
+
+                    $.confirm({
+                        text: confirmTxt,
+                        confirm: function () {
+                            $("#Loadder").addClass('Submitloader');
+
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            $("#lnk-Schedule > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Process']").addClass("selected");
+
+            $(".meetup").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-name");
+
+                $("#modal-body").html("");
+
+                var popup = $("#modalPopup .modal-content");
+
+                popup.html(Loading());
+                //Load the view
+                $.get(url, function (data) {
+                    //$("#modal-body").html(data);
+                    popup.html(data);
+                });
+
+            });
+
+
+
+        })
+
+    </script>
+}

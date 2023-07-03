@@ -1,0 +1,271 @@
+﻿@model IEnumerable<NewDepot.Models.Fields>
+@using NewDepot.Models
+@{
+    ViewBag.Title = "Application Inspection Form";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ApplicationForms af = null;
+    if (ViewBag.AppForm != null)
+    {
+        af = (ApplicationForms)ViewBag.AppForm;
+    }
+}
+
+
+<div class="content">
+    @using (Html.BeginForm("FillForm", "Process", FormMethod.Post, new { @Id = "DynamicForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        if (Model.Count() > 0)
+        {
+
+            <h2>@ViewBag.Form For @ViewBag.CompanyName</h2>
+        }
+        <hr />
+        <div class="row xrow og_form">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="well">
+                    @foreach (var item in Model)
+                    {
+                        <div class="form-group">
+                            <div class="row xrow">
+                                @if (item.DataType == "hidden")
+                                {
+                                    <input type="hidden" name="@item.Label" id="@item.Label" value="@item.hiddenValue" />
+                                }
+                                @if (item.Label != "ApplicationId" && item.Label != "CompanyId")
+                                {
+                                    if (item.DataType.ToLower() == "header")
+                                    {
+                                        <div class="col-md-12"><h4>@item.Label</h4></div>
+                                    }
+                                    else if (item.DataType.ToLower() != "description")
+                                    {
+                                        if (!string.IsNullOrEmpty(item.DisplayLabel))
+                                        {
+                                            <label class="control-label col-md-4">@item.DisplayLabel</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="control-label col-md-4">@item.Label</label>
+                                        }
+                                    }
+                                }
+
+                                <div class="col-md-8">
+                                    @if (item.DataType == "One line Text")
+                                    {
+                                        if (item.IsRequired == true)
+                                        {
+                                            <input type="text" id="@item.Label" class="form-control" name="@item.Label" required value="@item.hiddenValue" placeholder="@item.Description" />
+                                        }
+                                        else
+                                        {
+                                            <input type="text" id="@item.Label" class="form-control" name="@item.Label" value="@item.hiddenValue" placeholder="@item.Description" />
+                                        }
+                                    }
+                                    else if (item.DataType == "MultiLine Text")
+                                    {
+                                        if (item.IsRequired == true)
+                                        {
+                                            <textarea id="@item.Label" class="form-control" rows="5" name="@item.Label" required placeholder="@item.Description">@item.hiddenValue</textarea>
+                                        }
+                                        else
+                                        {
+                                            <textarea id="@item.Label" class="form-control" rows="5" name="@item.Label" placeholder="@item.Description">@item.hiddenValue</textarea>
+                                        }
+                                    }
+                                    else if (item.DataType == "Date")
+                                    {
+                                        if (item.IsRequired == true)
+                                        {
+                                            <input type="date" class="form-control" id="@item.Label" name="@item.Label" required value="@item.hiddenValue" />
+                                        }
+                                        else
+                                        {
+                                            <input type="date" class="form-control" id="@item.Label" name="@item.Label" value="@item.hiddenValue" />
+                                        }
+                                    }
+
+                                    else if (item.DataType == "Options")
+                                    {
+                                        if (!string.IsNullOrEmpty(item.OptionValue))
+                                        {
+                                            List<string> options = item.OptionValue.Split(',').ToList();
+                                            if (item.IsRequired)
+                                            {
+                                                <select name="@item.Label" class="form-control" required>
+                                                    @if (string.IsNullOrEmpty(item.hiddenValue))
+                                                    {
+                                                        <option>Select @item.Label</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.hiddenValue">@item.hiddenValue</option>
+                                                    }
+
+
+                                                    @foreach (var option in options)
+                                                    {
+                                                        <option value="@option">@option</option>
+                                                    }
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select name="@item.Label" class="form-control">
+                                                    @if (string.IsNullOrEmpty(item.hiddenValue))
+                                                    {
+                                                        <option>Select @item.Label</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.hiddenValue">@item.hiddenValue</option>
+                                                    }
+
+                                                    @foreach (var option in options)
+                                                    {
+                                                        <option value="@option">@option</option>
+                                                    }
+                                                </select>
+                                            }
+                                        }
+                                    }
+                                    else if (item.DataType == "CheckBox")
+                                    {
+                                        if (!string.IsNullOrEmpty(item.OptionValue))
+                                        {
+                                            List<string> options = item.OptionValue.Split(',').ToList();
+
+                                            var hidnVals = new List<string>();
+                                            if (!string.IsNullOrEmpty(item.hiddenValue))
+                                            {
+                                                hidnVals = item.hiddenValue.Split(',').ToList();
+                                            }
+
+                                            foreach (var option in options)
+                                            {
+
+                                                if (hidnVals.Contains(option))
+                                                {
+                                                    <input type="checkbox" checked name="@item.Label" value="@option" /> @option <br>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="@item.Label" value="@option" /> @option <br>
+
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <hr />
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">Inspector's Recommendation</label>
+                            <div class="col-md-8">
+                                @if (ViewBag.Recommend != null)
+                                {
+                                    if ((bool)ViewBag.Recommend == true)
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" value="yes" required checked /> Recommend
+                                            &nbsp; &nbsp;
+                                            <input type="radio" name="recommend" value="no" required /> Not Recommended
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            <input type="radio" name="recommend" value="yes" required /> Recommend
+                                            &nbsp; &nbsp;
+                                            <input type="radio" name="recommend" value="no" required checked /> Not Recommended
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>
+                                        <input type="radio" name="recommend" value="yes" required /> Recommend
+                                        &nbsp; &nbsp;
+                                        <input type="radio" name="recommend" value="no" required /> Not Recommended
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">Inspector's Coments and Recommendation</label>
+                            <div class="col-md-8">
+                                <div class="well">
+                                    <p>
+                                        @ViewBag.Reasons
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (af != null)
+                    {
+                        if (!string.IsNullOrEmpty(af.ExtraReport1))
+                        {
+                            <div class="form-group">
+                                <div class="row xrow">
+                                    <label class="control-label col-md-4">Extra Report</label>
+                                    <div class="col-md-8">
+                                        <a href="/CompanyDocument/DisplayPDFDocument?docId=0&docUrl=@af.ExtraReport1" target="_blank" class="list-group-item">
+                                            Extra Report <i class="fa fa-file-pdf-o"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        if (!string.IsNullOrEmpty(af.ExtraReport2))
+                        {
+                            <div class="form-group">
+                                <div class="row xrow">
+                                    <label class="control-label col-md-4">Second Extra Report</label>
+                                    <div class="col-md-8">
+                                        <a href="/CompanyDocument/DisplayPDFDocument?docId=0&docUrl=@af.ExtraReport2" target="_blank" class="list-group-item">
+                                            Second Extra Report <i class="fa fa-file-pdf-o"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+                    <div class="form-group">
+                        <div class="row xrow">
+                            <label class="control-label col-md-4">Filled By</label>
+                            <div class="col-md-8">
+                                <textarea name="reason" class="form-control" readonly>@ViewBag.StaffName</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@section Scripts{
+
+
+    <script type="text/javascript">
+        $("#DynamicForm").validate();
+    </script>
+}
+

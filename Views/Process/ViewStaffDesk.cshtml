@@ -1,0 +1,191 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<MyApps>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+    string stf = ViewBag.staff;
+    var stffs = stf.Split(';');
+
+}
+
+<div class="modal-body" style="max-height: 400px; overflow-y: scroll;">
+
+    <table class="table table-hover dataTable" style="height: 97%;">
+        <thead>
+            <tr>
+                <th>
+                    Company Name
+                </th>
+                <th>Facility Name</th>
+                <th>
+                    Category/Type
+                </th>
+                <th>
+                    Phase
+                </th>
+                <th>
+                    Year
+                </th>
+                <th>
+                    Date Assigned
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model.OrderByDescending(a => a.DateProcessed).ToList())
+        {
+
+            <tr class="">
+                <td>
+                    @item.CompanyName
+                </td>
+                <td>@item.FacilityDetails</td>
+                <td>
+                    @item.CategoryName/@Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @item.PhaseName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateProcessed)
+                </td>
+                <td class="txtright">
+                    <div class="btn-group">
+                        <a href="#" data-trId="@item.appID" class="btn btn-xs btn-success re-ass">Re-Assign</a>
+                    </div>
+                </td>
+            </tr>
+            <tr style="display:none" id="@item.appID">
+                <td colspan="6">
+                    <p id="spanReport @item.appID" style="color:red"></p>
+                    <div id="staffcontainer @item.appID">
+                        @foreach (var itm in stffs)
+                        {
+                            <span style="margin:5px;" data-appId="@item.appID" data-cid="staffcontainer @item.appID" data-staffId="@itm" class="btn btn-xs btn-warning re-assBtn">to @itm</span>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+        }
+
+    </table>
+
+</div>
+<div class="clear"></div>
+<div class="modal-footer">
+    <div class="txtcenter">
+
+        @using (Html.BeginForm("ShareApplication", "Process", FormMethod.Post))
+        {
+            int max = @Model.Count();
+            <input type="hidden" name="userid" id="userid" value="@ViewBag.StaffUID" />
+            <input type="hidden" name="ubId" id="ubId" value="@ViewBag.UserBranch" />
+            <input type="button" data-dismiss="modal" value="Close" class="btn btn-default lefty" />
+            <div class="input-group lefty" style="width: 200px; margin-left: 10px;">
+                <input type="number" min="1" max="@max" class="form-control" placeholder="Amount to Share" required name="amountToShare" id="amountToShare" />
+                <span class="input-group-btn">
+                    <button class="btn btn-success" type="submit">Share <i class="fa fa-share-alt"></i></button>
+                </span>
+            </div>
+            <div class="clear"></div>
+        }
+
+    </div>
+</div>
+
+
+
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+
+
+            //    $("#lnk-Branches > a").addClass("selected").find(".act").addClass("selected");
+            //    $(".sidebar > ul > li > ul li a[href='/Process']").addClass("selected");
+
+            //    $("#reasonBox").hide();
+
+            //    $(".dataTable").dataTable({
+            //        "aLengthMenu": [25, 50, 75, 100, 200],
+            //        'iDisplayLength': 25,
+            //        columnDefs: [{ orderable: false, "targets": [-1] }],
+            //        "language": {
+            //            "lengthMenu": "Display  _MENU_ records per page",
+            //            "zeroRecords": "No record found",
+            //            "info": "Showing page _PAGE_ of _PAGES_",
+            //            "infoEmpty": "No Application on your Desk Currently",
+            //            "infoFiltered": "(filtered from _MAX_ total records)"
+            //        },
+            //        "order": [[4, "desc"]]
+            //    });
+
+            //    $(".meetup, .appr, .rej").on("click", function (e) {
+            //        e.preventDefault();
+            //        var url = $(this).attr("data-url");
+            //        var uid = $(this).attr("data-uid");
+            //        var name = $(this).attr("data-name");
+
+            //        $("#modal-body").html("");
+
+            //        if (uid == "1") {
+            //            var w = $(this).attr("data-w");
+            //            if (w == "1") {
+            //                var headTitle = "Presentation Waiver Request  for \"" + name + "\"";
+            //                $(".modal-dialog").removeClass("wide-body");
+            //            } else if (w == "2") {
+            //                var headTitle = "Inpection Waiver Request for \"" + name + "\"";
+            //                $(".modal-dialog").removeClass("wide-body");
+            //            } else {
+            //                var headTitle = "Schedule a Meeting with \"" + name + "\"";
+            //                $(".modal-dialog").removeClass("wide-body");
+            //            }
+            //        } else if (uid == "2") {
+            //            var headTitle = "Approve \"" + name + "'s\" Application";
+            //            $(".modal-dialog").removeClass("wide-body");
+            //        } else if (uid == "3") {
+            //            var headTitle = "Reject \"" + name + "'s\" Application";
+            //            $(".modal-dialog").addClass("wide-body");
+            //        }
+
+            //        $(".modal-title").text(headTitle);        // find title for changr
+            //        $("#modal-body").html("");
+            //        $("#modal-body").html(Loading());
+            //        //Load the view
+            //        $.get(url, function (data) {
+            //            $("#modal-body").html(data);
+            //        });
+
+            //    });
+
+            //    $(document.body).on("click", ".disapprove", function (e) {
+            //        e.preventDefault();
+
+            //        if ($("#reasonBox").hasClass("closed")) {
+            //            $("#reasonBox").removeClass("closed").slideDown();
+            //            $("#reasonBox textarea").attr("required", "required");
+            //            $("#disapprove").show();
+            //            $("#approve").hide();
+            //            $(this).text("Cancel").removeClass("btn-danger").addClass("btn-default");
+
+            //        }
+            //        else {
+            //            $("#reasonBox").addClass("closed").slideUp();
+            //            $("#reasonBox textarea").removeAttr("required");
+            //            $(this).text("Disapprove").removeClass("btn-default").addClass("btn-danger");
+            //            $("#disapprove").hide();
+            //            $("#approve").show();
+            //        }
+            //    });
+        });
+    </script>
+}

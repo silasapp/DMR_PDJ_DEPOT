@@ -1,0 +1,70 @@
+﻿@model IEnumerable<NewDepot.Models.permits>
+
+@{
+    ViewBag.Title = "Expiring Permits";
+}
+
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">Expiring Permits</h2>
+        <div class="righty">
+            </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+
+<table class="table">
+    <tr>
+        <th>
+            Permit Number
+        </th>
+        <th>
+            Application Id
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Date Issued
+        </th>
+        <th>
+            Date Expiring
+        </th>
+        <th></th>
+    </tr>
+
+    @if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.permit_no)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.application_id)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.categoryName)
+            </th>
+            <td>
+                @item.date_issued.ToLongDateString()
+            </td>
+            <td>
+                @item.date_expire.ToLongDateString()
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a href="/Application/PDF/@item.application_id" class="btn btn-xs btn-success ">Download <i class="glyphicon glyphicon-file"></i></a>
+                    <a href="/Application/@item.application_id" class="btn btn-xs btn-info ">View <i class="glyphicon glyphicon-eye-open"></i></a>
+                    @Html.ActionLink("Renew", "Renew", new { id = item.id, method = "d" }, new { @class = "btn btn-xs btn-warning" })
+            </div>
+            </td>
+        </tr>
+    }
+}
+   
+
+</table>

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<NewDepot.Models.faq_description>
+
+@{
+    Layout = null;
+}
+
+
+@foreach (var item in Model)
+{
+
+    @* ===== Accordion ===== *@
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#Col-@item.id" data-toggle="collapse" data-parent="#accordion">@item.title</a>
+                </h4>
+            </div>
+            <div id="Col-@item.id" class="panel-collapse collapse in">
+                <div class="panel-body " style="white-space: pre-line">
+                    @Html.Raw(item.description.Replace(Environment.NewLine, "<br />"))
+                </div>
+            </div>
+        </div>
+    </div>
+}

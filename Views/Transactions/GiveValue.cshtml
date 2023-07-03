@@ -1,0 +1,331 @@
+﻿
+@using NewDepot.Helpers
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<NewDepot.Models.PaymentDetailsSubmit>;
+
+@{
+    ViewData["Title"] = "Give Value - " + GeneralClass.PaymentPending + " Applications";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+<h1>@ViewData["Title"]</h1>
+
+<br />
+
+<div class="card-black">
+
+    <input type="number" hidden value="" id="txtTotalAount" />
+    <input type="number" hidden value="" id="txtNewTotalAount" />
+    <input type="number" hidden value="" id="txtCharge" />
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" style="font-size:smaller" id="MyAppsTable">
+
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Facility</th>
+                    <th>App Ref</th>
+                    <th>RRR</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Service Charge</th>
+                    <th style="background-color:darkseagreen">Total Amount</th>
+                    <th>Description</th>
+                    <th>Date Applied</th>
+                    <th>Verify Payment</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (Model.Count() > 0)
+                {
+                    for (int a = 0; a < Model.Count(); a++)
+                    {
+                        var app_id = generalClass.Encrypt(Model.ToList()[a].AppID.ToString());
+
+                        var colors = Model.ToList()[a].Status == GeneralClass.PaymentPending ? "badge-danger" :
+                                    Model.ToList()[a].Status == GeneralClass.PaymentCompleted ? "badge-primary" : "badge-dark";
+                        <tr>
+                            <td>  <b>@Model.ToList()[a].CompanyName</b> </td>
+                            <td>  <b>@Model.ToList()[a].FacName</b> </td>
+                            <td>  <b class="text-primary">@Model.ToList()[a].RefNo</b> </td>
+                            <td> <b class="text-danger"> @Model.ToList()[a].rrr</b> </td>
+                            <td>  @Model.ToList()[a].Category - @Model.ToList()[a].AppType (@Model.ToList()[a].ShortName) </td>
+                            <td> <h5> <span class="badge @colors">@Model.ToList()[a].Status</span></h5> </td>
+                            <td>  ₦@string.Format("{0:N}", Model.ToList()[a].Amount)</td>
+                            <td>  ₦@string.Format("{0:N}", Model.ToList()[a].ServiceCharge)</td>
+                            <td style="background-color:darkseagreen">  ₦@string.Format("{0:N}", Model.ToList()[a].TotalAmount)</td>
+                            <td class="text-info">@Model.ToList()[a].Description</td>
+                            <td>  @Model.ToList()[a].DateApplied</td>
+
+                            <td>
+                                <button class="btn btn-danger btn-sm" onclick="VerifyRRR('@Model.ToList()[a].rrr', '@Model.ToList()[a].AppID', '@Model.ToList()[a].Amount', '@Model.ToList()[a].ServiceCharge', '@Model.ToList()[a].TotalAmount')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#VerifyPay"> Verify Payment </button>
+
+                                @if (generalClass.Decrypt(Context.Session.GetString("_sessionRoleName").Trim()) == GeneralClass.ICT_ADMIN || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.SUPER_ADMIN || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.SUPPORT || generalClass.Decrypt(Context.Session.GetString("_sessionRoleName")) == GeneralClass.ADMIN)
+                                {
+                                    <button class="btn btn-primary btn-sm" id="Give_@Model.ToList()[a].AppID" onclick="GiveValueAction('@generalClass.Encrypt(Model.ToList()[a].AppID.ToString())', '@Model.ToList()[a].Amount', '@Model.ToList()[a].ServiceCharge', '@Model.ToList()[a].TotalAmount', '@Model.ToList()[a].Description')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#GiveValuePay"> Give Value </button>
+                                }
+                            </td>
+
+
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+
+@* Verify rrr modal*@
+<div class="modal" id="VerifyPay" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> Verify this payment RRR </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="alert text-center" id="RRRLoader">
+
+                    <h2 id="txtRRR"> </h2>
+                    <div id="txtStatusRRR"> </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@*Give Value Payment*@
+
+<div class="modal" id="GiveValuePay" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="RRRLoaders">
+            <div class="modal-header">
+                <h4 class="modal-title"> Give Value </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="alert" id="">
+
+                    <div class="alert alert-info">
+
+                        <input type="text" hidden value="" id="txtAppID" />
+
+
+                        <b>Amount Due : <span id="txtGiveValueAmountDue" class="text-info"></span></b>
+                        <p></p>
+                        <b>Service Charge : <span id="txtGiveValueServiceCharge"></span></b>
+                        <p></p>
+                        <b>Total Amount : <span id="txtGiveValueTotalAmount" class=""></span></b>
+                        <p></p>
+                        <small><b>Description : <span id="txtGiveValueDescription"></span></b></small>
+
+                        <hr />
+
+                        <small class="text-danger">
+                            Please enter the amount that was actually paid from your verification source.
+                        </small>
+
+                        <p></p>
+
+                        <div class="form-group">
+                            <label> Enter Amount Paid </label>
+                            <input type="number" onkeyup="CalculateTotal()" class="form-control" id="txtGiveValuePaid" value="0" />
+                        </div>
+
+                        <b>New Amount to Pay : <span id="txtNewAmount" class="text-danger"></span></b>
+
+                        <br />
+
+                    </div>
+
+                    <br />
+
+
+                    <div class="text-right">
+                        <button class="btn btn-primary" onclick="PayGiveValue()"> Give Value </button>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    function CalculateTotal() {
+
+        var total = $("#txtTotalAount").val();
+        var amountPaid = $("#txtGiveValuePaid").val();
+
+        var newTotal = 0;
+
+        newTotal = total - amountPaid;
+
+        if (newTotal <= 0) {
+
+            $("#txtNewAmount").text("₦" + formatNumber(newTotal));
+        }
+        else {
+            $("#txtNewAmount").text("₦" + formatNumber(newTotal));
+        }
+    }
+
+
+
+    function PayGiveValue() {
+
+        if ($("#txtGiveValuePaid").val() <= 0 || $("#txtGiveValuePaid").val() === "") {
+
+            alert("Please enter the amount that was paid.");
+        }
+        else {
+
+            var total = $("#txtTotalAount").val();
+            var amountPaid = $("#txtGiveValuePaid").val();
+            var serviceCharge = $("#txtCharge").val();
+
+            var newTotal = 0;
+
+            newTotal = total - amountPaid;
+
+            if (newTotal <= 0) {
+
+                $("#txtNewAmount").text("₦" + formatNumber(newTotal));
+            }
+            else {
+                $("#txtNewAmount").text("₦" + formatNumber(newTotal));
+            }
+
+
+            if (newTotal < 0) {
+                alert("The new amount to pay is a negative number. This is not allowed.");
+            }
+            else {
+
+                var msg = confirm("Are you sure you want to give value to this application?");
+
+                if (msg === true) {
+
+                    $("#RRRLoaders").addClass("Submitloader");
+
+                    $.post("/Transactions/PayGiveValue",
+                        {
+                            "AppID": $("#txtAppID").val(),
+                            "Fee": (newTotal - serviceCharge),
+                            "ServiceCharge": serviceCharge,
+                            "AmountPaid": amountPaid,
+                            "TotalAmt": newTotal
+                        },
+                        function (response) {
+
+                            if ($.trim(response) === "Paid") {
+                                alert("Offline payment successfully made for this application.");
+                                location.reload(true);
+                            }
+                            else {
+                                alert(response);
+                                $("#RRRLoaders").removeClass("Submitloader");
+                            }
+                        });
+                }
+            }
+        }
+    }
+
+
+
+
+    function GiveValueAction(appid, payFee, serviceCharge, totalAmt, desc) {
+
+        $("#txtAppID").val(appid);
+        $("#txtGiveValueAmountDue").text("₦" + formatNumber(payFee));
+        $("#txtGiveValueServiceCharge").text("₦" + formatNumber(serviceCharge));
+        $("#txtGiveValueTotalAmount").text("₦" + formatNumber(totalAmt));
+        $("#txtGiveValueDescription").text(desc);
+
+        $("#txtTotalAount").val(totalAmt);
+        $("#txtCharge").val(serviceCharge);
+    }
+
+
+    function formatNumber(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    }
+
+
+    function VerifyRRR(rrr, id, payFee, serviceCharge, totalAmt) {
+        if (rrr === null || rrr === "") {
+            $("#txtRRR").html("<b class='text-danger'> No payment RRR passed </b>");
+            $("#txtStatusRRR").html("");
+        }
+        else {
+            $("#txtRRR").html("<b class='text-primary'>" + rrr + "</b>");
+            CheckRRR(rrr, id);
+        }
+    }
+
+
+
+
+
+    function CheckRRR(rrr, id, payFee, serviceCharge, totalAmt) {
+
+        $("#RRRLoader").addClass("loader");
+        $.post("/Transactions/CheckRRR",
+            {
+                "rrr": rrr
+            },
+            function (response) {
+                var result = $.trim(response).split("|");
+
+                if (result[0] === "1") {
+                    $("#txtStatusRRR").html("<hr><h3 style='color:forestgreen'> <b> Payment Approved </b> </h3> <hr> <b> Amount : ₦" + result[1] + "</b > <p></p> <span> Payment Date : " + result[2] + "</span> <br/> <span> Transaction time : " + result[3] + "</span> <br><br>");
+                    $("#RRRLoader").removeClass("loader");
+                    //GiveValueAction(id, payFee, serviceCharge, totalAmt);
+
+                    $("#txtStatusRRR").append("<a class='btn btn-sm btn-info' href='/Applications/PaymentSuccess/" + result[4] + "'> Confirm Payment </a>");
+                }
+                else {
+                    $("#txtStatusRRR").html("<b class='danger'> " + result[1] + "</b> <br><br>")
+                    $("#RRRLoader").removeClass("loader");
+                }
+            });
+    }
+
+
+</script>

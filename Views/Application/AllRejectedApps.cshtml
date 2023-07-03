@@ -1,0 +1,154 @@
+﻿@using NewDepot.Helpers
+@model IEnumerable<AllProcessingModel>
+
+@{
+    ViewBag.Title = "All Rejected Applications";
+
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    var generalClass = new GeneralClass();
+    List<Staff> AllStaff = ViewBag.StaffTable as List<Staff>;
+    int i = 1;
+}
+
+
+<div class="page-title">
+    <div class="title_left">
+        <h3>@ViewBag.Title</h3>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-striped table-hover table-bordered dataTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Company Name</th>
+                                <th>
+                                    Reference
+                                </th>
+                                <th>Category</th>
+                                <th>State</th>
+                                <th>Staff Desk</th>
+                                <th>Old Process</th>
+                                <th>New Process</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderByDescending(x=>x.AppReference))
+                            {
+                                var id = i++;
+                                <tr>
+                                    <td>@id</td>
+                                    <td>@item.Company</td>
+                                    <td>@item.AppReference</td>
+                                    <td>@item.PhaseName</td>
+                                    <td>@item.State</td>
+                                    <td>
+                                        @{
+                                            var staff = AllStaff.Where(x => x.StaffID.ToString() == item?.CurrentProcDesk).FirstOrDefault();
+
+                                            <p>Old: @item.CurrentDesk </p>
+                                            <p>New: @staff?.StaffEmail </p><br />
+
+                                        }
+                                    </td>
+                                    <td class="row">
+                                        <div class="col-md-5">
+                                            <h3>Old Process</h3>
+                                            @foreach (var p in item.processingModel.OrderBy(x => x.Sort))
+                                            {
+
+                                                var staff2 = AllStaff.Where(x => x.StaffEmail.ToLower() == p.Staff?.ToLower()).FirstOrDefault();
+                                                <h4><b>Processed</b>: @p.Processed.ToString()</h4><br />
+                                                <h4><b>Staff:</b> @p.Staff</h4><br />
+                                                <h4><b>Staff ID:</b> @p.oldStaffID , @staff2?.StaffID</h4><br />
+                                                <h4><b>Sort:</b> @p.Sort</h4><br />
+                                            }
+                                        </div>
+                                        <hr style="border-right:1px solid black" />
+                                        <div class="col-md-5">
+                                            <h3>New Process</h3>
+
+                                            @if (item.myDesk != null)
+                                            {
+
+                                                @foreach (var t in item.myDesk.OrderBy(x => x.Sort))
+                                                {
+                                                    var staffy = AllStaff.Where(x => x.StaffID == t.StaffID).FirstOrDefault();
+                                                    <h4><b>Processed</b> : @t.HasWork</h4><br />
+                                                    <h4><b>Staff:</b>  @staffy?.StaffEmail</h4><br />
+                                                    <h4><b>Sort: @t.Sort</b></h4><br />
+
+                                                }
+                                            }
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <!-- bootstrap-daterangepicker -->
+    <script src="~/OldDepotStyle/Scripts/js/moment/moment.min.js"></script>
+    <script src="~/OldDepotStyle/Scripts/bootstrap-datetimepicker.js"></script>
+    <script src="~/js/jquery.datetimepicker.min.js"></script>
+    <script src="~/OldDepotStyle/Scripts/js/datepicker/daterangepicker.js"></script>
+    <script src="~/OldDepotStyle/Scripts/DatePickerController.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "order": [[6, "desc"]],
+
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("LazyIndex", "Application",new {phase=ViewBag.phase,sDate=ViewBag.sDate ,eDate=ViewBag.eDate})',
+                "bProcessing": true,
+                "pageLength": 50,
+                "aoColumns": [
+                    {
+                        "sName": "Id",
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    {"sName": "Id"},
+                        { "sName": "CompanyName" },
+                        { "sName": "Reference" },
+                    { "sName": "PhaseName" },
+                    { "sName": "Yearr" },
+                        { "sName": "Status" },
+                    { "sName": "Date_Added" },
+                    { "sName": "StateName" },
+                        {
+                            "sName": "Is",
+                            "bSearchable": false,
+                            "bSortable": false,
+                            "mRender": function (data, type, oObj) {
+
+                                return ' <a class="btn btn-xs btn-primary" href="/Process/ViewApplication/' + generalClass.Encrypt( oObj[0]) + '"  >' + 'View ' + '<i class="icon-eye"></i></a>  '
+
+                                ;
+                            }
+                        }
+                ]
+            });
+        });
+    </script>
+}

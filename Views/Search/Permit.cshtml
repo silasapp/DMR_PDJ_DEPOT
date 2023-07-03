@@ -1,0 +1,106 @@
+﻿@model NewDepot.Models.MyApps
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+
+@{
+    ViewBag.Title = "Permit Search result for " + Model.AppPermit.permit_no + " (" + Model.PhaseName + ")";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+
+}
+
+<div class="content">
+    <h2 class="">Permit @Model.AppPermit.permit_no</h2>
+    <br />
+
+    <table class="table table-striped table-hover dataTable">
+        <thead>
+            <tr>
+                <th>
+                    Permit Number
+                </th>
+                <th>
+                    Application Id
+                </th>
+                <th>
+                    Company Name
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Date Issued
+                </th>
+                <th>
+                   Date Expired
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.AppPermit.permit_no)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.app.id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.comp.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.PhaseName)
+                </td>
+                <td>
+                    @Model.AppPermit.date_issued.ToLongDateString()
+                </td>
+                <td>
+                    @Model.AppPermit.date_expire.ToLongDateString()
+                </td>
+                @if (Model.CheckApprovalType == "Yes")
+                {
+            <td>
+                @Model.AppPermit.date_expire.ToLongDateString()
+            </td>
+                }
+                else
+                {
+                    <td>
+                        <b>Not Applicable</b>
+                    </td>
+                }
+
+                <td>
+                    <a href="/Application/ViewPermit/@Model.app.id" class="btn btn-xs btn-success ">Download <i class="glyphicon glyphicon-file"></i></a>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Permits > a").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                "order": [[4, "desc"]]
+            });
+        });
+    </script>
+}

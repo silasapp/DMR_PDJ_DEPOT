@@ -1,0 +1,121 @@
+﻿@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.companies>
+
+@{
+    ViewData["Title"] = "All Registered Companies";
+    ViewData["BodyClass"] = "fix-header";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<div class="card-black">
+
+    <h3>@ViewData["Title"]</h3>
+
+    <br />
+
+    <table class="table table-bordered table-hover table-responsive" id="MyFacilityTablee">
+        <thead>
+            <tr>
+                <th> Company Name</th>
+                <th> Email </th>
+                @*<th> Address </th>*@
+                <th> Business Type </th>
+                <th>Contact Person</th>
+                <th> Active Status </th>
+                <th> Deleted Status </th>
+                <th> Created At </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                var status = a.ActiveStatus == true ? "Active" : "Deactivated";
+                var deleted = a.DeleteStatus == true ? "Deleted" : "Not Deleted";
+
+                var comp = generalClass.Encrypt(a.id.ToString());
+                var compemail = generalClass.Encrypt(a.elps_id.ToString());
+
+                <tr>
+                    <td> @a.name</td>
+                    <td> @a.CompanyEmail</td>
+                    @*<td> @a.operational_address_id</td>*@
+                    <td> @a.business_type</td>
+                    <td>@a.contact_firstname @a.contact_lastname</td>
+                    <td> @status</td>
+                    <td> @deleted</td>
+                    <td>@a.CreatedAt.ToString()</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-warning btn-sm" href="/Application/CompanyApplications/@comp" target="_blank"> <i class="fa fa-file"> </i> Apps </a>
+                            <a class="btn btn-outline-success btn-sm" href="/Application/CompanyLicenses/@comp" target="_blank"> <i class="fa fa-file"> </i> Licenses </a>
+                            <a class="btn btn-info btn-sm" href="/Companies/AllCompanyDoc/@comp" target="_blank"> <i class="fa fa-book"> </i> Docs </a>
+                            <a class="btn btn-primary btn-sm" href="/Companies/FullCompanyProfile/@compemail" target="_blank"> <i class="ti-eye"> </i> View </a>
+                        </div>
+                    </td>
+                </tr>
+                @*}*@
+
+            }
+
+        </tbody>
+    </table>
+
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+            $(function () {
+                $("#lnk-Applications > a").addClass("selected").find(".act").addClass("selected");
+                $(".sidebar > ul > li > ul li a[href='/Application']").addClass("selected");
+
+                $("#MyFacilityTablee").dataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'pageLength',
+                        'copyHtml5',
+                        {
+                            extend: 'csvHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print all',
+                            footer: true,
+                            exportOptions: {
+                                modifier: {
+                                    selected: null
+                                }
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            collectionLayout: 'fixed two-column'
+                        }
+
+                    ],
+
+                    "aLengthMenu": [25, 50, 75, 100, 200],
+                    'iDisplayLength': 50,
+                    columnDefs: [{ orderable: false, "targets": [-1, -3] }],
+                    "language": {
+                        "lengthMenu": "Display  _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    },
+                    "order": [[5, "desc"]]
+                });
+            });
+    </script>
+}

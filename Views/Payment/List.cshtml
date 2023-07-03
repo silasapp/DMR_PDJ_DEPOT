@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Payment Transactions";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<div class="content">
+    <h2 class="lefty">Payment Transactions</h2>
+    <hr class="clear" />
+
+    <table class="table customDT">
+        <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>Transaction Date </th>
+                <th>
+
+                    Type
+                </th>
+                <th> Reference Number</th>
+                <th>Payment Reference </th>
+                <th>Approved Amount</th>
+                <th>Customer Name</th>
+                <th>Response Description</th>
+                <th>WebPay Reference</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-payment > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Company/All']").addClass("selected");
+
+
+        });
+
+        $(document).ready(function () {
+            $('.customDT').dataTable({
+
+                "bServerSide": true,
+                "sAjaxSource": '@Url.Action("LazyIndex", "Payment")',
+                "bProcessing": true,
+                "pageLength": 50,
+                "aoColumns": [
+
+                        { "sName": "Id" },
+                        { "sName": "Transaction_Date" },
+                        { "sName": "Type" },
+                        { "sName": "Reference_Number" },
+                        { "sName": "Payment_Reference" },
+                        { "sName": "Approved_Amount" },
+                        { "sName": "Customer_Name" },
+                        { "sName": "Response_Description" },
+                        { "sName": "Webpay_Reference" },
+                        {
+                            "sName": "Id",
+                            "bSearchable": false,
+                            "bSortable": false,
+                            "mRender": function (data, type, oObj) {
+                                if (!oObj[8])
+                                {
+                                    return '<a class="btn btn-xs btn-success" disabled href="TransactionDetail/' + oObj[8] + '">' + 'Query' + '<i class="icon-login"></i></a>';
+                                }
+                                else {
+                                    return '<a class="btn btn-xs btn-success" href="TransactionDetail/' + oObj[8] + '">' + 'Query' + '<i class="icon-login"></i></a>';
+
+
+                                }
+                            }
+                        }
+                ]
+            });
+        });
+    </script>
+}

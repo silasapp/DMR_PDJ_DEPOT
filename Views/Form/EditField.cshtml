@@ -1,0 +1,68 @@
+﻿@*@model NewDepot.Models.Fields
+@{
+    Layout = null;
+}
+@using (Html.BeginForm("CreateField", "Form", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.FormId)
+    <input type="hidden" name="edit" id="edit" value="true" />
+
+    <div class="form-group">
+        <label class="control-label col-md-4" for="@Model.Label">Field Label</label>
+        <div class="col-md-8 editor-field">
+            @Html.TextBoxFor(model => model.Label, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Label)
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-4" for="@Model.Label">Field Description</label>
+        <div class="col-md-8">
+            @Html.TextBoxFor(model => model.Description, htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-8 col-md-offset-4">
+            <div class="checkbox">
+                <label style="padding-left: 30px;">
+                    @Html.CheckBoxFor(model => model.IsRequired, new { @style = "top: 10px; width: 18px; height: 18px; margin-left: -30px;" }) This is Field Compulsory?
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-4" for="@Model.DataType">Datatype</label>
+        <div class="col-md-8 editor-field">
+            @Html.DropDownListFor(model => model.DataType, (SelectList)@ViewBag.types, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.DataType)
+        </div>
+    </div>
+    if (Model.DataType.ToLower() == "options" || Model.DataType.ToLower() == "checkbox")
+    {
+        <div class="form-group" id="dropVals">
+            <label class="control-label col-md-4">Option values</label>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.OptionValue, htmlAttributes: new { @class = "form-control", @placeholder = "e.g. Option1, Option 2, Option3" })
+                <small>Separate each value with a comman (,)</small>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group hide" id="dropVals">
+            <label class="control-label col-md-4">Option values</label>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.OptionValue, htmlAttributes: new { @class = "form-control", @placeholder = "e.g. Option1, Option 2, Option3" })
+                <small>Separate each value with a comman (,)</small>
+            </div>
+        </div>
+    }
+    <div class="form-group marg25">
+        <div class="txtcenter">
+            <input type="submit" value="Save Changes" class="btn btn-success" />
+            &nbsp; &nbsp;@Html.ActionLink("Cancel", "ManageForm", new { Model.FormId }, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}*@

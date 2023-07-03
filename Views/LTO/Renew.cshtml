@@ -1,0 +1,446 @@
+﻿@using NewDepot.Models
+@using NewDepot.Models
+
+@model RenewModel
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewData["Title"] = "Renewal of License To Operate ";
+    var tnks = Model.Tanks; // (List<Tanks>)ViewBag.tnks;
+    var Pumps = Model.Pumps; // (List<Pumps>)ViewBag.pumps;
+    var pds = Model.Products;
+    var atgArea = "display:none";
+    bool atgB = false;
+    var m = "k";
+    var facilityID = 0;
+
+    if (Model.Facility.Id > 0)
+    {
+        facilityID = Model.Facility.Id;
+    }
+    else{
+        facilityID = @ViewBag.FacilityID;
+    }
+    if (Model.ATGParams != null && Model.ATGParams.Count() > 0)
+    {
+        atgArea = "";
+        atgB = true;
+    }
+}
+
+
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">   @ViewData["Title"] </h3>
+        <hr />
+    </div>
+</div>
+
+<br />
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+@*@if (ViewBag.review != null)
+    {
+        <div class="well well-sm">
+            <h3>Please review the Storage Capacity if there has been any Change since the Last time you got this Certificate </h3>
+        </div>
+    }*@
+<div class="row">
+    <form action="/LTO/AddTanks" method="post">
+
+
+        <div class="col-md-12">
+            <div class="col-md-12">
+                <h3>@Model.Facility.Name Tank Details</h3>
+            </div>
+            <input type="hidden" name="frmLegacy" value="@ViewBag.frmLegacy" />
+            <input type="hidden" name="facilityId" value="@facilityID" />
+            <input type="hidden" name="review" value="@ViewBag.review" />
+            <input type="hidden" name="phaseId" value="@ViewBag.PhaseId" />
+            <input type="hidden" name="PermitNo" value="@Model.Permit.permit_no" />
+            <div class="col-md-12">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tank Name</th>
+                            <th>Max. Capacity</th>
+                            <th>Product</th>
+                            <th>Diameter(m)</th>
+                            <th>Height(m)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tankContainer" class="special-control">
+                        @* if facility already have tanks, *@
+                        @if (tnks.Count > 0)
+                        {
+                            for (int i = 0; i < tnks.Count; i++)
+                            {
+
+                                var did = "document" + i;
+                                var id = "tnks[" + i + "].id";
+                                var Name = "tnks[" + i + "].Name";
+                                var Height = "tnks[" + i + "].Height";
+                                var MaxCapacity = "tnks[" + i + "].MaxCapacity";
+                                var ProductId = "tnks[" + i + "].ProductId";
+                                var Diameter = "tnks[" + i + "].Diameter";
+                                var ModifyType = "tnks[" + i + "].ModifyType";
+                                var Recalibrate = "tnks[" + i + "].Recalibrate";
+                                var pn = pds.Where(a => a.Id == tnks[i].ProductId).FirstOrDefault();
+                                var indx = i + 1;
+                                <tr id="@did" class="tnks">
+                                    <td style="display: table-cell; vertical-align: middle">@indx</td>
+                                    <td>
+                                        <input type="hidden" name="@id" value="@tnks[i].Id" />
+                                        <input type="text" required name="@Name" class="form-control" value="@tnks[i].Name" placeholder="e.g. PMS Tank 1" />
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.phaseId != null && ViewBag.phaseId == 5 || ViewBag.phaseId == 9)
+                                        {
+                                            <input type="number" required name="@MaxCapacity" class="form-control" value="@tnks[i].MaxCapacity" placeholder="e.g. 113000" />
+
+
+                                        }
+                                        else
+                                        {
+
+                                            <input type="number" required name="@MaxCapacity" readonly class="form-control" value="@tnks[i].MaxCapacity" placeholder="e.g. 113000" />
+
+                                        }
+
+                                    </td>
+                                    <td>
+                                        <select required name="@ProductId" class="form-control">
+                                            <option value="">Select Product</option>
+                                            @foreach (var item in pds)
+                                            {
+                                                if (item.Id == tnks[i].ProductId)
+                                                {
+                                                    <option value="@item.Id" selected>@item.Name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" required name="@Diameter" class="form-control" value="@tnks[i].Diameter" placeholder="e.g. 3.2" />
+
+                                    </td>
+                                    <td>
+                                        <input type="text" required name="@Height" class="form-control" value="@tnks[i].Height" placeholder="e.g. 8" />
+
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.phaseId != null && (ViewBag.phaseId == 5 || ViewBag.phaseId == 9))
+                                        {
+                                            /**/
+                                            <select class="form-control" name="@ModifyType" required>
+                                                <option value="Type">Choose Type</option>
+                                                <option value="Decommission">Decommission</option>
+                                                <option value="Convert">Convert</option>
+                                                <option value="Convert">Upgrade</option>
+                                            </select>
+                                        }
+
+                                        @if (ViewBag.phaseId != null && ViewBag.phaseId == 11)
+                                        {
+                                            <input type="checkbox" name="@Recalibrate" value="Yes" title="Select tank(s) to be re-calibrated." />
+
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                            else
+                            {
+                                @if (ViewBag.frmLegacy != null)
+                                {
+
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    var a = i;
+                                    var did = "document" + a;
+                                    var Name = "tnks[" + a + "].Name";
+                                    var Height = "tnks[" + i + "].Height";
+                                    var MaxCapacity = "tnks[" + i + "].MaxCapacity";
+                                    var ProductId = "tnks[" + i + "].ProductId";
+                                    var Diameter = "tnks[" + i + "].Diameter";
+                                    var ModifyType = "tnks[" + i + "].ModifyType";
+                                    var Recalibrate = "tnks[" + i + "].Recalibrate";
+                                    var AppTank = "tnks[" + i + "].AppTank";
+                                    var indx = a + 1;
+                                    <tr id="@did" class="tnks">
+                                        <td style="display: table-cell; vertical-align: middle">@indx</td>
+                                        <td>
+                                            <input type="hidden" name="@AppTank" value="Yes" />
+                                            <input type="text" required name="@Name" class="form-control" value="" placeholder="e.g. PMS Tank A" />
+                                        </td>
+                                        <td>
+                                            <input type="number" required name="@MaxCapacity" class="form-control" value="" placeholder="e.g. 33000" />
+                                        </td>
+                                        <td>
+                                            <select required name="@ProductId" class="form-control">
+                                                <option></option>
+                                                @foreach (var item in pds)
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" required name="@Diameter" class="form-control" value="" placeholder="e.g. 3.2" />
+
+                                        </td>
+                                        <td>
+                                            <input type="text" required name="@Height" class="form-control" value="" placeholder="e.g. 8" />
+
+                                        </td>
+                                        <td>
+                                                            
+                                            <input type="checkbox" checked class="AppTank[]" name="@AppTank" value="Yes" title="Select this tank if this tank is for the application" />
+
+                                        </td>
+                                    </tr>
+                                }
+                                }
+                            }
+
+                    </tbody>
+                     <tfoot>
+                            <tr>
+                                    <td colspan="7">
+                                        <a id="addTank" href="" data-m="@m" class="btn btn-xs btn-warning">Add More Tank</a>
+                                    </td>
+                                
+                            </tr>
+
+                        </tfoot>
+
+                </table>
+                @*<div id="hasAtgDiv" style="@atgArea" class="special-control row">
+                        <div class="col-md-12"><h4>Tanks ATG Functionalities</h4></div>
+                        <div class="col-md-4">
+
+                            @if (atgB && Model.ATGParams.Where(a => a.ToLower() == "Temprature".ToLower()).FirstOrDefault() != null)
+                            {
+
+                                <input type="checkbox" name="Parameters" value="Temprature" id="param1" checked />
+                                <label for="param1">Can Measure Temprature</label>
+                            }
+                            else
+                            {
+
+                                <input type="checkbox" name="Parameters" value="Temprature" id="param1" />
+                                <label for="param1">Can Measure Temprature</label>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            @if (atgB && Model.ATGParams.Where(a => a.ToLower() == "Density".ToLower()).FirstOrDefault() != null)
+                            {
+                                <input type="checkbox" name="Parameters" value="Density" id="param2" checked />
+                                <label for="param2">Can Measure Density</label>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="Parameters" value="Density" id="param2" />
+                                <label for="param2">Can Measure Density</label>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            @if (atgB && Model.ATGParams.Where(a => a.ToLower() == "Water Level".ToLower()).FirstOrDefault() != null)
+                            {
+                                <input type="checkbox" name="Parameters" value="Water Level" id="param3" checked /><label for="param3">Can Measure Water level</label>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="Parameters" value="Water Level" id="param3" /><label for="param3">Can Measure Water level</label>
+                            }
+                        </div>
+                        <div class="clear"></div>
+                        <hr />
+                    </div>*@
+            </div>
+            <div style="min-height:30px; clear:both"></div>
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <div class="col-md-4 col-lg-4 col-sm-4"></div>
+                    <div class="col-md-4 col-lg-4 col-sm-4">
+                        <input type="submit" class="btn btn-primary btn-success btn-block" value="NEXT" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+<div style="clear:both"></div>
+@section Scripts {
+    <script type="text/javascript" src="~/OldDepotStyle/Scripts/bundles.min.js"></script>
+    <script src="~/Scripts/LTO.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $(document.body).on("change", '#stateId', function () {
+                var stt = $(this).val();
+
+                $.get("/storage/getlga/" + stt, function (data) {
+                    $("#lga").empty();
+                    $('#lga').append($('<option/>', { Value: "", text: "Select Local Government" }));
+                    $.each(data, function (i, obj) {
+                        $('#lga').append($('<option>').text(obj.Name).attr('value', obj.Id));
+                    });
+                });
+            });
+
+        });
+    </script>
+
+}
+
+                @*        @if (ViewBag.frmLegacy != null)
+        {
+            var lg = (Legacies)ViewBag.legacy;
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 col-xs-12">
+                    <h4>Facility Information</h4>
+                    <hr />
+                </div>
+                <div id="suitWrapper">
+                    <div class="col-sm-8 col-sm-offset-2 col-xs-12">
+                        <div class="Facility">
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Depot (Facilities) Name</label>
+                                <div class="col-md-7">
+                                    <input type="text" required name="FacilityName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Facility Address</label>
+                                <div class="col-md-7">
+                                    <input type="text" value="@lg.FacilityAddress" required name="Address_1" class="form-control" placeholder="Enter the Facility location address" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">City</label>
+                                <div class="col-md-7">
+                                    <input type="text" required name="City" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">State</label>
+                                <div class="col-md-7">
+                                    <select required name="StateId" id="stateId" class="form-control">
+                                        <option value="">Select State Located</option>
+                                        @foreach (var item in ViewBag.stats as List<States_UT>)
+                                        {
+                                            <option value="@item.State_id">@item.StateName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">LGA</label>
+                                <div class="col-md-7">
+                                    <select required name="LgaId" id="lga" class="form-control">
+                                        <option value="">Select Local Government</option>
+                                        <option value="1">Oshodi/Isolo</option>
+                                        <option value="2">Ikeja</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-sm-offset-2 col-xs-12">
+                        <hr />
+                        <div class="suitability ">
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Size of the Land</label>
+                                <div class="col-md-7">
+                                    <div class="input-group">
+                                        <input type="number" required name="SizeOfLand" class="form-control" placeholder="100" />
+                                        <span class="input-group-addon" style="font-size: 14px;">Square Meters</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Site is Along Pipe Line</label>
+                                <div class="col-md-3">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="ISAlongPipeLine" id="pipeLineYes" value="yes" class="" /><label for="pipeLineYes">YES</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="ISAlongPipeLine" id="pipeLineNo" value="No" class="" /><label for="pipeLineYes">NO</label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Site is Under High Tension</label>
+                                <div class="col-md-3">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsUnderHighTension" id="highTensionYes" value="yes" class="" /><label for="pipeLineYes">YES</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsUnderHighTension" id="highTensionNo" value="No" class="" /><label for="pipeLineYes">NO</label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="StationsWithin2KM" id="StationsWithin2KM" value="0" />
+                            <input type="hidden" name="DistanceFromExistingStation" id="DistanceFromExistingStation" value="More than 800 Meters" />
+
+
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Site is on HighWay</label>
+                                <div class="col-md-3">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsOnHighWay" id="IsOnHighWayYes" value="yes" class="" /><label for="pipeLineYes">YES</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsOnHighWay" id="IsOnHighWayNo" value="No" class="" /><label for="pipeLineYes">NO</label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        }
+*@

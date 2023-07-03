@@ -1,0 +1,38 @@
+﻿@*@model System.Web.Mvc.HandleErrorInfo*@
+
+@{
+    ViewBag.Title = "Payment Error";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<section>
+    <div class="container">
+        <h2 class="">@ViewBag.Title</h2>
+        <hr />
+        <div class="row">
+            <div class="col-md-10">
+
+                <div class="widget">
+                    <div class="widget-header">
+                        <h4 class="text-error">&nbsp; Payment Aborted</h4>
+                    </div>
+                    <div class="widget-content">
+                        <h4 class="text-error">Sorry, the payment gateway is not available at the moment, kindly click "Pay Now" from <a href="/Application/MyApplications">My Applications</a> to try again or <a href="/">Go Back</a></h4>
+                        <br />
+                        @if (!string.IsNullOrEmpty(ViewBag.RError))
+                        {
+                            <p>@ViewBag.RError</p>
+                        }
+                        @if (!string.IsNullOrEmpty(ViewBag.RError2))
+                        {
+                            <p>@ViewBag.RError2</p>
+                        }
+
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+
+            </div>
+        </div>
+    </div>
+</section>

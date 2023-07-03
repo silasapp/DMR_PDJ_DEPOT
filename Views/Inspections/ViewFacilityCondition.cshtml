@@ -1,0 +1,264 @@
+﻿@* Rejection *@
+
+<!--<div class="modal" id="AppExternalRejectionModals">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card-black" style="width:950px" id="AppExternalRejectionLoadder">
+            <div class="modal-header">
+                <h4 class="modal-title"> Reject Application Back </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+
+                    {
+                        var divclass = "";
+                        var hide = "";
+                    }
+
+                    if (generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName)) == GeneralClass.FIELD_SUPERVISOR && Model.FirstOrDefault().applicationProccesses.FirstOrDefault().FlowType == GeneralClass.FIELDHQ)
+                    {
+                        hide = "";
+                        divclass = "col-sm-6";
+                    }
+                    else if (generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName)) == GeneralClass.HQ_SUPERVISOR && Model.FirstOrDefault().applicationProccesses.FirstOrDefault().FlowType == GeneralClass.HQONLY)
+                    {
+                        hide = "";
+                        divclass = "col-sm-6";
+                    }
+                    else
+                    {
+                        hide = "hide";
+                        divclass = "col-sm-12";
+                    }
+
+                    <div class="divclass hide">
+                        <b> Select Other Document(s) </b>
+                        <div class="table-responsive" style="max-height:500px; overflow-y:scroll">
+                            <table class="table table-bordered table-hover" style="font-size:smaller" id="OtherDocsTable">
+                                <thead>
+                                    <tr>
+                                        <th style="padding-left: 18px;">Select</th>
+                                        <th class="text-left"><b> Select Additional Document(s) for this application</b> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    foreach (var apps in Model)
+                                    {
+                                        foreach (var otherDoc in apps.otherDocuments)
+                                        {
+                                            <tr>
+                                                <td> otherDoc.LocalDocID </td>
+                                                <td class="text-left"> otherDoc.DocName</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="divclass">
+                        <br />
+
+
+                        <div class="alert" style="font-size:medium">
+                            <div>
+                                <span><b>Reference NO :</b> <b class="text-primary"> @Model.FirstOrDefault().applicationDetails.FirstOrDefault().RefNo</b> </span>
+                            </div>
+                            <p></p>
+                            <div>
+                                <span><b>Facility Details :</b> <small>@Model.FirstOrDefault().applicationDetails.FirstOrDefault().Facility</small> </span>
+                            </div>
+                            <p></p>
+                            <div>
+                                <span><b>Categoory :</b> <small><b class="text-danger"> @Model.FirstOrDefault().applicationDetails.FirstOrDefault().Category</b></small> </span>
+                            </div>
+                            <p></p>
+                            <div>
+                                <span><b>Type :</b> <small><b class=""> @Model.FirstOrDefault().applicationDetails.FirstOrDefault().AppType </b></small> </span>
+                            </div>
+                            <p></p>
+                            <div>
+                                <span><b>Stage :</b> <small><b class=""> @Model.FirstOrDefault().applicationDetails.FirstOrDefault().AppStage </b></small> </span>
+                            </div>
+                            <p></p>
+                            <div class="text-sm-left">
+                                <span><b>Status :</b> <small><b style="color:crimson"> @Model.FirstOrDefault().applicationDetails.FirstOrDefault().AppStatus</b></small> </span>
+                            </div>
+                            <p></p>
+
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group">
+                            <label for="comment" class=""> Comment:</label>
+                            <br />
+                            <textarea class="btn-block" id="txtAppExRejectComment" style="max-width:100%" rows="4" cols="60" placeholder="Some comment here...Max(100)"></textarea>
+                        </div>
+
+                        <hr />
+
+                        <button class="btn btn-danger" id="btnReject"> Send Back Application </button>
+
+                    </div>
+
+                </div>
+
+                <p></p>
+                <div id="ExRejectModalInfo"> </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@model NewDepot.Models.FacilityCondition
+
+    @{
+        ViewBag.Title = "View Facility Condition Form";
+        Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+        var app = (NewDepot.Models.vApplication)ViewBag.application;
+        var appForm = (NewDepot.Models.ApplicationForm)ViewBag.appForm;
+    }
+
+    <div class="content">
+        <h2>@ViewBag.Title</h2>
+        <hr />
+        <div class="row">
+            <div class="col-md-8">
+                <div class="well well-sm">
+                    <h3 style="margin-bottom: 4px;">
+                        Facility Name: @app.FacilityName (@app.FacilityAddress())
+                    </h3>
+                    <hr />
+
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Date, "Date Filled", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NumberOfAttendants, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.NumberOfAttendants, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AttentdantsHaveUniform, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @if (Model.AttentdantsHaveUniform)
+                                {
+                                    <input type="text" readonly class="form-control" value="YES" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly class="form-control" value="NO" />
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.HasABackOffice, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @if (Model.HasABackOffice)
+                                {
+                                    <input type="text" readonly class="form-control" value="YES" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly class="form-control" value="NO" />
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NMDPRAStaff, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.NMDPRAStaff, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Recommended for Approval</label>
+                            <div class="col-md-8">
+                                @if (appForm.Recommend != null && appForm.Recommend.Value == true)
+                                {
+                                    <input type="text" readonly class="form-control" value="YES" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly class="form-control" value="NO" />
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Reason for Recommendation</label>
+                            <div class="col-md-8">
+                                <textarea type="text" readonly class="form-control">@appForm.Reasons</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-horizontal">
+                        <hr />
+
+                        <form action="/Inspections/SupervisorApproveAF" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="appId" value="@app.Id" />
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Reason for Accept or Decline</label>
+                                <div class="col-md-8">
+                                    <textarea type="text" class="form-control" style="background-color: #FFF;" name="ManagerReason" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-4 col-md-8">
+                                    <input type="submit" class="btn btn-danger" name="Approve" value="Disapprove" />
+                                    <input type="submit" class="btn btn-primary" name="Approve" value="Approve" />
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>*@

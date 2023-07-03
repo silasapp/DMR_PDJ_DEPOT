@@ -1,0 +1,105 @@
+﻿@model IEnumerable<NewDepot.Models.Departments>
+
+@{
+    ViewBag.Title = "Departments";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    int count = 0;
+}
+
+<div class="content">
+    <h2 class="lefty">Divisions &amp; Units</h2>
+
+    <div class="righty">
+        <a href="#" class="btn btn-success addBtn" data-toggle="modal" data-target="#modalPopup"
+           data-url="/Department/Create" data-uid="1">
+            Creat New Division/Unit &nbsp;<i class="icon-plus"></i>
+        </a>
+    </div>
+    <hr class="clear" />
+    @if (ViewBag.Message != null)
+    {
+        string alerttype = (((string)ViewBag.MsgType).ToLower() == "pass" ? "alert-success" : "alert-danger");
+        <div class="alert @alerttype alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            @ViewBag.Message
+        </div>
+    }
+
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>#</th>
+            <th>
+                Division &amp; Unit Name
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            count++;
+            <tr>
+                <td>@count</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="txtright">
+                    <div class="btn-group">
+                        <button class="btn btn-xs btn-warning delBtn" data-toggle="modal" data-target="#modalPopup"
+                                data-url="/Department/Create" data-id="@item.Id" data-uid="3">
+                            Edit <i class="icon-pencil"></i>
+                        </button>
+                        <a href="#" data-toggle="modal" data-target="#modalPopup" class="btn btn-danger btn-xs delBtn"
+                           data-url="/Department/Delete/@item.Id" data-uid="2">Delete <i class="icon-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Categories > a").addClass("selected").addClass("open").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Department']").addClass("selected");
+
+            var noPerPage = '<select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class=""><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select>';
+            $(".dataTable").dataTable({
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display " + noPerPage + " records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            $(".addBtn, .delBtn").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-itemname");
+                var headTitle;
+
+                if (uid == "1") { headTitle = "Add New Division"; }
+                else if (uid == "3") { headTitle = "Edit Division"; url = url + "/" + $(this).attr("data-id"); }
+                else if (uid == "2") { headTitle = "Delete Division"; }
+
+                $("#modalPopup").on('show.bs.modal', function (e) {
+                    var modal = $(this);
+                    modal.find(".modal-title").text(headTitle);        // find title for changr
+                    modal.find("#modal-body").html();
+                    modal.find("#modal-body").html(Loading());
+                    //Load the view
+                    $.get(url, function (data) {
+                        modal.find("#modal-body").html();
+                        modal.find("#modal-body").html(data);
+                    });
+                });
+            });
+
+        })
+    </script>
+}

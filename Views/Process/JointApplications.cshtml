@@ -1,0 +1,402 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<MyApps>
+
+
+@{
+    ViewBag.Title = "Joint Application(s) For "+ViewBag.FieldOffice ;
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+    GeneralClass generalClass = new GeneralClass();
+
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var userName = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionUserName));
+    int i = 1;
+
+}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+<div class="subLoader">
+    <div class="page-title" style="margin-bottom:40px;">
+        <div class="title_left">
+            <h2>@ViewBag.Title</h2>
+        </div>
+    </div>
+
+    @if (ViewBag.Message != null)
+    {
+        string alerttype = (ViewBag.MsgType.ToLower() == "fail" ? "alert-danger" : (ViewBag.MsgType.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+        string head = (ViewBag.MsgType.ToLower() == "fail" ? "Application Error!" : (ViewBag.MsgType.ToLower() == "warn" ? "Alert!" : "Success"));
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@head</strong> @ViewBag.Message
+            </div>
+        </div>
+    }
+
+    <div class="">
+            <form action="" method="post" id="frmPush">
+                <input type="hidden" name="frommydesk" value="true" />
+                <input type="hidden" name="processor" id="processor" />
+                <input type="hidden" name="supervisors" id="supervisor" value="" />
+                <table class="table table-hover table-striped table-bordered dataTable" id="pushTable">
+                    <thead>
+                        <tr>
+                            <th style="padding-left: 18px;">
+                                <input type="checkbox" name="selectAll" id="selectAll" />
+                            </th>
+                            <th>Reference No.</th>
+                            <th>
+                                Company Name
+                            </th>
+                            <th>Facility</th>
+                            <th>
+                                Category
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                Year
+                            </th>
+                            <th>State</th>
+                            <th>LGA</th>
+                            <th>
+                                Application Date
+                            </th>
+                            <th>
+                                Created At
+                            </th>
+                           
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    @foreach (var item in Model.OrderByDescending(a => a.DateProcessed).ToList())
+                    {
+                        var id = i++;
+                        <tr class="">
+
+                         
+                                <td style="padding-left: 18px;">@id</td>
+                            <td>@item.Reference</td>
+                            <td>
+                                <a href="/Companies/FullCompanyProfile/@generalClass.Encrypt(item.Company_Id.ToString())" title="View Company Profile">@item.CompanyName</a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("ViewFacility", "Facility", new { id =generalClass.Encrypt( item.FacilityId.ToString()) })">
+                                    @item.FacilityName
+                                </a>
+                            </td>
+                            <td>
+                                <span>@item.PhaseName</span>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Type)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Year)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StateName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LGA)
+                            </td>
+
+                            <td>
+                                <b>Applied:</b> @item.Date_Added<br />
+                                <b>Submitted:</b> @item.DateSubmitted
+                            </td>
+                            <td>
+
+                                @item.DateProcessed.ToString()
+                            </td>
+                          
+                            <td>
+                                <div class="btn-group">
+                                    @*<a href="/Process/ViewApplication/@generalClass.Encrypt(item.appID.ToString())/@generalClass.Encrypt(item.processID.ToString())" class="btn btn-xs btn-success">View Application</a>*@
+                                    <a href="/Application/ViewApplication/@item.appID" class="btn btn-xs btn-success">View Application</a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </form>
+        
+    </div>
+</div>
+
+
+@section scripts{
+        <script src="~/ela/js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $("#lnk-Branches > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Process']").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ targets: [0, -1], orderable: false },
+
+                { targets: 8, orderData: 7 },
+                { targets: 7, visible: false }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "No record found",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No Application on your Desk Currently",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+                //,
+                //"order": [[7, "desc"]]
+            });
+
+            $(".dataTable2").dataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5',
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed two-column'
+                    }
+
+                ],
+
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+
+                columnDefs: [/*{ orderable: false, "targets": [0, -1] },*/
+
+                    { targets: 8, orderData: 7 },
+                    { targets: 7, visible: false }
+                ],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "No record found",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No Application on your Desk Currently",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                },
+                // "order": [[6, "desc"]]
+            });
+
+            $(".appr, .rej").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-name");
+
+                $("#modal-body").html("");
+
+                if (uid == "1") {
+                    var w = $(this).attr("data-w");
+                    if (w == "1") {
+                        var headTitle = "Presentation Waiver Request  for \"" + name + "\"";
+                        $(".modal-dialog").removeClass("wide-body");
+                    } else if (w == "2") {
+                        var headTitle = "Inpection Waiver Request for \"" + name + "\"";
+                        $(".modal-dialog").removeClass("wide-body");
+                    } else {
+                        var headTitle = "Schedule a Meeting with \"" + name + "\"";
+                        $(".modal-dialog").removeClass("wide-body");
+                    }
+                } else if (uid == "2") {
+                    var headTitle = "Approve \"" + name + "'s\" Application";
+                    $(".modal-dialog").removeClass("wide-body");
+                } else if (uid == "3") {
+                    var headTitle = "Reject \"" + name + "'s\" Application";
+                    $(".modal-dialog").addClass("wide-body");
+                }
+
+                $(".modal-title").text(headTitle);        // find title for changr
+                $("#modal-body").html("");
+                $("#modal-body").html(Loading());
+                //Load the view
+                $.get(url, function (data) {
+                    $("#modal-body").html(data);
+                });
+
+            });
+
+            $(".checkerPush").on("click", function () {
+                if (CheckPushCount()) {
+                    $("#frmPush").submit();
+                }
+                else {
+                    alert("Please select Application(s) to push before continuing.");
+                }
+            });
+
+            $(".pushToApprove").on("click", function (e) {
+                e.preventDefault();
+                if (CheckPushCount()) {
+
+                    var confirmTxt = "Are you sure you want to push selected application(s) for approval ?";
+
+                     if ('@userRole' === '@GeneralClass.OOD') {
+
+                        confirmTxt = "Are you sure you want to approve selected application(s) ?";
+
+                    }
+
+                    $.confirm({
+
+                        text: confirmTxt ,
+                        confirm: function () {
+                            $(".subLoader").addClass('Submitloader');
+                            $("#frmPush").submit();
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+                else {
+                    alert("Please select Application(s) to Approve.");
+                }
+            });
+
+            $(".push").on("click", function (e) {
+                e.preventDefault();
+
+                if (CheckPushCount()) {
+
+                    //Load the view
+                    $("#modalPopup").on('show.bs.modal', function () {
+                        var modal = $(this);
+                        modal.find('.modal-title').text('');
+                        modal.find('.modal-content').html(Loading());
+
+                        $.get('/Process/GetSupervisors', function (data) {
+                            $(".modal-content").html(data);
+                        });
+                    });
+                    $("#modalPopup").modal('show');
+
+                }
+                else {
+                    alert("Please select application(s) to assign to supervisor.");
+                }
+            });
+
+            $(document).on("click", "#btnAssign", function () {
+                if (CheckSupvCount()) {
+                    var sup = '';
+                    sup = $('.supv:checked').val();
+
+                    $('#supervisor').val(sup);
+                    $('#processor').val(sup);
+                    $.confirm({
+                        text: "Are you sure you want to push application(s) for approval ?",
+                        confirm: function () {
+                            $("#frmPush").addClass('Submitloader');
+                            $("#frmPush").submit();
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+
+                }
+                else {
+                    alert("Please select atleast one supervisor to work on the application(s).");
+                }
+            });
+
+            // add multiple select / deselect functionality
+            $("#selectAll").click(function () {
+                $('.allowPush').prop('checked', this.checked);
+            });
+
+            // if all checkbox are selected, check the selectall checkbox
+            // and viceversa
+            $(".allowPush").click(function () {
+                if ($(".allowPush").length == $(".allowPush:checked").length) {
+                    $("#selectAll").attr("checked", "checked");
+                } else {
+                    $("#selectAll").removeAttr("checked");
+                }
+            });
+
+
+            // add multiple select / deselect functionality
+            $("#inspectorsAll").click(function () {
+                $('.insp').prop('checked', this.checked);
+            });
+
+            // if all checkbox are selected, check the selectall checkbox
+            // and viceversa
+            $(".insp").click(function () {
+                if ($(".insp").length == $(".insp:checked").length) {
+                    $("#inspectorsAll").attr("checked", "checked");
+                } else {
+                    $("#inspectorsAll").removeAttr("checked");
+                }
+            });
+        });
+        function CheckPushCount() {
+            var count = 0;
+            $("#pushTable tbody [type=checkbox]").each(function () {
+                if ($(this).is(":checked")) {
+                    count += 1;
+                };
+            });
+            if (count > 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+
+        function CheckInspCount() {
+            var count = 0;
+            $("#inspTable tbody [type=checkbox]").each(function () {
+                if ($(this).is(":checked")) {
+                    count += 1;
+                };
+            });
+            if (count > 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function CheckSupvCount() {
+            var count = 0;
+            if ($('.supv:checked').length > 0) {
+                return true;
+            }
+            return false;
+
+        }
+    </script>
+}

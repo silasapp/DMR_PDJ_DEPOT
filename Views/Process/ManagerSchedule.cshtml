@@ -1,0 +1,156 @@
+﻿@model NewDepot.Models.MeetingSchedules
+
+@{
+    ViewBag.Title = "Confirm Scheduled Meeting";
+    Layout = null;
+
+    string form = (Model.WaiverRequest == true ? "ManagerWaiver" : "ManagerSchedule");
+    Waivers realWaver = new Waivers();
+    string wFor = string.Empty;
+    if (Model.WaiverRequest == true)
+    {
+        List<Waivers> waiver = new List<Waivers>();
+        realWaver = waiver.Where(C => C.entityId == Model.Id).FirstOrDefault();
+        wFor = (realWaver.WaiverFor.ToLower() == "inspection" ? "an <b>Inspection</b>" : "a <b>" + realWaver.WaiverFor.ToUpperInvariant() + "</b>");
+    }
+
+}
+
+<div class="row">
+
+    <button type="button" class="close col-md-2" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></span>
+    </button>
+    <div class="col-md-10">
+        @if (Model.WaiverRequest == true)
+        {
+            if (realWaver.WaiverFor.Trim().ToLower() == "inspection".Trim())
+            {
+                <h3 class="modal-title">Inpection Waiver Request for @ViewBag.Company</h3>
+            }
+            else if (realWaver.WaiverFor.Trim().ToLower() == "presentation".Trim())
+            {
+                <h3 class="modal-title">Presentation Waiver Request for @ViewBag.Company</h3>
+            }
+            else
+            {
+                <h3 class="modal-title">Double Waiver Request for @ViewBag.Company</h3>
+            }
+        }
+        else
+        {
+            <h3 class="modal-title">Meeting/Inspection Schedule with @ViewBag.Company</h3>
+        }
+    </div>
+</div>
+<div class="modal-body" id="modal-body">
+
+    @using (Html.BeginForm(form, "Process", FormMethod.Post, new { @class = "form-horizontal", @id = "endorseSchFrm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        if (Model.WaiverRequest == true)
+        {
+            // Waiver is to be done
+            <input type="hidden" name="Id" value="@realWaver.ID" />
+
+            <div class="modal-body">
+                <p>
+                    The Inspector is requesting @Html.Raw(wFor) Waiver for this Application. Please see reason for the recommendation below
+                    @if (realWaver.WaiverFor.ToLower() == "double")
+                    {
+                        <br />
+                        <h4><b>Please Note:</b> Approving this means both the Presentation and Inspection will be Waived and application moves to the next department for further processing.</h4>
+                    }
+                </p>
+                <div class="well">
+
+                    @if (realWaver != null)
+                    {
+                        @realWaver.RequestReason
+                    }
+                </div>
+
+                <div id="reasonBox" class="form-group closed" style="display: none;">
+                    <label class="control-label col-md-3">Reason for Declining</label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" name="disapproveReason" id="disapproveReason"></textarea>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            // Normal Schedule is to be done
+<div class="modal-body">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group row">
+        <label class="col-md-3"><b>Facility Name:</b></label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <span class="input-group-addon" style="top:0;"></span>
+                <input type="text" readonly class="form-control" value="@ViewBag.Facility" name="StaffUserName" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3"><b>Scheduler:</b></label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <span class="input-group-addon" style="top:0;"></span>
+                <input type="text" readonly class="form-control" value="@Model.StaffUserName" name="StaffUserName" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-3"><b>Scheduled Date:</b></label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <span class="input-group-addon glyphicon glyphicon-calendar" style="top:0;"></span>
+                <input type="text" readonly class="form-control dateTimePicker" value="@Model.MeetingDate" name="MeetingDate" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-md-3"><b>Venue:</b></label>
+        <div class="col-md-9">
+            <input type="text" readonly class="form-control" value="@Model.Address" name="Address" />
+        </div>
+    </div>
+    <input type="hidden" readonly class="form-control" value="" id="Action" name="actionA" />
+
+    @if (Model.Message != null)
+    {
+        <div class="form-group row">
+            <label class="col-md-3"><b>Schedule Comment:</b></label>
+            <div class="col-md-9">
+                <input type="text" readonly class="form-control" value="@Model.Message" name="Message" />
+            </div>
+        </div>
+    }
+    <div id="reasonBox" class="form-group row closed">
+        <label class="control-label col-md-3"><b>Reason for Action:</b></label>
+        <div class="col-md-9">
+            <textarea class="" rows="5" style="width:100%" placeholder="Enter Comment Here.." name="disapproveReason" id="txtActionComment"></textarea>
+        </div>
+    </div>
+
+</div>
+
+
+        }
+
+<div class="row">
+    <div class="col-md-3"></div>
+
+    <input  id="btnApproveSchedule"  type="button" value="Approve" class="col-md-3 btn btn-success ApproveSchedule" />
+    <input  id="btnDisapproveSchedule"  type="button" value="Dis-approve" class="btn col-md-3 btn-danger DisapproveSchedule" />
+
+</div>
+        <p></p>
+        <div id="ScheduleModalInfo"></div>
+    }
+</div>

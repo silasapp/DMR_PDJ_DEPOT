@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31321.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewDepot", "NewDepot.csproj", "{3C92FEAB-3AD3-479C-B55D-503E758CD197}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Depot_Database", "..\Depot_Database\Depot_Database.sqlproj", "{79EA1DD2-4088-4F7A-8118-2050219530B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C92FEAB-3AD3-479C-B55D-503E758CD197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C92FEAB-3AD3-479C-B55D-503E758CD197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C92FEAB-3AD3-479C-B55D-503E758CD197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C92FEAB-3AD3-479C-B55D-503E758CD197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79EA1DD2-4088-4F7A-8118-2050219530B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79EA1DD2-4088-4F7A-8118-2050219530B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79EA1DD2-4088-4F7A-8118-2050219530B5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{79EA1DD2-4088-4F7A-8118-2050219530B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79EA1DD2-4088-4F7A-8118-2050219530B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79EA1DD2-4088-4F7A-8118-2050219530B5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A26BD612-5B60-4F1F-8B92-CDF739409876}
+	EndGlobalSection
+EndGlobal

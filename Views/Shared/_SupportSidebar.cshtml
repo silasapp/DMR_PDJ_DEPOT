@@ -1,0 +1,213 @@
+﻿
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var userName = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionUserName));
+    var nul = "null";
+    var yr1 = "2018"; var yr2 = "2019"; var yr3 = "2020"; var yr4 = "2021"; var yr5 = "2022";
+}
+<div class="left_col scroll-view">
+    <div class="navbar nav_title" style="border: 0;">
+        <a href="/" class="site_title" title="NMDPRA Depot Portal">
+            <img src="@Url.Content("/OldDepotStyle/Content/Images/coat-of-arm.jpg")" alt="NMDPRA Depot Portal" class="img-circle"><span>NMDPRA Depot Portal</span>
+        </a>
+    </div>
+    <div class="clearfix"></div>
+
+    <!-- menu profile quick info -->
+    <div class="profile">
+        <div class="profile_pic">
+            @* /Content/Images/img.jpg *@
+            <img src="@Url.Content("/OldDepotStyle/Content/Images/default_avatar.png")" alt="..." class="img-circle profile_img">
+        </div>
+        <div class="profile_info">
+            <span>Welcome,</span>
+            <h2>@userName</h2>
+        </div>
+    </div>
+    <!-- /menu profile quick info -->
+    <!-- sidebar menu -->
+    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+        <div class="menu_section">
+            <h3>Support</h3>
+            <ul class="nav side-menu">
+
+                <li id="lnk-Applications" class="more">
+                    <a href="#">
+                        <i class="fa fa-home"></i>Applications <span class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu">
+                        <li>
+                            <a href="@Url.Action("Index", "Application")">All Applications</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("All", "Company")">All Companies</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("AllFacilities", "Facility")">All Facilities</a>
+                        </li>
+                    </ul>
+                </li>
+                <li id="lnk-Reports" class="more">
+                    <a href="#" class=""><i class="fa fa-bar-chart" aria-hidden="true"></i>Reports <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                        <li id="lnk-Year" class="more">
+                            <a href="#" class=""><i class="fa fa-bar-chart" aria-hidden="true"></i>Application Year<span class="fa fa-chevron-down"></span></a>
+
+                            <ul class="nav child_menu">
+                                @using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                                {
+                                    <li>
+                                        <input type="submit" value="2018" class="btn btn-success" />
+                                        <input class="form-control" type="hidden" id="year" name="year" value="2018" hidden />
+                                    </li>
+                                }@using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                                {
+                                    <li>
+                                        <input type="submit" value="2019" class="btn btn-success" />
+                                        <input class="form-control" type="hidden" id="year" name="year" value="2019" hidden />
+                                    </li>
+                                }@using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                                {
+                                    <li>
+                                        <input type="submit" value="2020" class="btn btn-success" />
+                                        <input class="form-control" type="hidden" id="year" name="year" value="2020" hidden />
+                                    </li>
+                                }@using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                                {
+                                    <li>
+                                        <input type="submit" value="2021" class="btn btn-success" />
+                                        <input class="form-control" type="hidden" id="year" name="year" value="2021" hidden />
+                                    </li>
+                                }
+                                @*<li><a href="/Reports/ApplicationSummary">2018</a></li>
+                                    <li><a href="/Reports/ApplicationSummary">2019</a></li>
+                                    <li><a href="/Reports/ApplicationSummary">2020</a></li>
+                                    <li><a href="/Reports/ApplicationSummary">2021</a></li>*@
+
+                            </ul>
+
+                        </li>
+                        <li><a href="/Reports/PaymentSummary">Payment Summary</a></li>
+                        <li><a href="/Reports/PaymentExport">Payment Receipt</a></li>
+                        <li><a href="/Reports/PermitNLicenseSummary">Permits Summary</a></li>
+                        <li><a href="/Reports/ApplicationSummary">Applications Summary</a></li>
+                        <li>
+                            <a href="@Url.Action("RejectedApplications", "Application")">Rejected Applications</a>
+                        </li>
+                        <li><a href="/Invoice">Invoice</a></li>
+                        <li><a href="/Invoice/Receipt">Receipt</a></li>
+                    </ul>
+                </li>
+                <li id="lnk-payment">
+                    <a href="@Url.Action("Remitalist", "Payment")"><i class="fa fa-money"></i>Payment Transactions</a>
+                </li>
+                <li class="" id="lnk-Permits">
+                    <a href="@Url.Action("Permits", "Application")"><i class="fa fa-sign-in"></i>Permits</a>
+                </li>
+                <li id="lnk-search" class="more">
+                    <a href="#">
+                        <i class="fa fa-lock" aria-hidden="true"></i>Search <span class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu">
+                        <li>
+                            <a href="/Search/Legacy">Search Legacy</a>
+                        </li>
+                        <li>
+                            <a href="/Search">Search Others</a>
+                        </li>
+                        <li>
+                            <a href="/Application/Deleted">Deleted Applications</a>
+                        </li>
+                    </ul>
+                </li>
+                <li id="lnk-Branches">
+                    <a href="@Url.Action("Facility", "Update")"><i class="fa fa-cubes"></i>Update Facility Identification Code</a>
+                </li>
+                @if (userRole.Contains("ITAdmin"))
+                {
+                    <li>
+                        <a href="/Search/DownloadCompanyExcel">Download Depot Company</a>
+                    </li>
+                }
+                <li id="lnk-Access" class="more">
+                    <a href="#">
+                        <i class="fa fa-lock" aria-hidden="true"></i>Access Management <span class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu">
+
+                        <li>
+                            <a href="/UsersAdmin">Staffs Admin</a>
+                        </li>
+                        @if (userRole.Contains("Support"))
+                        {
+                            <li>
+                                <a href="/Payment/GiveValue">Give Value</a>
+                            </li>
+                        }
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /sidebar menu -->
+    <!-- /menu footer buttons -->
+    <div class="sidebar-footer hidden-small">
+        <a data-toggle="tooltip" data-placement="top" title="Settings">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="Lock">
+            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+        </a>
+        <a href="javascript:document.getElementById('logoutForm').submit()" data-toggle="tooltip" data-placement="top" title="Logout">
+            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+        </a>
+    </div>
+    <!-- /menu footer buttons -->
+</div>
+
+
+
+
+
+@*<ul>
+
+        @if (userEmail.ToLower() == "itoro.g@brandonemaxfront.com".ToLower())
+        {
+            <li id="lnk-Access" class="more">
+                <a href="#">
+                    <i class="icon-directions" aria-hidden="true"></i>
+                    <span>Access Management</span>
+                    <span class="more"></span>
+                    <span class="act"></span>
+                </a>
+                <ul>
+                    <li>
+                        <a href="/UsersAdmin">
+                            <i class="icon-pointer" aria-hidden="true"></i>
+                            <span>Staffs Admin</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
+
+        <li id="lnk-Log">
+            @*<a href="http://goo.gl/forms/KNkCx6KVko" target="_blank">*
+            <a href="https://goo.gl/b1ezXO" target="_blank">
+                <i class="icon-list" aria-hidden="true"></i>
+                <span>Log an Issue</span>
+                <span class="act"></span>
+            </a>
+        </li>
+
+    </ul>*@

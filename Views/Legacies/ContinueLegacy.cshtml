@@ -1,0 +1,267 @@
+﻿@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.BothDocuments>
+
+@{ ViewData["Title"] = "Continue Legacy : " + ViewData["ResubmitTitle"];
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    List<States_UT> states = ViewBag.States as List<States_UT>; }
+
+<div>
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName"> @ViewData["Title"] </h3>
+        <hr />
+    </div>
+
+    <br />
+
+   
+
+    @if (Model.FirstOrDefault().legacyModels.Count() > 0)
+    {
+        foreach (var leg in Model.FirstOrDefault().legacyModels)
+        {
+<div style="margin:20px">
+
+  
+    <br />
+
+    <form action="#" id="FormContinueLegacy" method="post">
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <input type="text" hidden value="@leg.Legacy.Id" id="txtLegacyID" />
+
+                <b> Facility Information </b>
+
+                <hr />
+
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label> Depot (Facility) Name</label>
+                        <input class="form-control col-sm-12" id="txtFacilityName" value="@leg.Legacy.FacilityName" required name="txtFacilityName" placeholder="Facility name..." />
+
+                    </div>
+                </div>
+
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label> Facility Address</label>
+                        <input class="form-control" id="txtFacilityAddress" value="@leg.Legacy.FacilityAddress" required name="txtFacilityAddress" placeholder="Facility address..." />
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label> State </label>
+                            <select class="form-control valid" id="txtFacilityState" name="txtFacilityState" required>
+
+                                @foreach (var ct in states)
+                                {
+            <option value="@ct.State_id">@ct.StateName</option>}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label> LGA </label>
+                            <select class="form-control valid" id="txtFacilityLGA" required name="txtFacilityLGA">
+                            </select>
+                            <br />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label> City </label>
+                            <input class="form-control" id="txtFacilityCity" required value="@leg.Legacy.City" name="txtFacilityCity" placeholder="Facility city..." />
+                        </div>
+                    </div>
+
+                   
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label> Contact Person </label>
+                                <input type="text" class="form-control" id="txtContactName" value="@leg.Legacy.ContactName" required name="txtContactName" placeholder="Fullname" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label> Contact Phone </label>
+                                <input type="number" class="form-control" id="txtContactPhone" value="@leg.Legacy.ContactPhone" required name="txtContactPhone" placeholder="090**********" />
+                            </div>
+                        </div>
+
+                        @*<div class="col-sm-5">
+                            <div class="form-group">
+                                <label> Size of Land Sqr Meters ? </label>
+                                <input class="form-control" type="number" id="txtMeters" required name="txtMeters" value="@leg.Legacy.LandMeters" placeholder="100" />
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label> Site along pipe-line ? </label>
+                                <select class="form-control valid" id="seltxtPipeLine" required name="seltxtPipeLine">
+
+                                    <option value="@leg.Legacy.IsPipeline"> @leg.Legacy.IsPipeline </option>
+                                    <option value="true">YES</option>
+                                    <option value="false">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label> Site under high tention ? </label>
+                                <select class="form-control valid" id="seltxtHighTention" required name="seltxtHighTention">
+                                    <option value="@leg.Legacy.IsHighTension"> @leg.Legacy.IsHighTension </option>
+                                    <option value="true">YES</option>
+                                    <option value="false">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label> Site on high-way ? </label>
+                                <select class="form-control valid" id="seltxtHighWay" required name="seltxtHighWay">
+                                    <option value="@leg.Legacy.IsHighway"> @leg.Legacy.IsHighway </option>
+                                    <option value="true">YES</option>
+                                    <option value="false">NO</option>
+                                </select>
+                            </div>
+                        </div>*@
+
+                 
+                    <br />
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-6">
+
+                <b> Legacy Information </b>
+
+                <hr />
+
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <label class="label"><b> Last Application Type </b></label>
+                        <select class="form-control col-sm-12" required id="seltxtAppTypes" name="seltxtAppTypes">
+                            <option value="@leg.Legacy.AppType"> @leg.Legacy.AppType </option>
+
+                            @if ((ViewBag.CategoryTypes as List<NewDepot.Models.CategoryType>).Count() > 0)
+                            {
+                                foreach (var m in (ViewBag.CategoryTypes as List<NewDepot.Models.CategoryType>))
+                                {
+        <option value="@m.CategoryName" data-counter="@m.Counter">@m.CategoryName</option>}
+                            }
+
+                        </select>
+                    </div>
+
+
+                </div>
+
+                <br />
+
+
+
+                <div class="col-sm-11">
+                    <div class="form-group">
+                        <label> Licence Number </label>
+                        <input type="text" class="form-control" id="txtLicenceNumber" value="@leg.Legacy.LicenseNo" required name="txtLicenceNumber" placeholder="LPD/*********" />
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label> Issue Date </label>
+                            <br />
+                            <b class="text-danger">@leg.Legacy.Issue_Date</b>
+                            <input type="datetime" class="form-control" id="txtIssuedDate" required name="txtIssuedDate" value="@leg.Legacy.Issue_Date" placeholder="01/01/1900 12:00 AM" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label> Expiry Date </label>
+                            <br />
+                            <b class="text-danger">@leg.Legacy.Exp_Date</b>
+                            <input type="datetime" class="form-control" id="txtExpiryDate" required name="txtExpiryDate" value="@leg.Legacy.Exp_Date" placeholder="01/01/1901 12:00 PM" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+
+            </div>
+        </div>
+
+        <br />
+
+
+
+        <hr />
+
+        <div class="text-center">
+
+            <button type="submit" class="btn btn-success m-b-10 m-l-5">Continue Legacy </button>
+            &nbsp;
+
+            <div id="FormContinueLegacyInfo"> </div>
+
+        </div>
+
+    </form>
+
+</div>}
+}
+
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#txtFacilityState").change(function () {
+                var html = "";
+                var stateID = $("#txtFacilityState option:selected").val();
+                $("#txtFacilityLGA").html("");
+
+                $.getJSON("/Helpers/GetLga/",
+                    { "id": stateID },
+                    function (datas) {
+
+                        $("#txtFacilityLGA").append("<option disabled selected></option>");
+                        $.each(datas,
+                            function (key, val) {
+                                html += "<option value=" + val.id + ">" + val.name + "</option>";
+                            });
+                        $("#txtFacilityLGA").append(html);
+
+                    });
+            });
+
+        });
+
+
+    </script>
+ 
+
+}

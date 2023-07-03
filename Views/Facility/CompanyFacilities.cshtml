@@ -1,0 +1,132 @@
+﻿@model IEnumerable<NewDepot.Models.Facilities>
+@using NewDepot.Models;
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    Layout = null;
+    var Products = new List<Products>();
+    var Companies = new List<companies>();
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+
+}
+<style type="text/css">
+    .badge{
+        border-radius: 14px;
+        padding: 8px 11px;
+    }
+</style>
+
+<div class="">
+    <br />
+    <table class="table table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                @*<th>
+                    Drive In/Out
+                </th>*@
+                <th>
+                    Contact
+                </th>
+                <th>
+                    Street Address
+                </th>
+                <th>
+                    Pumps
+                </th>
+                <th>
+                    Tanks
+                </th>
+                <th></th>
+               
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            var address = item.address_1 + ", " + item.city + ", " + item.StateName;
+            var compName = Companies.Where(x => x.id == item.CompanyId).FirstOrDefault().name;
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                @*<td>
+                    @item.NoofDriveIn/@item.NoofDriveOut
+                </td>*@
+            <td>
+                @compName<br />
+                @item.ContactNumber
+            </td>
+                <td>
+                    @address
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoOfPumps)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoOfTanks)
+                </td>
+                <td><a href="#" class="btn btn-xs btn-info viewTk" data-target="#tankDet_@item.Id">View Tanks</a></td>
+            </tr>
+            <tr class="hide" id="tankDet_@item.Id">
+                <td colspan="7">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tank Name</th>
+                                    <th>Product</th>
+                                    <th>Capacity</th>
+                                </tr>
+                                @foreach (var tk in item.Tanks)
+                                {
+                                    var count = Convert.ToInt16(item.Tanks.IndexOf(tk)) + 1;
+                                    var cap = Convert.ToDouble(tk.MaxCapacity);
+                                    var prodName = Products.Where(x => x.Id == tk.ProductId).FirstOrDefault().Name;
+                                    <tr>
+                                        <td>@count</td>
+                                        <td>@tk.Name</td>
+                                        <td>@prodName </td>
+                                        <td>@cap.ToString("###,###,##0.00")</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="list-group">
+                                <div class="list-group-item">
+                                    <span>PMS</span>
+                                    <span class="badge">@item.Tanks.Where(a => a.ProductName.ToLower() == "pms").Sum(a => Convert.ToDouble(a.MaxCapacity)).ToString("###,###,##0.00")</span>
+                                </div>
+                                <div class="list-group-item">
+                                    <span>AGO</span>
+                                    <span class="badge">@item.Tanks.Where(a => a.ProductName.ToLower() == "ago").Sum(a => Convert.ToDouble(a.MaxCapacity)).ToString("###,###,##0.00")</span>
+                                </div>
+                                <div class="list-group-item">
+                                    <span>DPK</span>
+                                    <span class="badge">@item.Tanks.Where(a => a.ProductName.ToLower() == "dpk").Sum(a => Convert.ToDouble(a.MaxCapacity)).ToString("###,###,##0.00")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+               
+            </tr>
+        }
+
+    </table>
+</div>
+<br />

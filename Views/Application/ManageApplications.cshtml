@@ -1,0 +1,104 @@
+﻿@model IEnumerable<NewDepot.Models.MyApps>
+
+@{
+    ViewBag.Title = "Company Applications";
+    int counter = 0;
+
+}
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li>Applications</li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reference)
+            </th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Date Applied</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    @foreach (var item in Model)
+    {
+        string alertx, alertd = string.Empty;
+        if (item.Status.ToLower() == "approved") { alertx = "alert-success"; }
+        else if ((item.Status.ToLower() == "processing") || (item.Status.ToLower() == "payment completed")) { alertx = "alert-info"; }
+        else if ((item.Status.ToLower() == "pending") || (item.Status.ToLower() == "payment pending")) { alertx = "alert-warning"; }
+        else { alertx = "alert-danger"; }
+
+        var startDate = item.Date_Added;
+        var ExpDate = startDate.AddYears(1);
+        var check = ExpDate.AddDays(-30);
+        var now = DateTime.Now;
+
+        if (check <= now)
+        {
+            alertd = "alert-danger";
+        }
+        counter++;
+        <tr>
+            <td>
+                @counter
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reference)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                <div class="alert alert-mini @alertx">
+                    <strong>@Html.DisplayFor(model => item.Status)</strong>
+                </div>
+            </td>
+            <td>
+                @item.Date_Added.ToShortDateString()
+            </td>
+            <td class="txtright">
+                @if (item.Status.ToLower() == "payment pending")
+                {
+                    <a href="/Application/Payment?id=@item.appID &refCode=@item.Reference" class="btn btn-xs btn-warning ">Pay Now <i class="glyphicon glyphicon-credit-card"></i></a>
+                }
+                else if (item.RemainingDocs.Count > 0 && item.Status.ToLower() == "rejected")
+                {
+                    <div class="btn-group">
+                        <a href="/Application/AppDocument/@item.appID" class="btn btn-xs btn-info ">Add Documents <i class="glyphicon glyphicon-folder-open"></i></a>
+                        <a href="/Process/RejectedApplication?AppId=@item.appID" class="btn btn-xs btn-danger ">See Why <i class="glyphicon glyphicon-question-sign"></i></a>
+                    </div>
+                }
+                else if (item.Status.ToLower() == "rejected")
+                {
+                    <div class="btn-group">
+                        <a href="/Application/@item.appID" class="btn btn-xs btn-info ">View <i class="glyphicon glyphicon-eye-open"></i></a>
+                        <a href="/Process/RejectedApplication?AppId=@item.appID" class="btn btn-xs btn-danger ">See Why <i class="glyphicon glyphicon-question-sign"></i></a>
+                    </div>
+                }
+                else if (item.Submitted == false)
+                {
+                    //Session["ApplicationId"] = item.appID;
+
+                    <a href="/Company/ContinueApplication" class="btn btn-xs btn-info ">Complete Application <i class="glyphicon glyphicon-eye-open"></i></a>
+                }
+                else
+                {
+                    <a href="/Application/@item.appID" class="btn btn-xs btn-info ">View <i class="glyphicon glyphicon-eye-open"></i></a>
+                }
+            </td>
+        </tr>
+    }
+
+</table>

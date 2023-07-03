@@ -1,0 +1,340 @@
+﻿@model LPGDepot.Models.InspectionForm
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>InspectionForm</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AppId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AppId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PipeWorks)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PipeWorks)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TestRunObservation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TestRunObservation)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsGasLeak)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsGasLeak)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsGasLeakComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsGasLeakComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsEmergency)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsEmergency)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsEmergencyComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsEmergencyComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsFireExtinguisher)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsFireExtinguisher)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsFireExtinguisherComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsFireExtinguisherComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsChemicalFoam)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsChemicalFoam)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsChemicalFoamComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsChemicalFoamComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsLighteningProtective)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsLighteningProtective)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsLighteningProtectiveComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsLighteningProtectiveComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsMechanicalLeak)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsMechanicalLeak)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsMechanicalLeakComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsMechanicalLeakComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsNoNakedLight)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsNoNakedLight)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsNoNakedLightComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsNoNakedLightComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsNoSmoking)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsNoSmoking)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsNoSmokingComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsNoSmokingComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDecantingSystem)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsDecantingSystem)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDecantingSystemComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsDecantingSystemComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsSmfillingHead)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsSmfillingHead)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsWeighingBridge)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsWeighingBridge)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsWeighingBridgeComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsWeighingBridgeComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCounterWeighingBridge)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCounterWeighingBridge)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCounterWeighingBridgeComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCounterWeighingBridgeComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsFillingHead)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsFillingHead)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsConnectingHose)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsConnectingHose)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsGasSupplyLine)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsGasSupplyLine)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCathodicProtection)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCathodicProtection)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsUltraSonic)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsUltraSonic)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCorrosionInhibitor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCorrosionInhibitor)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsHandGloves)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsHandGloves)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsHandGlovesComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsHandGlovesComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsGasMask)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsGasMask)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsGasMaskComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsGasMaskComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsSafetyShoes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsSafetyShoes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsSafetyShoesComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsSafetyShoesComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsOverallJacket)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsOverallJacket)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsOverallJacketComment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsOverallJacketComment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SafteyOthers)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SafteyOthers)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HousingType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HousingType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PumpNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PumpNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CompressorsNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CompressorsNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsWaterSupply)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsWaterSupply)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsWaterHydrant)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsWaterHydrant)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PowerSupply)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PowerSupply)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedAt)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DeletedStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DeletedStatus)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DeletedBy)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DeletedBy)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DeletedAt)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DeletedAt)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="InsId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

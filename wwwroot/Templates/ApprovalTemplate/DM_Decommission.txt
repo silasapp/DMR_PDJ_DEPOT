@@ -1,0 +1,30 @@
+﻿
+
+<p style="font-family:Candara; font-size:18px; "><u><b>RE: APPROVAL TO DECOMMISSION PETROLEUM PRODUCTS STORAGE TANK</b></u></p>
+
+<div style="font-family:Candara; font-size:18px; ">
+<p style="text-align:justify; padding-top:-5px!important;">
+We refer to your application of {1}, for Approval To Modify a bulk storage depot facility at {0}, and the subsequent site inspection visit carried out on {2}.
+<br/>
+In view of the satisfactory report from the facility inspection, I am pleased to inform you that you are hereby granted Approval to decommission your
+{8} ({7}) storage tank(s) with the following product type/capacities:
+
+</p>
+ <table style="width: 100%; border-collapse: collapse; margin-top: -10px;"  class="table table-sm table-bordered">
+	<tr style="border: 1px solid black;">
+	<th colspan="5" style="border: 1px solid black;padding: 5px;height: 10px;">
+	</th>
+	</tr>
+	 <tr style="border: 1px solid black;">
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">S/No.</th>
+	 	<th style="border: 1px solid black; padding:2px;height: 20px;">Tank No. </th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">PRODUCT</th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">CAPACITY (litres)</th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">REMARK</th>
+	 </tr style="border: 1px solid black;">
+        <tbody>
+            {5}
+        </tbody>
+    </table>
+
+	</div>

@@ -1,0 +1,14 @@
+﻿@model IList<NewDepot.Models.Tanks>
+
+@{
+    Layout = null;
+    var nm = "Pumps[" + ViewBag.id + "].TankId";
+}
+<select name="@nm" required class="form-control">
+    <option value="">Select Tank</option>
+    @foreach (var item in Model)
+    {
+        <option value="@item.Id">@item.Name</option>
+    }
+</select>
+   

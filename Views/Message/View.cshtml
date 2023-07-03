@@ -1,0 +1,58 @@
+﻿@model NewDepot.Models.messages
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = Model.subject;
+}
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+
+            <a href="@Url.Action("Index", "Message")" class="btn btn-xs btn-info">Back to Messages <i class="fa fa-arrow-left"></i></a>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            @*<h3>@Model.subject</h3>
+                <hr />*@
+
+            @Html.Raw(Model.content)
+
+        </div>
+        @*<dl class="dl-horizontal">
+
+
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.sender_id)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.sender_id)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Date)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Date)
+                </dd>
+
+            </dl>*@
+    </div>

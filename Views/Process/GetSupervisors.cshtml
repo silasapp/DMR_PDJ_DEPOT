@@ -1,0 +1,104 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<Staff>
+
+@{
+
+
+    Layout = null;
+    int count = 0;
+
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    string desk = "Inspectors";
+
+    if (userRole.Contains("AD"))
+    {
+
+        desk = "Supervisor";
+    }
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">Push Application to a @desk's Desk</h3>
+</div>
+
+@if (Model != null && Model.Count() > 0)
+{
+<div class="modal-body">
+    <div>
+        <p>
+            Please select one @desk to push this application to
+        </p>
+        <table id="inspTable" class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="padding-left: 10px;">
+
+                    </th>
+                    <th>Staff Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td style="padding-left: 10px;">
+                            @if (item.ActiveStatus == true)
+                            {
+                                <input type="radio" id="@item.StaffID" name="supervisor" class="supv" value="@item.StaffID" />
+                            }
+                            else
+                            {
+
+                                <input type="radio" id="@item.StaffID" name="supervisor" class="" disabled value="@item.StaffID" />
+
+                            }
+                        </td>
+                        <td>@item.FirstName @item.LastName</td>
+                        <td>@item.StaffEmail</td>
+                        <td>
+                            @if (item.ActiveStatus == true)
+                            {
+                                <span class="label label-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">Not Available</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-4"></div>
+        <input type="button" id="btnAssign" value="Push Application(s)" class="btn btn-success" />
+    </div>
+    <p></p>
+
+    <div id="SPushInfo"> </div>
+</div>
+}
+else
+{
+    <div class="modal-body">
+        <div>
+            <p>
+                No supervisor found. Please contact the Portal admin for addition of staffs on the portal.
+            </p>
+        </div>
+    </div>
+}

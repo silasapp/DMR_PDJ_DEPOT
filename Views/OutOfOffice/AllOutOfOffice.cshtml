@@ -1,0 +1,354 @@
+﻿@using NewDepot.Models;
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@model IList<NewDepot.Models.OutOfOfficeModel>
+
+@{ ViewData["Title"] = "All Out Of Office";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    int count = 1;
+    GeneralClass generalClass = new GeneralClass();
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+    var userEmail = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionEmail));
+
+}
+
+
+    <div class="card-black">
+
+        <div class="card-title">All staff out of office</div>
+
+        <br />
+
+
+        <table id="TableAllOutOfOfficee" class="table table-hover table-bordered table-striped" style="font-size:small">
+            <thead>
+                <tr>
+                    <th>
+                        SN
+                    </th>
+                    <th>
+                        Staff
+                    </th>
+                    <th>
+                        Job(s) on Desk
+                    </th>
+                    <th>
+                        Reliever
+                    </th>
+                    <th>
+                        Date From
+                    </th>
+                    <th>
+                        Date To
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Comment
+                    </th>
+
+                    <th>
+                        Created At
+                    </th>
+                    <th>
+                        Updated At
+                    </th>
+                    <th>
+                        Approved By
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    var cnt = count++;
+                    <tr>
+                        <td>@cnt</td>
+                        <td>@Model[i].Staff <br /> (@Model[i].StaffRole)</td>
+                        <td><p class="text-danger">@Model[i].DeskCount</p></td>
+                        <td>@Model[i].Reliever <br /> (@Model[i].RelieverRole)</td>
+                        <td>@Model[i].DateFrom</td>
+                        <td>@Model[i].DateTo</td>
+                        <td>
+                            @if (DateTime.Now < Convert.ToDateTime(Model[i].DateFrom.ToString()))
+                            {
+                                @Model[i].Status
+                            }
+                            else
+                            {
+                                <p class="text-danger"><i>Expired</i></p>
+                            }
+
+                        </td>
+                        <td>
+                            @Model[i].Comment
+                        </td>
+                     
+                        <td>
+                            @Model[i].CreatedAt
+                        </td>
+                        <td>
+                            @if (Model[i].UpdatedAt == null)
+                            {
+                                <p>Not yet updated</p>
+                            }
+                            else
+                            {
+                                @Model[i].UpdatedAt
+                            }
+                        </td>
+                        <td>
+                            @if (Model[i].Approved == null)
+                            {
+                                <p class="text-warning">Not yet approved</p>
+                            }
+                            else
+                            {
+                                @if (Model[i].Approved == true)
+                                {
+                                    <p class="text-success">Approved</p>
+                                }
+                                else
+                                {
+                                    <p class="text-danger">Declined</p>
+                                }
+
+                                <p class=""> @Model[i].ApprovedBy <br /><small>(@Model[i].ApproverRole)</small></p>
+                                <p>@Model[i].ApproverComment </p>
+                                <p>Date: @Model[i].ApprovedDate</p>
+                            }
+                        </td>
+                        <td>
+                            @if (Model[i].Approved == null && DateTime.Now < Convert.ToDateTime(Model[i].DateFrom.ToString()))
+                            {
+
+
+                                @if ((userRole == GeneralClass.ADPDJ || userRole == GeneralClass.SUPERVISOR) && Model[i].StaffLocation == GeneralClass.HQ && !Model[i].Staff.Contains(userEmail) )
+                                {
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-success" onclick="getOutOfOffice('@Model[i].OutID','@Model[i].Staff','@Model[i].StaffRole','@Model[i].Reliever','@Model[i].RelieverRole','@Model[i].DeskCount','@Model[i].DateFrom','@Model[i].DateTo')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ApprovalModal">Approve &nbsp;<i class="fa fa-check"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="getOutOfOffice('@Model[i].OutID','@Model[i].Staff','@Model[i].StaffRole','@Model[i].Reliever','@Model[i].RelieverRole','@Model[i].DeskCount','@Model[i].DateFrom','@Model[i].DateTo')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#RejectionModal">Decline &nbsp;<i class="fa fa-times"></i></button>
+                                    </div>
+                                }
+                                else if ((userRole == GeneralClass.TEAMLEAD || userRole == GeneralClass.OPSCON || userRole == GeneralClass.ZOPCON) && Model[i].StaffLocation != GeneralClass.HQ && !Model[i].Staff.Contains(userEmail))
+                                {
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-success" onclick="getOutOfOffice('@Model[i].OutID','@Model[i].Staff','@Model[i].StaffRole','@Model[i].Reliever','@Model[i].RelieverRole','@Model[i].DeskCount','@Model[i].DateFrom','@Model[i].DateTo')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ApprovalModal">Approve &nbsp;<i class="fa fa-check"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="getOutOfOffice('@Model[i].OutID','@Model[i].Staff','@Model[i].StaffRole','@Model[i].Reliever','@Model[i].RelieverRole','@Model[i].DeskCount','@Model[i].DateFrom','@Model[i].DateTo')" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#RejectionModal">Decline &nbsp;<i class="fa fa-times"></i></button>
+                                    </div>
+                                }
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+
+    @* Rejection modal*@
+    <div class="modal" id="RejectionModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content" id="RejectionLoadder">
+                <div class="modal-header">
+                    <h3 class="modal-title col-sm-8">
+                        Reject <b class="text-primary"><i>Out Of Office</i></b>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="btn btn-danger"><i class="fa fa-times"></i></span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input hidden value="" name="OutID" id="txtOutID" class="txtOutID" />
+                    <div class="alert alert-info">
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Staff Details (Out of office)</b></label><br />
+                            <input class="form-control txtStaffDetails" id="txtStaffDetails" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Outgoing Role</b></label><br />
+                            <input class="form-control txtStaffRole" id="txtStaffRole" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Desk Count</b></label><br />
+                            <input class="form-control txtDeskCount" id="txtDeskCount" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Releiving Staff Details</b></label><br />
+                            <input class="form-control txtReleiveStaffDetails" id="txtReleiveStaffDetails" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Relieving Role</b></label><br />
+                            <input class="form-control txtRLRole" id="txtRLRole" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Start Date</b></label><br />
+                            <input class="form-control txtStartDate" id="txtStartDate" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>End Date</b></label><br />
+                            <input class="form-control txtEndDate" id="txtEndDate" readonly />
+                        </div>
+                    </div>
+                    <h5><b>Comment:</b></h5>
+                    <textarea class="" id="txtRejectComment" name="comment" style="width:100%" rows="5" cols="68" placeholder="Some comment here..." required></textarea>
+
+                </div>
+                <div class="clear"></div>
+
+                <div class="row">
+                    <div class="col-md-5"></div>
+                    <input type="button" id="btnRejectOOF" value="Reject" class="btn btn-danger" />
+                </div>
+                <p></p>
+
+                <div id="RejectModalInfo"> </div>
+
+
+            </div>
+        </div>
+    </div>@* Approval modal*@
+    <div class="modal" id="ApprovalModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content" id="ApprovalLoadder">
+                <div class="modal-header">
+                    <h3 class="modal-title col-sm-8">
+                        Approve <b class="text-primary"><i>Out Of Office</i></b>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="btn btn-danger"><i class="fa fa-times"></i></span>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+
+                    <input hidden value="" name="OutID" id="txtOutID" class="txtOutID" />
+                    <div class="alert alert-info">
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Staff Details (Out of office)</b></label><br />
+                            <input class="form-control txtStaffDetails" id="txtStaffDetails" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Outgoing Role</b></label><br />
+                            <input class="form-control txtStaffRole" id="txtStaffRole" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Desk Count</b></label><br />
+                            <input class="form-control txtDeskCount" id="txtDeskCount" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Releiving Staff Details</b></label><br />
+                            <input class="form-control txtReleiveStaffDetails" id="txtReleiveStaffDetails" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Relieving Role</b></label><br />
+                            <input class="form-control txtRLRole" id="txtRLRole" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>Start Date</b></label><br />
+                            <input class="form-control txtStartDate" id="txtStartDate" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label"><b>End Date</b></label><br />
+                            <input class="form-control txtEndDate" id="txtEndDate" readonly />
+                        </div>
+                    </div>
+
+                    <h5><b>Comment:</b></h5>
+                    <textarea class="" id="txtApproveComment" name="comment" style="width:100%" rows="5" cols="68" placeholder="Some comment here..." required></textarea>
+
+                </div>
+                <div class="clear"></div>
+
+                <div class="row">
+                    <div class="col-md-5"></div>
+                    <input type="button" id="btnApproveOOF" value="Approve" class="btn btn-success" />
+                </div>
+                <p></p>
+
+                <div id="ApprovalModalInfo"> </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+
+        function getOutOfOffice(Id, staffName, staffRole, RelieverName, RelieverRole, DeskCount, DateFrom, DateTo) {
+            $(".txtOutID").val(Id);
+            $(".txtStaffDetails").val(staffName );
+            $(".txtStaffRole").val(staffRole );
+            $(".txtReleiveStaffDetails").val(RelieverName);
+            $(".txtRLRole").val(RelieverRole);
+            $(".txtDeskCount").val(DeskCount);
+            $(".txtStartDate").val(DateFrom);
+            $(".txtEndDate").val(DateTo);
+        }
+
+        $(function () {
+            $("#TableAllOutOfOfficee").dataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                    'copyHtml5',
+                    {
+                        extend: 'csvHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        footer: true
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        footer: true,
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed two-column'
+                    }
+
+                ],
+
+                "aLengthMenu": [50, 100, 150, 200, 250],
+                'iDisplayLength': 200,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+        });
+    </script>
+}

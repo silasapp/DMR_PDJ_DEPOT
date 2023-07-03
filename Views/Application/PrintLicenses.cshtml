@@ -1,0 +1,191 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers
+@using System.Configuration
+@model IEnumerable<permitsModel>
+
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ViewBag.Title = "My Permits";
+    int count = 0;
+    var Category = (List<Categories>)ViewBag.Category;
+
+
+}
+
+
+<div class="card">
+    <section class="content-header">
+        <div class="row">
+            <div class="col-md-8 col-xs-6">
+                <h2 class="">@ViewBag.Header</h2>
+            </div>
+            <div class="col-md-4 col-xs-6">
+                <div class="righty">
+                    @*<button type="submit" class="btn btn-primary">Batch Print</button>*@
+                    @if (ViewBag.Printed)
+                    {
+                        <a href="/Application/printlicenses?printed=false" class="btn btn-success">License Waiting </a>
+                    }
+                    else
+                    {
+                        <a href="/Application/printlicenses?printed=true" class="btn btn-warning">Printed License </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="widget-content">
+        <table class="table table-hover table-bordered table-striped dataTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>
+                        Permit Number
+                    </th>
+                    <th>
+                        Application Id
+                    </th>
+                    <th>
+                        Company Name
+                    </th>
+                    <th>Facility Name</th>
+                    <th>
+                        Category
+                    </th>
+                    <th>
+                        Phase
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date_Issued)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date_Expire)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                var check = item.Date_Expire.AddDays(-30);
+                var now = DateTime.Now;
+                string color = string.Empty;
+
+                if (item.Date_Expire < now)
+                {
+                    color = "danger";
+                }
+                else if (check <= now)
+                {
+                    color = "warning";
+                }
+                count++;
+
+        <tr class="@color">
+            <td>@count</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Permit_No)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FacilityName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhaseName)
+            </td>
+            <td>
+                @item.Date_Issued.ToShortDateString()
+            </td>
+            @if (item.CheckApprovalType == "Yes")
+            {
+                <td>
+                    @item.Date_Expire.ToShortDateString()
+                </td>
+            }
+            else
+            {
+                <td>
+                    <b>Not Applicable</b>
+                </td>
+            }
+            <td class="txtright">
+                <div class="btn-group">
+                    @if (item.Category_id == ViewBag.LicenseId && item.Permit_No.ToLower().Contains("/r"))
+                    {
+                        <a href="/Application/ViewPermit/@item.OrderId" class="btn btn-xs btn-success" target="_blank">Download <i class="glyphicon glyphicon-file"></i></a>
+                    }
+                    @if (item.Date_Expire < now && item.CheckApprovalType == "Yes")
+                    {
+                        <p class="text-danger">Expired</p>
+                    }
+
+                </div>
+            </td>
+
+        </tr>
+            }
+
+        </table>
+    </div>
+</div>
+
+    @section Scripts{
+        <script type="text/javascript">
+            $(function () {
+                $("#lnkPermits").addClass("active");
+
+                $(".dataTable").dataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'pageLength',
+                        'copyHtml5',
+                        {
+                            extend: 'csvHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            footer: true
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print all',
+                            footer: true,
+                            exportOptions: {
+                                modifier: {
+                                    selected: null
+                                }
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            collectionLayout: 'fixed two-column'
+                        }
+
+                    ],
+
+                    "aLengthMenu": [50, 100, 150, 200, 250],
+                    'iDisplayLength': 200,
+                    columnDefs: [{ orderable: false, "targets": [-1] }],
+                    "language": {
+                        "lengthMenu": "Display _MENU_ records per page",
+                        "zeroRecords": "Nothing found - sorry",
+                        "infoEmpty": "No records available",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+            });
+        </script>
+    }

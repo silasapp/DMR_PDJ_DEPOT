@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[Phases] (
+    [id]                  INT             IDENTITY (1, 1) NOT NULL,
+    [category_id]         INT             NOT NULL,
+    [name]                NVARCHAR (150)  NOT NULL,
+    [Description]         NVARCHAR (2000) NULL,
+    [Deleted]             BIT             NULL,
+    [Price]               DECIMAL (18, 2) NULL,
+    [ServiceCharge]       DECIMAL (18, 2) NULL,
+    [Stage]               INT             NOT NULL,
+    [PriceByVolume]       BIT             NOT NULL,
+    [ShortName]           NVARCHAR (50)   NULL,
+    [ProcessingFee]       DECIMAL (18, 2) NOT NULL,
+    [ProcessingFeeByTank] BIT             NOT NULL,
+    [SanctionFee]         DECIMAL (18, 2) NULL,
+    [IssueType]           NVARCHAR (50)   NULL,
+    [FlowType]            NVARCHAR (50)   NULL,
+    [CreatedAt]           DATETIME        NULL,
+    [CreatedBy]           INT             NULL,
+    [UpdatedAt]           DATETIME        NULL,
+    [UpdatedBy]           INT             NULL,
+    [DeleteStatus]        BIT             NULL,
+    [DeletedBy]           INT             NULL,
+    [DeletedAt]           DATETIME        NULL,
+    CONSTRAINT [PK_services_id] PRIMARY KEY CLUSTERED ([id] ASC)
+);
+

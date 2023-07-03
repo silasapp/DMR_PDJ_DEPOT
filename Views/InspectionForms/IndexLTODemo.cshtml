@@ -1,0 +1,1323 @@
+﻿@using NewDepot.Controllers.Accounts;
+@model IEnumerable<NewDepot.Models.InsectionList>
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "INSPECTION FORM";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+
+<div class="card">
+
+    <br />
+
+    <h4><b> VERIFICATION INSPECTION SCHEDULE FOR LIQUEFIED PETROLEUM GAS DEPOT.</b></h4>
+    <hr />
+
+    <div class="alert alert-info">
+        <div>
+            <h5>Reference NO : @ViewData["RefNo"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Company Name : @ViewData["CompanyName"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Facility Name : @ViewData["FacilityName"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Facility Address : @ViewData["FacilityAddress"] </h5>
+        </div>
+        <br />
+        <div>
+            <h5>Application : @ViewData["AppCategory"] </h5>
+        </div>
+
+    </div>
+
+    <p><br /></p>
+
+    <input type="text" hidden value="@ViewData["InspectionAppID"]" id="txtAppID" />
+
+    @if (Model.FirstOrDefault().inspectionForms.Count() == 0)
+    {
+        <form role="form" method="post" action="#" id="FormCreateInspection">
+
+            <div>
+
+                <b class="text-danger">A.  1. <u> TANK FARM </u></b>
+                <p></p>
+
+                <br />
+
+                <table class="table table-bordered table-hover" style="resize:both; font-size:small">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Capacity</th>
+                            <th>Design Pressure</th>
+                            <th>Working Pressure</th>
+                            <th>Last Date of Pressure Test</th>
+                            <th>Tank Surface</th>
+                            <th>Pressure Gauge</th>
+                            <th>Temp. Gauge</th>
+                            <th>Gas Line</th>
+                            <th>Levele Gauge</th>
+                            <th>Inlet Valve</th>
+                            <th>Outlet Valve</th>
+                            <th>Sprinkler</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="AppendMore">
+                        <tr>
+                            <td>
+                                <input type="number" required class="form-control-sm" id="txtCapacity[]" name="txtCapacity[]" placeholder="(MT)" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control-sm" id="txtDesign[]" placeholder="(Kg/Cm2)" name="txtDesign[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control-sm" id="txtPressure[]" name="txtPressure[]" placeholder="(Kg/Cm2)" />
+                            </td>
+
+                            <td>
+                                <input type="date" class="form-control-sm" id="txtLasDate[]" placeholder="" name="txtLasDate[]" />
+                            </td>
+
+                            <td>
+                                <select class="form-control" id="txtSurface[]" name="txtSurface[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <select class="form-control" id="txtPressureGauge[]" name="txtPressureGauge[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="txtTempGauge[]" name="txtTempGauge[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="txtGasLine[]" name="txtGasLine[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="txtLevelGauge[]" name="txtLevelGauge[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="txtInlet[]" name="txtInlet[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="txtOutlet[]" name="txtOutlet[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="txtSprinkler[]" name="txtSprinkler[]">
+                                    <option></option>
+                                    <option value="OK">OK</option>
+                                    <option value="NOT OK">NOT OK</option>
+                                </select>
+                            </td>
+
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br />
+
+                <div class="text-left">
+                    <button class="btn btn-primary" id="" onclick="AddMore()"> <i class="fa fa-plus"> </i> Add More </button>
+                </div>
+                <br />
+
+            </div>
+
+            <p></p>
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label"><b>(ii) Pipe Works </b></label>
+                        <input type="text" id="txtPipeWoks" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label"><b> (iii) Test run of depot (To be performed if result from D(ii) are statutory) Observations </b> </label>
+                        <input type="text" id="txtTestRun" class="form-control" />
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <b class="text-danger"> B. <u> SAFTEY FACILITIES </u></b>
+
+            <P></P>
+
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (i) Gas Leak Detector </b> </label>
+                        <select class="form-control" id="txtGasLeak">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtGasLeakComment" />
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (ii) Emergency shutdown system </b> </label>
+                        <select class="form-control" id="txtEmergency">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtEmergencyComment" />
+                    </div>
+
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (iii) Fire Extinguishers </b> </label>
+                        <select class="form-control" id="txtFireExtinguishers">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments (Foam, CO2, DCP etc...) </b> </label>
+                        <input type="text" class="form-control" id="txtFireExtinguishersComment" />
+                    </div>
+
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (iv) Chemical Foam Truck </b> </label>
+                        <select class="form-control" id="txtChemicalFoam">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtChemicalFoamComment" />
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <b class="text-danger"> C. <u> FILLING PLATFORM FACILITIES </u></b>
+
+            <P></P>
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (v) Lightening Protective Devices </b> </label>
+                        <select class="form-control" id="txtLightening">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments (Gas, Flame, Explosion proof...) </b> </label>
+                        <input type="text" class="form-control" id="txtLighteningComment" />
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (vi) Mechanical Leak Tester/Water Bath </b> </label>
+                        <select class="form-control" id="txtMechanicalLeak" name="[]">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtMechanicalLeakComment" />
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (vii) "No Naked Light" sign posts </b> </label>
+                        <select class="form-control" id="txtNaked">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtNakedComment" />
+                    </div>
+
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (viii) "No Smoking" sign posts </b> </label>
+                        <select class="form-control" id="txtSmoking" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtSmokingComment" />
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (viii) Decanting System </b> </label>
+                        <select class="form-control" id="txtDecanting" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments (Mode of Operations) </b> </label>
+                        <input type="text" class="form-control" id="txtDecantingComment" />
+                    </div>
+                </div>
+
+            </div>
+            <hr />
+
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (i) Single/Multiple filling head </b> </label>
+                        <input type="text" class="form-control" id="txtSMFilling" />
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (ii) Weighing Bridge </b> </label>
+                        <select class="form-control" id="txtWeighing" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments (Date Calibrated) </b> </label>
+                        <input type="date" class="form-control" id="txtWeighingComment" />
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (iii) Counter Weighing Bridge </b> </label>
+                        <select class="form-control" id="txtCounterWeighing">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments (Date Calibrated) </b> </label>
+                        <input type="date" class="form-control" id="txtCounterWeighingComment" />
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3">
+
+                    <b class="text-danger"> Indicate Leackage where occurring </b>
+
+                    <p></p>
+
+                    <div class="form-group">
+                        <label class="control-label"><b> (i) Filling Head </b> </label>
+                        <select class="form-control" id="txtFillingHead" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+
+                        <br />
+
+                        <label class="control-label"><b> (ii) Connecting Hose </b> </label>
+                        <select class="form-control" id="txtConnectingHose" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+
+                        <br />
+
+                        <label class="control-label"><b> (iii) Gas Supply Line </b> </label>
+                        <select class="form-control" id="txtGasSupply" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+
+                        <br />
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <hr />
+
+            <b class="text-danger">D. <u> CORROSION MONITORING </u></b>
+
+            <P></P>
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> (i) Cathodic Protection (if any)</b> </label>
+                        <select class="form-control" id="txtCathodic" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> (ii) Ultra-Sonic Thickness Measurement (UTM) </b> </label>
+                        <input type="text" class="form-control" id="txtUltraSonic" />
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> (iii) Corrosion Inhibitor (if any) </b> </label>
+                        <input type="text" class="form-control" id="txtCorrosion" />
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <hr />
+
+            <b class="text-danger">E. <u> SAFTEY WEARS </u></b>
+
+            <P></P>
+
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (a) Hand Gloves </b> </label>
+                        <select class="form-control" id="txtGloves" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtGlovesComment" />
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (b) Gas Mask </b> </label>
+                        <select class="form-control" id="txtGasMask" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtGasMaskComment" />
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (c) Saftey Shoes </b> </label>
+                        <select class="form-control" id="txtShoes" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtShoesComment" />
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label"><b> (d) Overall Jacket </b> </label>
+                        <select class="form-control" id="txtJacket" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                        <br />
+
+                        <label class="control-label"><b> Comments </b> </label>
+                        <input type="text" class="form-control" id="txtJacketComment" />
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <hr />
+
+
+            <b class="text-danger">F. <u> PUMP/COMPRESSOR AREA </u></b>
+
+            <P></P>
+
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Type of Housing </b> </label>
+                        <input type="text" class="form-control" id="txtHousing" />
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Number of Pumps </b> </label>
+                        <input type="text" class="form-control" id="txtPumpNumber" />
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label"><b> Number of Compressors </b> </label>
+                        <input type="text" class="form-control" id="txtCompressorsNO" />
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <hr />
+
+            <b class="text-danger">G. <u> DEPOT UTILITIES </u></b>
+
+            <P></P>
+
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="control-label"><b> Portable water supply </b> </label>
+                        <select class="form-control" id="txtWaterSupply">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="control-label"><b> Water Hydrant Points </b> </label>
+                        <select class="form-control" id="txtWaterHydrant" name="">
+                            <option></option>
+                            <option value="true">YES</option>
+                            <option value="false">NO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label class="control-label"><b> Power Supply (NEPA Only/Generator Only/NEPA & Generator) </b> </label>
+                        <input type="text" class="form-control" id="txtPowerSupply" />
+                    </div>
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="col-sm-12">
+                <div class="form-group">
+
+                    <label class="control-label"><b> Others Comments </b> </label>
+                    <input type="text" class="form-control" id="txtOthers" required />
+                </div>
+            </div>
+
+            <br /><br />
+
+            @*<div class="text-center">
+                <input type="submit" class="btn btn-primary" value="Submit Inspection" />
+                &nbsp;
+                <input type="reset" class="btn btn-outline-warning" value="Clear all" id="btnInspClear" />
+            </div>
+
+            <br />*@
+
+            <div id="InspectionInfo"></div>
+
+
+
+        </form>
+    }
+    else
+    {
+<form role="form" method="post" action="#" id="FormEditInspection">
+
+    <div>
+
+        <b class="text-danger">A.  1. <u> TANK FARM </u></b>
+        <p></p>
+
+        <br />
+
+        <table class="table table-bordered table-hover" style="resize:both; font-size:small">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Capacity</th>
+                    <th>Design Pressure</th>
+                    <th>Working Pressure</th>
+                    <th>Last Date of Pressure Test</th>
+                    <th>Tank Surface</th>
+                    <th>Pressure Gauge</th>
+                    <th>Temp. Gauge</th>
+                    <th>Gas Line</th>
+                    <th>Levele Gauge</th>
+                    <th>Inlet Valve</th>
+                    <th>Outlet Valve</th>
+                    <th>Sprinkler</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody id="AppendMore">
+
+                @foreach (var n in Model.FirstOrDefault().tankFarmInspections)
+                {
+                    <tr>
+                        <td>
+                            <input type="number" hidden value="@n.TankFarmId" id="txtTankID[]" name="txtTankID[]" />
+
+                            <input type="number" value="@n.Capacity" required class="form-control-sm" id="txtECapacity[]" name="txtECapacity[]" placeholder="(MT)" />
+                        </td>
+
+                        <td>
+                            <input type="text" value="@n.Dpressure" class="form-control-sm" id="txtEDesign[]" placeholder="(Kg/Cm2)" name="txtEDesign[]" />
+                        </td>
+                        <td>
+                            <input type="text" value="@n.Wpressure" class="form-control-sm" id="txtEPressure[]" name="txtEPressure[]" placeholder="(Kg/Cm2)" />
+                        </td>
+
+                        <td>
+                            <input type="date" value="@n.LpressureDate" class="form-control-sm" id="txtELasDate[]" placeholder="" name="txtELasDate[]" />
+                        </td>
+
+                        <td>
+                            <select class="form-control" id="txtESurface[]" name="txtESurface[]">
+                                <option value="@n.TankSurface">@n.TankSurface</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select class="form-control" id="txtEPressureGauge[]" name="txtEPressureGauge[]">
+                                <option value="@n.PressureGauge">@n.PressureGauge</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="txtETempGauge[]" name="txtETempGauge[]">
+                                <option value="@n.TemperatureGauge">@n.TemperatureGauge</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="txtEGasLine[]" name="txtEGasLine[]">
+                                <option value="@n.GasLine">@n.GasLine</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="txtELevelGauge[]" name="txtELevelGauge[]">
+                                <option value="@n.LevelGauge">@n.LevelGauge</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="txtEInlet[]" name="txtEInlet[]">
+                                <option value="@n.InletValve">@n.InletValve</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="txtEOutlet[]" name="txtEOutlet[]">
+                                <option value="@n.OutletValve">@n.OutletValve</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="txtESprinkler[]" name="txtESprinkler[]">
+                                <option value="@n.SprinklerSystem">@n.SprinklerSystem</option>
+                                <option value="OK">OK</option>
+                                <option value="NOT OK">NOT OK</option>
+                            </select>
+                        </td>
+
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @*<br />
+
+            <div class="text-left">
+                <button class="btn btn-primary" id="" onclick="AddMore()"> <i class="fa fa-plus"> </i> Add More </button>
+            </div>*@
+        <br />
+
+    </div>
+
+    <p></p>
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="control-label"><b>(ii) Pipe Works </b></label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().PipeWorks" id="txtEPipeWoks" class="form-control" />
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="control-label"><b> (iii) Test run of depot (To be performed if result from D(ii) are statutory) Observatiions </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().TestRunObservation" id="txtETestRun" class="form-control" />
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr />
+
+    <b class="text-danger"> B. <u> SAFTEY FACILITIES </u></b>
+
+    <P></P>
+
+    <div class="row">
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (i) Gas Leak Detector </b> </label>
+                <select class="form-control" id="txtEGasLeak">
+
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasLeak">@{ var s1 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasLeak == true ? "YES" : "NO"; } @s1 </option>
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasLeakComment" class="form-control" id="txtEGasLeakComment" />
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (ii) Emergency shutdown system </b> </label>
+                <select class="form-control" id="txtEEmergency">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsEmergency">@{ var s2 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsEmergency == true ? "YES" : "NO"; } @s2 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsEmergencyComment" class="form-control" id="txtEEmergencyComment" />
+            </div>
+
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (iii) Fire Extinguishers </b> </label>
+                <select class="form-control" id="txtEFireExtinguishers">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsFireExtinguisher">@{ var s3 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsFireExtinguisher == true ? "YES" : "NO"; } @s3 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments (Foam, CO2, DCP etc...) </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsFireExtinguisherComment" class="form-control" id="txtEFireExtinguishersComment" />
+            </div>
+
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (iv) Chemical Foam Truck </b> </label>
+                <select class="form-control" id="txtEChemicalFoam">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsChemicalFoam">@{ var s4 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsChemicalFoam == true ? "YES" : "NO"; } @s4 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsChemicalFoamComment" class="form-control" id="txtEChemicalFoamComment" />
+            </div>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <b class="text-danger"> C. <u> FILLING PLATFORM FACILITIES </u></b>
+
+    <P></P>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (v) Lightening Protective Devices </b> </label>
+                <select class="form-control" id="txtELightening">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsLighteningProtective">@{ var s5 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsLighteningProtective == true ? "YES" : "NO"; } @s5 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments (Gas, Flame, Explosion proof...) </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsLighteningProtectiveComment" class="form-control" id="txtELighteningComment" />
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (vi) Mechanical Leak Tester/Water Bath </b> </label>
+                <select class="form-control" id="txtEMechanicalLeak" name="[]">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsMechanicalLeak">@{ var s6 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsMechanicalLeak == true ? "YES" : "NO"; } @s6 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsMechanicalLeakComment" class="form-control" id="txtEMechanicalLeakComment" />
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (vii) "No Naked Light" sign posts </b> </label>
+                <select class="form-control" id="txtENaked">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsNoNakedLight">@{ var s7 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsNoNakedLight == true ? "YES" : "NO"; } @s7 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsNoNakedLightComment" class="form-control" id="txtENakedComment" />
+            </div>
+
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (viii) "No Smoking" sign posts </b> </label>
+                <select class="form-control" id="txtESmoking" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsNoSmoking">@{ var s8 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsNoSmoking == true ? "YES" : "NO"; } @s8 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsNoSmokingComment" class="form-control" id="txtESmokingComment" />
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (viii) Decanting System </b> </label>
+                <select class="form-control" id="txtEDecanting" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsDecantingSystem">@{ var s9 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsDecantingSystem == true ? "YES" : "NO"; } @s9 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments (Mode of Operations) </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsDecantingSystemComment" class="form-control" id="txtEDecantingComment" />
+            </div>
+        </div>
+
+    </div>
+    <hr />
+
+    <div class="row">
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (i) Single/Multiple filling head </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsSmfillingHead" class="form-control" id="txtESMFilling" />
+            </div>
+        </div>
+
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (ii) Weighing Bridge </b> </label>
+                <select class="form-control" id="txtEWeighing" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsWeighingBridge">@{ var s10 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsWeighingBridge == true ? "YES" : "NO"; } @s10 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments (Date Calibrated) </b> </label>
+                <input type="date" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsWeighingBridgeComment" class="form-control" id="txtEWeighingComment" />
+            </div>
+        </div>
+
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (iii) Counter Weighing Bridge </b> </label>
+                <select class="form-control" id="txtECounterWeighing">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsCounterWeighingBridge">@{ var s11 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsCounterWeighingBridge == true ? "YES" : "NO"; } @s11 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments (Date Calibrated) </b> </label>
+                <input type="date" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsCounterWeighingBridgeComment" class="form-control" id="txtECounterWeighingComment" />
+            </div>
+        </div>
+
+
+        <div class="col-sm-3">
+
+            <b class="text-danger"> Indicate Leackage where occurring </b>
+
+            <p></p>
+
+            <div class="form-group">
+                <label class="control-label"><b> (i) Filling Head </b> </label>
+                <select class="form-control" id="txtEFillingHead" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsFillingHead">@{ var s12 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsFillingHead == true ? "YES" : "NO"; } @s12 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+
+                <br />
+
+                <label class="control-label"><b> (ii) Connecting Hose </b> </label>
+                <select class="form-control" id="txtEConnectingHose" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsConnectingHose">@{ var s13 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsConnectingHose == true ? "YES" : "NO"; } @s13 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+
+                <br />
+
+                <label class="control-label"><b> (iii) Gas Supply Line </b> </label>
+                <select class="form-control" id="txtEGasSupply" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasSupplyLine">@{ var s14 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasSupplyLine == true ? "YES" : "NO"; } @s14 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+
+                <br />
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <hr />
+
+    <b class="text-danger">D. <u> CORROSION MONITORING </u></b>
+
+    <P></P>
+
+    <div class="row">
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label"><b> (i) Cathodic Protection (if any)</b> </label>
+                <select class="form-control" id="txtECathodic" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsCathodicProtection">@{ var s15 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsCathodicProtection == true ? "YES" : "NO"; } @s15 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label"><b> (ii) Ultra-Sonic Thickness Measurement (UTM) </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsUltraSonic" class="form-control" id="txtEUltraSonic" />
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label"><b> (iii) Corrosion Inhibitor (if any) </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsCorrosionInhibitor" class="form-control" id="txtECorrosion" />
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <hr />
+
+    <b class="text-danger">E. <u> SAFTEY WEARS </u></b>
+
+    <P></P>
+
+    <div class="row">
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (a) Hand Gloves </b> </label>
+                <select class="form-control" id="txtEGloves" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsHandGloves">@{ var s16 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsHandGloves == true ? "YES" : "NO"; } @s16 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsHandGlovesComment" class="form-control" id="txtEGlovesComment" />
+            </div>
+        </div>
+
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (b) Gas Mask </b> </label>
+                <select class="form-control" id="txtEGasMask" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasMask">@{ var s17 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasMask == true ? "YES" : "NO"; } @s17 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsGasMaskComment" class="form-control" id="txtEGasMaskComment" />
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (c) Saftey Shoes </b> </label>
+                <select class="form-control" id="txtEShoes" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsSafetyShoes">@{ var s18 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsSafetyShoes == true ? "YES" : "NO"; } @s18 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsSafetyShoesComment" class="form-control" id="txtEShoesComment" />
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label"><b> (d) Overall Jacket </b> </label>
+                <select class="form-control" id="txtEJacket" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsOverallJacket">@{ var s19 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsOverallJacket == true ? "YES" : "NO"; } @s19 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+                <br />
+
+                <label class="control-label"><b> Comments </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsOverallJacketComment" class="form-control" id="txtEJacketComment" />
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <hr />
+
+
+    <b class="text-danger">F. <u> PUMP/COMPRESSOR AREA </u></b>
+
+    <P></P>
+
+
+    <div class="row">
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label"><b> Type of Housing </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().HousingType" class="form-control" id="txtEHousing" />
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label"><b> Number of Pumps </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().PumpNumber" class="form-control" id="txtEPumpNumber" />
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label"><b> Number of Compressors </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().CompressorsNumber" class="form-control" id="txtECompressorsNO" />
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <hr />
+
+    <b class="text-danger">G. <u> DEPOT UTILITIES </u></b>
+
+    <P></P>
+
+    <div class="row">
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label class="control-label"><b> Portable water supply </b> </label>
+                <select class="form-control" id="txtEWaterSupply">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsWaterSupply">@{ var s20 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsWaterSupply == true ? "YES" : "NO"; } @s20 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label class="control-label"><b> Water Hydrant Points </b> </label>
+                <select class="form-control" id="txtEWaterHydrant" name="">
+                    <option value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsWaterHydrant">@{ var s21 = Model.FirstOrDefault().inspectionForms.FirstOrDefault().IsWaterHydrant == true ? "YES" : "NO"; } @s21 </option>
+
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-8">
+            <div class="form-group">
+                <label class="control-label"><b> Power Supply (NEPA Only/Generator Only/NEPA & Generator) </b> </label>
+                <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().PowerSupply" class="form-control" id="txtEPowerSupply" />
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+
+
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label class="control-label"><b> Longitude </b> </label>
+            <input type="text" readonly disabled class="form-control" id="EtxtLongitude" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().Longitude" />
+        </div>
+        <br />
+    </div>
+
+    <div class="col-sm-4">
+        <div class="form-group">
+            <label class="control-label"><b> Latitude  </b> </label>
+            <input type="text" readonly disabled class="form-control" id="EtxtLatitude" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().Latitude" />
+        </div>
+        <br />
+    </div>
+
+    <br />
+
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label class="control-label"><b> Others Comments </b> </label>
+            <input type="text" value="@Model.FirstOrDefault().inspectionForms.FirstOrDefault().SafteyOthers" class="form-control" id="txtEOthers" />
+        </div>
+    </div>
+
+
+    <br />
+
+    <div id="InspectionInfo"></div>
+
+</form>
+    }
+
+
+    <br /><br />
+
+
+</div>
+
+
+<script>
+
+    var More_i = 1;
+
+    function AddMore() {
+
+        More_i++;
+
+        var html = "<tr id='Remove" + More_i + "'>";
+        html += "<td><input type='number' required class='form-control-sm' id='txtCapacity[]' name='txtCapacity[]' placeholder='(Meters)'/></td>";
+        html += "<td><input type='text' class='form-control-sm' id='txtDesign[]' name='txtDesign[]' placeholder='(Kg/Cm2)'/></td>";
+        html += "<td><input type='text' class='form-control-sm' id='txtPressure[]' name='txtPressure[]' placeholder='(Kg/Cm2)'/></td>";
+        html += "<td><input type='date' class='form-control-sm' id='txtLasDate[]' name='txtLasDate[]' placeholder=''/></td>";
+
+        html += "<td><select class='form-control' id='txtSurface[]' name='txtSurface[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><select class='form-control' id='txtPressureGauge[]' name='txtPressureGauge[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><select class='form-control' id='txtTempGauge[]' name='txtTempGauge[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><select class='form-control' id='txtGasLine[]' name='txtGasLine[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><select class='form-control' id='txtLevelGauge[]' name='txtLevelGauge[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><select class='form-control' id='txtInlet[]' name='txtInlet[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><select class='form-control' id='txtOutlet[]' name='txtOutlet[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><select class='form-control' id='txtSprinkler[]' name='txtSprinkler[]'><option></option><option value='OK'>OK</option><option value='NOT OK'>NOT OK</option></select> </td>";
+        html += "<td><button class='btn btn-danger btn-xs' onclick='RemoveMore();'> <i class='fa fa-trash'> </i> </button> </td>";
+        html += "</tr>";
+
+        $("#AppendMore tr:last").after(html);
+    }
+
+
+    function RemoveMore() {
+        $("#Remove" + More_i).remove();
+        More_i--;
+    }
+</script>

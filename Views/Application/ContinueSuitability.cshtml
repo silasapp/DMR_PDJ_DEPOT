@@ -1,0 +1,261 @@
+﻿@model FacilityModel;
+@using NewDepot.Models
+@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+    ViewData["Title"] = "Facility Information For Application With Ref: "+ ViewData["Ref"];
+}
+<div class="row" id="BackImage">
+    <br />
+    <h3 class="DashCompanyName"> @ViewData["Title"] </h3>
+    <hr />
+</div>
+
+
+<div class="row" style="margin-top:20px">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        @if (Model != null)
+        {
+            <form id="facfrm" action="/Application/ContinueSuitability" method="post" enctype="multipart/form-data">
+
+                <div id="suitWrapper">
+                    <div class="Facility">
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>Depot (Facility) Name</b></label>
+                            <div class="col-md-8">
+                                <input type="number" hidden required name="Id" value="@Model.Id" class="form-control" />
+                                <input type="text" required name="FacilityName" value="@Model.Name" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>Contact Name</b></label>
+                            <div class="col-md-8">
+                                <input type="text" required name="ContactName" value="@Model.ContactName" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>Contact Number</b></label>
+                            <div class="col-md-8">
+                                <input type="number" required name="ContactNumber" value="@Model.ContactNumber" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>Facility Address</b></label>
+                            <div class="col-md-8">
+                                <input type="text" required name="Address_1" class="form-control" value="@Model.Street" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>City</b></label>
+                            <div class="col-md-8">
+                                <input type="text" required name="City" value="@Model.City" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>State</b></label>
+                            <div class="col-md-8">
+                                <select required name="StateId" id="stateId" class="form-control">
+                                    <option value="@Model.StateId">@Model.StateName</option>
+                                    @foreach (var item in ViewBag.stats)
+                                    {
+                                        <option value="@item.State_id">@item.StateName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>LGA</b></label>
+                            <div class="col-md-8">
+                                <select required name="LgaId" id="lga" class="form-control">
+                                    <option value="@Model.LGAId">@Model.LGA</option>
+                                 
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-offset-4">
+                    <hr />
+                    <div class="suitability ">
+                        <div class="form-group row">
+                            <label class="col-md-4 control-label"><b>Size of the Land</b></label>
+                            <div class="col-md-7">
+                                <div class="input-group">
+                                    <input type="number" id="txtMeters" required name="SizeOfLand" value="@Model.SizeOfLand" class="form-control" />
+                                    <span class="input-group-addon" style="font-size: 14px;">Square Meters</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-5 control-label"><b>Site is Along Pipe Line</b></label>
+                            <div class="col-md-3">
+                                <div class="radio">
+                                    <label>
+                                        @if (Model.ISAlongPipeLine == true)
+                                        {
+                                            <input type="radio" checked readonly value="@Model.ISAlongPipeLine" name="ISAlongPipeLine" id="seltxtPipeLine" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                                        }
+                                        else
+                                        { <input type="radio" readonly value="@Model.ISAlongPipeLine" name="ISAlongPipeLine" id="seltxtPipeLine" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="radio">
+                                    <label>
+                                        @if (Model.ISAlongPipeLine == false)
+                                        {
+                                            <input type="radio" checked readonly value="@Model.ISAlongPipeLine" name="ISAlongPipeLine" id="pipeLineNo" class="" /><label for="pipeLineNo"><b>NO</b></label>
+                                        }
+                                        else
+                                        { <input type="radio" readonly value="@Model.ISAlongPipeLine" name="ISAlongPipeLine" id="pipeLineNo" class="" /><label for="pipeLineNo"><b>NO</b></label>
+                                        }
+                                    </label>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-5 control-label"><b>Site is Under High Tension</b></label>
+                            <div class="col-md-3">
+                                <div class="radio">
+                                    <label>
+                                        @if (Model.IsUnderHighTension == true)
+                                        {
+                                            <input type="radio" checked readonly name="IsUnderHighTension" id="highTensionYes" value="yes" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" readonly name="IsUnderHighTension" id="highTensionYes" value="yes" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="radio">
+                                    <label>
+                                        @if (Model.IsUnderHighTension == false)
+                                        {
+
+
+                                            <input type="radio" checked readonly name="IsUnderHighTension" id="highTensionNo" value="No" class="" /><label for="pipeLineYes"><b>NO</b></label>
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" readonly name="IsUnderHighTension" id="highTensionNo" value="No" class="" /><label for="pipeLineYes"><b>NO</b></label>
+
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <input type="hidden" name="StationsWithin2KM" id="StationsWithin2KM" value="0" />
+                        <input type="hidden" name="DistanceFromExistingStation" id="DistanceFromExistingStation" value="More than 800 Meters" />
+                        @*<div class="form-group row">
+                            <label class="col-md-5 control-label">Number of Stations Within 2Km</b></label>
+                            <div class="col-md-7">
+                                <input type="number" name="StationsWithin2KM" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-5 control-label">Distance From Existing Station</b></label>
+                            <div class="col-md-7">
+                                <select name="DistanceFromExistingStation" class="form-control" required>
+                                    <option value="">Select a Distance</option>
+                                    <option value="Less than 399 Meters">Less than 399 Meters</option>
+                                    <option value="400 - 799 Meters">400 - 799 Meters</option>
+                                    <option value="More than 800 Meters">More than 800 Meters</option>
+                                </select>
+                            </div>
+                        </div>*@
+
+                        <div class="form-group row">
+                            <label class="col-md-5 control-label"><b>Site is on HighWay</b></label>
+                            <div class="col-md-3">
+                                <div class="radio">
+                                    <label>
+                                        @if (Model.IsOnHighWay == true)
+                                        {
+                                            <input type="radio" checked readonly name="IsOnHighWay" id="IsOnHighWayYes" value="yes" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" readonly name="IsOnHighWay" id="IsOnHighWayYes" value="yes" class="" /><label for="pipeLineYes"><b>YES</b></label>
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="radio">
+                                    <label>
+                                        @if (Model.IsOnHighWay == false)
+                                        {
+
+
+                                            <input type="radio" checked readonly name="IsOnHighWay" id="IsOnHighWayNo" value="No" class="" /><label for="pipeLineYes"><b>NO</b></label>
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" readonly name="IsOnHighWay" id="IsOnHighWayNo" value="No" class="" /><label for="pipeLineYes"><b>NO</b></label>
+
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                            @*<div class="col-md-7">
+                                <div class="radio">
+                                    <input type="radio" name="IsOnHighWay" id="IsOnHighWayYes" value="yes" class="radio form-control" /><label class="radioLabel" for="IsOnHighWayYes">YES</b></label>
+                                    <input type="radio" name="IsOnHighWay" id="IsOnHighWayNo" value="no" class="radio form-control" /><label class="radioLabel" for="IsOnHighWayNo">NO</b></label>
+                                </div>
+                            </div>*@
+                        </div>
+
+
+                        @*<div class="form-group row">
+                            <label class="col-md-5 control-label">Has EIA</b></label>
+                            <div class="col-md-7">
+                                <div class="radio">
+                                    <input type="radio" name="HasEIA" id="HasEIAYes" value="yes" /><label for="HasEIAYes">YES</b></label>
+                                    <input type="radio" name="HasEIA" id="HasEIANo" value="no" /><label for="HasEIANo">NO</b></label>
+                                </div>
+                                @ * <input id="HasEIA" type="checkbox" name="HasEIA" class="form-control" value="HasEIA" />* @
+                            </div>
+                        </div>*@
+
+                        @*<div id="HasEIADiv" style="display:none" class="form-group">
+                            <label class="col-md-5 control-label">Name Of NMDPRA</b></label>
+                            <div class="col-md-7">
+                                <input type="text" name="EIANMDPRAStaff" class="form-control" value="" />
+                            </div>
+                        </div>*@
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 offset-5 company">
+                        <button type="button" id="btnConfirmSubmit2" class="btn btn-md btn-success">Submit <i class="fa fa-check"></i></button>
+
+                    </div>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+

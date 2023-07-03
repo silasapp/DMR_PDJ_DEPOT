@@ -1,0 +1,105 @@
+﻿@model IEnumerable<NewDepot.Models.messages>
+@using NewDepot.Helpers
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Company Messages";
+    int newMsg = Model.Count(c => c.read == 1);
+}
+
+
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title </h3>
+        <hr />
+    </div>
+
+</div>
+<div class="marg50"></div>
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+
+<div class="widget-content">
+    <table class="table table-hover table-striped table-bordered dataTable">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.date)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.read == 1)
+                        {
+                            // Message Read Already
+                            <i class="glyphicon glyphicon-envelope gray"></i>
+                        }
+                        else
+                        {
+                            <i class="glyphicon glyphicon-envelope unread"></i>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.subject, "View", new { id = item.id })
+                    </td>
+                    <td>
+                        @item.date
+                    </td>
+                    <td>
+                        <a href="/Message/Delete/@item.id"><i class="glyphicon glyphicon-trash deleteItem"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.date)
+                </th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#lnkAccount").addClass("active");
+
+            $('.dataTable').DataTable();
+        });
+    </script>
+}

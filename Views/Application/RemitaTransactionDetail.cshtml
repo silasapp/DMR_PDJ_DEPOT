@@ -1,0 +1,118 @@
+﻿@model NewDepot.Models.remita_transactions
+@using NewDepot.Helpers;
+
+@{
+    ViewBag.Title = "Transaction Detail";
+    decimal amt = Convert.ToDecimal(Model.transaction_amount);
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+}
+
+<div class="content text-md-center">
+    @if (ViewBag.Alert != null)
+        {
+            AlertBox alert = (AlertBox)ViewBag.Alert;
+            string alerttype = alert.GetTypeString;
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@alert.Title</strong> @alert.Message
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-8 offset-2">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="text-left">
+                        <b>Company Name</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.customer_name)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left">
+                        <b> Reference Number</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.reference_number)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left">
+                        <b> Payment Reference (RRR)</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.payment_reference)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="text-left">
+                        <b> Approved Amount</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.approved_amount)
+                    </td>
+                <tr />
+                <tr>
+
+                    <td class="text-left">
+                        <b> Transaction Amount</b>
+                    </td>
+                    <td class="text-left">
+                        ₦ @amt.ToString("N2")
+                    </td>
+                <tr />
+
+                <tr>
+                    <td class="text-left">
+                        <b> Transaction Date</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.transaction_date)
+                    </td>
+                </tr>
+
+                <tr>
+
+                    <td class="text-left">
+                        <b>Response Code</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.response_code)
+                    </td>
+                <tr />
+                <tr>
+
+                    <td class="text-left">
+                        <b>Response Description</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.response_description)
+                    </td>
+
+                <tr />
+                <tr>
+                    <td class="text-left">
+                        <b> Query Date</b>
+                    </td>
+                    <td class="text-left">
+                        @Html.DisplayFor(model => model.query_date)
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#lnk-payment > a").addClass("selected").find(".act").addClass("selected");
+        $(".sidebar > ul > li > ul li a[href='/Company/All']").addClass("selected");
+
+
+    });
+</script>

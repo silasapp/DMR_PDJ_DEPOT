@@ -1,0 +1,271 @@
+﻿
+
+@model IEnumerable<Forms>
+@using NewDepot.Helpers
+@{
+    ViewBag.Title = "Application Forms";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    int count = 0;
+    string btnLabel = (Model.FirstOrDefault().Id != 0 ? "Edit Form" : "Save Form");
+
+}
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Application Forms</h2>
+        </div>
+        <div class="col-md-6 text-right">
+            
+            <button class="btn btn-info btn-sm" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#AddFormModal">
+                    Creat New Form &nbsp;<i class="icon-plus"></i>
+                </button>
+        </div>
+        <div class="col-md-12"><hr /></div>
+        @if (ViewBag.Alert != null)
+        {
+            AlertBox alert = (AlertBox)ViewBag.Alert;
+
+            <div class="col-md-12">
+                <div class="alert @alert.GetTypeString" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <strong>@alert.Title!</strong> @alert.Message
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover dataTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Friendly Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            count++;
+                            string trBg = (bool)item.Deleted ? "danger" : "";
+                            <tr class="@trBg">
+                                <td>
+                                    @count
+                                </td>
+                                <td>
+                                    @Html.ActionLink(item.FriendlyName, "Index", new { id = item.TableName }, new { @target = "_blank" })
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FriendlyName)
+                                </td>
+                                <td style="width: 160px;">
+                                    <div class="btn-group">
+                                        <a href="/Form/ManageForm/@item.Id" class="btn btn-xs btn-info">Manage</a>
+
+                                        @if (item.Deleted != true && item.IsPublished != true)
+                                        {
+                                            <a data-url="/Form/Publish/@item.Id" href="#myModal1" data-toggle="modal" class="publish btn btn-xs btn-success">Publish</a>
+                                        }
+                                        @if (item.Deleted != true)
+                                        {
+                                            <a data-url="/Form/Delete/@item.Id" href="#myModal1" data-toggle="modal" class="delFrm btn btn-xs btn-danger">Delete</a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal" id="AddFormModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="AddFormLoadder">
+            <div class="modal-header">
+
+                <h3 class="modal-title"><b>Create New Application Form</b>  </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger">Close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div id="loadder">
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                       
+                        <div class="modal-body">
+                            @Html.ValidationSummary(true)
+
+                            <div class="form-group" style="margin-bottom: 10px;">
+                                <label class="control-label">Application Phase</label>
+
+                                <div class="col-md-12">
+                                    <select class="form-control" id="phase">
+                                        <option></option>
+
+                                        @foreach (var ph in ViewBag.Phases)
+                                        {
+                                            <option value="@ph.id">@ph.name</option>
+                                        }
+
+                                    </select>
+                                </div>
+                                <label class="control-label">Form Name</label>
+                                <div class="col-md-12">
+                                <input type="text" class="form-control" id="formname" value="" />
+                                </div>
+
+                                <div class="clear"></div>
+                            </div>
+
+                        </div>
+                        <input type="button" id="btnsubmitFM" value="@btnLabel" class="btn btn-success" />
+
+                        <div class="clear"></div>
+                        <div class="modal-footer">
+
+                        </div>
+                    }
+                </div>
+
+            </div>
+            <div id="FormInfo"> </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="myModalBody1">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h3 id="myModalLabel">Modal Title</h3>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <p></p>
+            </div>
+
+
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(function () {
+
+            $(".delFrm").unbind("click").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                //alert(url);
+                $("#myModalBody1").html(Loading());
+                $.get(url, function (data) {
+                    $("#myModalBody1").html(data);
+                });
+            });
+
+            $("#btnsubmitFM").click(function (e) {
+                e.preventDefault();
+                if ($("#phase option:selected").val() === "") {
+                    $("#phase").focus();
+                }
+                else if ($("#formname").val() === "") {
+                    $("#formname").focus();
+                }
+                else {
+
+                    var data = new FormData();
+                    data.append("phase", $("#phase option:selected").val());
+                    data.append("formname", $("#formname").val());
+
+                  
+                    $.confirm({
+                        text: "Are you sure you want to create this form?",
+                        confirm: function () {
+                            $("#loadder").addClass("Submitloader");
+
+
+                          
+                            $.ajax({
+                                url: "/Form/AddForm",
+                                type: "POST",
+                                contentType: false,
+                                processData: false,
+                                data: data,
+                                success: function (response) {
+                                    if ($.trim(response) === "Success") {
+                                        alert("A new inspection form (" + $("#formname").val() + " has been created successfully.");
+                                        location.reload(true);
+                                        $("#loadder").removeClass("Submitloader");
+                                    }
+                                    else {
+                                        ErrorMessage("#FormAddLegacyInfo", response);
+                                        $("#loadder").removeClass("Submitloader");
+                                    }
+                                }
+                                ,
+                                failure: function (data) {
+                                    alert("Failure");
+                                }
+                            });
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+
+
+            $(".publish").unbind("click").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                $("#myModalBody1").html(Loading());
+                $.get(url, function (data) {
+                    $("#myModalBody1").html(data);
+                });
+            });
+
+
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+
+        });
+
+    </script>
+}

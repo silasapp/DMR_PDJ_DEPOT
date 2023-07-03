@@ -1,0 +1,119 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers;
+@model IEnumerable<Facilities>
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "My Facilities";
+    int counter = 0;
+    var generalClass = new GeneralClass();
+
+}
+
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title </h3>
+        <hr />
+    </div>
+
+</div>
+<div class="marg50"></div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+
+<div class="widget-content">
+    <table class="table table-hover table-striped table-bordered" id="MFacilityTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Facility Name</th>
+                <th >Contact Person</th>
+                <th >Location</th>
+                <th >Loading Arms</th>
+                <th >Tanks</th>
+                <th >Date Added</th>
+                <th style="background: none!important;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fac in Model)
+            {
+                counter++;
+                <tr>
+                    <td>@counter</td>
+                    <td>@fac.Name</td>
+                    <td>@fac.ContactName - @fac.ContactNumber</td>
+                    <td>@fac.address_1, @fac.city, @fac.StateName</td>
+                    <td>@fac.NoOfPumps</td>
+                    <td>@fac.NoOfTanks</td>
+                    <td>@fac.Date</td>
+                    <td>
+                        <a href="@Url.Action("ViewFacility", "Facility", new { id = generalClass.Encrypt(fac.Id.ToString() )})" class="btn btn-xs btn-info">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnkFacility").addClass("active");
+            $("#MFacilityTable").DataTable({
+
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5',
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed two-column'
+                    }
+
+                ],
+
+                language: {
+                    buttons: {
+                        colvis: 'Change columns'
+                    }
+                },
+
+                "bDestroy": true,
+
+                //"paging": true,
+                //"ordering": true,
+                //"info": true,
+                //"searching": true,
+                //"order": [[0, "asc"]],
+            });
+
+        });
+    </script>
+}

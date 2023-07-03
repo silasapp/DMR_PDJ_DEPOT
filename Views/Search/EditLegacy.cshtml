@@ -1,0 +1,278 @@
+﻿@using NewDepot.Models
+@model MyApps
+
+@if (Model == null)
+{
+    <div class="modal-body">
+        <h4>Legacy license not found. Please check and try again.</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+}
+<!--else
+{
+
+    using (Html.act.BeginForm())
+    {
+        var appType = model.legacies.AppType;
+
+        <div class="modal-body">
+            <div class="form-horizontal">
+                Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                Html.HiddenFor(model => model.legacies.Id)
+
+                <div class="form-group">
+                    Html.LabelFor(model => model.legacies.CompName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        Html.EditorFor(model => model.legacies.CompName, new { htmlAttributes = new { @class = "form-control" } })
+                        Html.ValidationMessageFor(model => model.legacies.CompName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    Html.LabelFor(model => model.legacies.CompAddress, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        Html.EditorFor(model => model.legacies.CompAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        Html.ValidationMessageFor(model => model.legacies.CompAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    Html.LabelFor(model => model.legacies.LicenseNo, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        Html.EditorFor(model => model.legacies.LicenseNo, new { htmlAttributes = new { @class = "form-control" } })
+                        Html.ValidationMessageFor(model => model.legacies.LicenseNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-7">
+                            Html.LabelFor(model => model.legacies.AppType, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                <select name="AppType" required id="AppType" class="control-label col-md-12">
+                                    <option value="">Select License Stage</option>
+                                    @if (appType == "SI")
+                                    {
+                                        <option value="SI" selected>Suitability Inspection (SI)</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="SI">Suitability Inspection (SI)</option>
+                                    }
+                                    @if (appType == "ATC")
+                                    {
+                                        <option value="ATC" selected>Approval To Construct (ATC)</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="ATC">Approval To Construct (ATC)</option>
+                                    }
+
+                                    @if (appType == "NDT")
+                                    {
+
+                                        <option value="NDT" selected>Calibration/Integrity Tests(NDTs)</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="NDT">Calibration/Integrity Tests(NDTs)</option>
+                                    }
+
+
+                                    @if (appType == "LTO")
+                                    {
+                                        <option value="LTO" selected>License to Operate (LTO)</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="LTO">License to Operate (LTO)</option>
+                                    }
+
+                                </select>-->
+                                @*Html.EditorFor(model => model.legacies.AppType, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.AppType, "", new { @class = "text-danger" })*@
+                            <!--</div>
+                        </div>
+                        <div class="col-md-5">
+                            Html.LabelFor(model => model.legacies.CompID, htmlAttributes: new { @class = "control-label col-md-5" })
+                            <div class="col-md-7">
+                                Html.EditorFor(model => model.legacies.CompID, new { htmlAttributes = new { @class = "form-control" } })
+                                Html.ValidationMessageFor(model => model.legacies.CompID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    Html.LabelFor(model => model.legacies.FacilityAddress, "Facility Address", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        Html.EditorFor(model => model.legacies.FacilityAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        Html.ValidationMessageFor(model => model.legacies.FacilityAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    Html.LabelFor(model => model.legacies.State, "State", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <select name="State" id="_State" data-lga="#_LGA" class="form-control">
+                            <option value="">Select State</option>
+                            @foreach (var item in (List<State>)ViewBag.States)
+                            {
+                                if (item.Name.ToLower().Replace("state", "").Trim() == model.legacies.State.ToLower().Replace("state", "").Trim())
+                                {
+                                    <option data-id="@item.Id" value="@item.Name" selected>@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option data-id="@item.Id" value="@item.Name">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    Html.Label("LGA", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <select name="LGA" id="_LGA" class="form-control" required>
+                            <option value="">Select LGA</option>
+                            @if (!string.IsNullOrEmpty(model.legacies.LGA))
+                            {
+                                <option value="@model.legacies.LGA.Replace(" ,", "" )" selected>@model.legacies.LGA.Replace(",", "")</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.PMSVol, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.PMSVol, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.PMSVol, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.PMS_Tanks, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.PMS_Tanks, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.PMS_Tanks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.AGOVol, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.AGOVol, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.AGOVol, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.AGO_Tanks, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.AGO_Tanks, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.AGO_Tanks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.DPKVol, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.DPKVol, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.DPKVol, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.DPK_Tanks, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.DPK_Tanks, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.DPK_Tanks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.Issue_Date, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.Issue_Date, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.Issue_Date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.Exp_Date, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    Html.EditorFor(model => model.legacies.Exp_Date, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.Exp_Date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.Maj, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <select name="Maj" id="Maj" class="form-control">
+                                        <option value="">Select Marketer Type</option>
+                                        @if (model.legacies.Maj == 0)
+                                        {
+                                        <option value="0" selected>Independent Marketer</option>
+                                        }
+                                        else
+                                        {
+                                        <option value="0">Independent Marketer</option>
+                                        }
+                                        @if (model.legacies.Maj == 1)
+                                        {
+                                        <option value="1" selected>Major Marketer</option>
+                                        }
+                                        else
+                                        {
+                                        <option value="1">Major Marketer</option>
+                                        }
+                                    </select>
+                                    @*Html.EditorFor(model => model.legacies.Maj, new { htmlAttributes = new { @class = "form-control" } })
+                                    Html.ValidationMessageFor(model => model.legacies.Maj, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                Html.LabelFor(model => model.legacies.IsUsed, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        Html.EditorFor(model => model.legacies.IsUsed)
+                                        Html.ValidationMessageFor(model => model.legacies.IsUsed, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                        <div class="col-md-offset-2 col-md-8">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="" type="submit" class="btn btn-success">Save Changes</button>
+            </div>
+            }
+            }-->
+

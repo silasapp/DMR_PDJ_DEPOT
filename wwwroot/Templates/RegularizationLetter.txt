@@ -1,0 +1,79 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body style="color: gray; font-size:14px; box-sizing: border-box;">
+    <font face="Helvetica, arial, sans-serif">
+        <div style=" width:700px;background-color: #ece8d4; padding: 5px 0 5px 0;">
+            <img src="~/images/nmdpra.png" alt="Logo" style="width: 98%; height: 120px; display: block; margin: 0 auto;" />
+        </div>
+
+        <div style="background-color: #ece8d4; width:700px; min-height:200px;">
+            <div style="padding: 10px 30px 30px 30px;">
+                <h3 style="text-align: center;font-weight: 300;padding-bottom: 10px; border-bottom: 1px solid #ddd;">{0}</h3>
+                <p>Dear {1},</p><p>
+                </p>
+                <p>
+                    Congratulations! Your application for <b>Regularization</b> of a depot facility
+                    from The Nigerian Midstream and Downstream Petroleum Regulatory Authority (NMDPRA) has been approved.
+					
+					<br />
+					<b>Please note </b>that pick up date will be communicated once your approval is endorsed.
+				
+					<br />
+                    Details of the Permit is as follow:
+                </p>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 150px;"><b>Issue No:</b></td>
+                        <td>{2}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Permit Tenure:</b></td>
+                        <td>{7}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Date Issued:</b></td>
+                        <td>{3}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Expiry Date:</b></td>
+                        <td>{4}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Facility Name:</b></td>
+                        <td>{5}</td>
+                    </tr>
+                </table>
+                <br />
+                <div>
+                    <h4>PLEASE NOTE</h4>
+                    <ol style="margin-left: 25px;">
+                        <li style="padding-left: 10px;">
+                            It is mandatory that some meaningful development be made on site within three (3) months from the 
+                            date approval was granted (See Expiry date above). The approval expires if no development commences within the time frame.
+                        </li>
+                        <li style="padding-left: 10px;">
+                            Sign Post should be installed on site immediately. The sign post should indicate the name of the 
+                            company and the reference number of the approval letter.
+                        </li>
+                        <li style="padding-left: 10px;">
+                            Companies involved in building of Depots, construction and fabrication of Storage 
+                            Facilities should have NMDPRA Permit to operate as Oil Industry Service Company.
+                        </li>
+                    </ol>
+                </div>
+
+                <p>
+                    Nigerian Midstream and Downstream Petroleum Regulatory Authority<br />
+                    (PDJ)
+                </p>
+            </div>
+        </div>
+        <div style="padding: 10px 0; text-align: center; background-color: #888; color: #f9f9f9; width:700px">
+            &copy; {6} Nigerian Midstream and Downstream Petroleum Regulatory Authority &minus; NMDPRA Nigeria
+        </div>
+    </font>
+</body>
+</html>

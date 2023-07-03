@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Schedule Confirmation";
+}
+
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title for Application: @ViewBag.Referene</h3>
+        <hr />
+    </div>
+</div>
+<p class="marg50"></p>
+<div class="row">
+
+    <div class="col-md-12">
+        <p> Thank you for responding to @ViewBag.Schedule, appropriate action will be taken on your response immediately.</p>
+        <a href="@Url.Action("Dashboard", "Companies")" class="btn btn-success btn-sm">Click here</a> to continue to your dashboard.
+
+    </div>
+</div>

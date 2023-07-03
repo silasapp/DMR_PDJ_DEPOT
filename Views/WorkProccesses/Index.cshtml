@@ -1,0 +1,193 @@
+﻿@{
+    ViewData["Title"] = "Application Process Configuration";
+    ViewData["BodyClass"] = "fix-header fix-sidebar";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+
+}
+
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="card">
+
+            <div class="card-subtitle">
+                <i class="object ungroup outline icon"></i>
+                <span class="content">
+                    Create @ViewData["Title"]
+                </span>
+            </div>
+
+            <form action="#" id="FormCreateProcess">
+
+                <div class="row">
+
+                    <div class="form-group col-sm-6">
+                        <label class=""> Application Phase </label>
+                        <select name="txtPhase" id="txtPhase" class="form-control" required>
+                            <option></option>
+                            @foreach (var ph in ViewBag.Phases)
+                            {
+                                <option value="@ph.id">@ph.name</option>
+                            }
+                        </select>
+                        <br />
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label class=""> Location </label>
+                        <select name="txtLocation" id="txtLocation" class="form-control" required>
+                            <option></option>
+                            @foreach (var ph in ViewBag.Location)
+                            {
+                                <option value="@ph.LocationID">@ph.LocationName</option>
+                            }
+                        </select>
+                        <br />
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label class=""> Role </label>
+                        <select name="txtRole" id="txtRole" class="form-control" required>
+                            <option></option>
+                                @foreach (var rl in ViewBag.Roles)
+                                {
+                                    <option value="@rl.Role_id">@rl.RoleName</option>
+                                }
+                        </select>
+                        <br />
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label class=""> Sort </label>
+                        <input type="number" name="txtSort" id="txtSort" class="form-control" required />
+                        <br />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Create Proccess" class="btn btn-primary waves-effect waves-light" />
+                    <input type="reset" class="btn btn-secondary waves-effect waves-light" />
+                </div>
+
+                <div id="CreateProcessInfo"> </div>
+            </form>
+        </div>
+        <br />
+        <div class="card">
+
+            <div class="card-subtitle">
+                <i class="object ungroup outline icon"></i>
+                <span class="content text-danger">
+                    Edit @ViewData["Title"]
+                </span>
+            </div>
+
+            <form action="#" id="FormEditProcess">
+
+                <input type="hidden" id="txtEditProcessID" />
+
+                <div class="row">
+
+                    <div class="form-group col-sm-6">
+                        <label class="text-primary"> Application Phase </label>
+                        <select name="txtEditPhase" id="txtEditPhase" class="form-control" required>
+                            <option selected id="txtEditPhaseVal"></option>
+                            @foreach (var ph in ViewBag.Phases)
+                            {
+                                <option value="@ph.id">@ph.name</option>
+                            }
+
+                        </select>
+                        <br />
+                    </div>
+
+
+                    <div class="form-group col-sm-4">
+                        <label class="text-primary"> Location </label>
+                        <select name="txtEditLocationn" id="txtEditLocationn" class="form-control" required>
+                            <option selected id="txtEditLocationnVal"></option>
+                            @foreach (var ph in ViewBag.Location)
+                            {
+                                <option value="@ph.LocationID">@ph.LocationName</option>
+                            }
+
+
+                        </select>
+                        <br />
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label class="text-primary"> Role </label>
+                        <select name="txtEditRolee" id="txtEditRolee" class="form-control" required>
+                            <option selected id="txtEditRoleeVal"></option>
+                            @foreach (var rl in ViewBag.Roles)
+                            {
+                                <option value="@rl.Role_id">@rl.RoleName</option>
+                            }
+                        </select>
+                        <br />
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label class="text-primary"> Sort </label>
+                        <input type="number" name="txtEditSort" id="txtEditSort" class="form-control" required />
+                        <br />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Edit Proccess" class="btn btn-info waves-effect waves-light" />
+                    <input type="reset" class="btn btn-secondary waves-effect waves-light" />
+                </div>
+
+                <div id="EditProccessInfo"> </div>
+            </form>
+
+        </div>
+
+
+    </div>
+
+        <div class="col-sm-8">
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-title">
+                        <h4> Application process list  </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered " style="font-size:smaller" id="ApplicationProcessTable">
+                                <thead>
+                                    <tr>
+                                        <th>ProcessID</th>
+                                        <th>Application Phase</th>
+                                        <th>Role</th>
+                                        <th>Location</th>
+                                        <th>Sort</th>
+                                        <th>CreatedAt</th>
+                                        @*<th>CreatedBy</th>*@
+                                        <th>UpdatedAt</th>
+                                        @*<th>UpdatedBy</th>*@
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    @section Scripts{
+
+        <script src="~/js/NewDepot Scripts/Configurations/ApplicationProcess.js"></script>
+
+    }
+

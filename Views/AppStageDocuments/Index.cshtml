@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewData["Title"] = "Application Stage Documents Configuration";
+    ViewData["BodyClass"] = "fix-header fix-sidebar";
+}
+
+
+<div class="row">
+
+    <div class="col-sm-4">
+
+        <div class="card">
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Create App Stage & Documents
+                </span>
+            </div>
+
+            <form action="#" id="FormCreateStageDoc">
+
+                <div class="form-group">
+
+                    <label class="control-label"> Stages </label>
+                    <select name="txtStages" id="txtStagess" class="form-control" required></select>
+
+                    <br />
+
+                    <label class="control-label"> Documents </label>
+                    <select name="txtDocs" id="txtDocs" class="form-control" required></select>
+
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create Stage Document" class="ui pink small button" />
+                </div>
+
+                <div id="StageDocInfo"> </div>
+            </form>
+
+
+        </div>
+
+        <br />
+
+        <div class="ui pink segment">
+
+            <div class="card-subtitle">
+                <i class="book icon"></i>
+                <span class="content">
+                    Edit Stage & Doc
+                </span>
+            </div>
+
+            <form asp-action="#" id="FormEditStageDoc">
+
+                <input type="hidden" id="txtEditStageDocID" />
+                <br />
+                <div class="text-sm-left" id="relationshipStatus"> </div>
+
+                <br />
+
+                <label class="control-label">Select New Stage </label>
+                <select name="txtEditStages" id="txtEditStagess" class="form-control" required></select>
+
+                <br />
+
+                <label class="control-label">Select New Document </label>
+                <select name="txtEditDocs" id="txtEditDocs" class="form-control" required></select>
+
+                <br />
+
+                <div class="form-group">
+                    <input type="submit" value="Save Edit" class="ui pink small button" />
+                    <input type="reset" id="FormEditStageDocReset" class="ui grey small button" />
+                </div>
+            </form>
+
+            <div id="EditStageDocInfo"> </div>
+        </div>
+
+
+    </div>
+
+    <div class="col-sm-8">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h4 class="card-title"> @ViewBag.Title</h4>
+                <h6 class="card-subtitle"> List of all created @ViewBag.Title </h6>
+
+
+                <table id="TableStageDoc" class="ui celled table table-hover" style="font-size:smaller">
+                    <thead>
+                        <tr>
+                            <th>
+                                StageDoc ID
+                            </th>
+                            <th>
+                                Stage ID
+                            </th>
+                            <th>
+                                Doc ID
+                            </th>
+                            <th>
+                                App Stage
+                            </th>
+                            <th>
+                                App Document
+                            </th>
+                            <th>
+                                Doc Type
+                            </th>
+                            <th>
+                                Created At
+                            </th>
+                            <th>
+                                Updated At
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

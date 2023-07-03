@@ -1,0 +1,232 @@
+﻿@using NewDepot.Models
+
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewBag.Title = "Review Legacy Depot and Continue your Application";
+
+    var lg = (Legacies)ViewBag.legacy;
+    if (lg == null)
+    {
+        lg = new Legacies();
+    }
+
+}
+
+
+
+<div class="">
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">   @ViewBag.Title </h3>
+        <hr />
+    </div>
+</div>
+<div class="marg50"></div>
+<div class="">
+    <div class="widget">
+        <div class="widget-content">
+
+            <form action="/LTO/Review" method="post" id="revFrm">
+                <div class="widget">
+
+                    <input type="hidden" name="frmLegacy" value="@ViewBag.frmLegacy" />
+                    <input type="hidden" name="PermitNo" value="@ViewBag.permit_no" />
+                    <input type="hidden" name="category" value="@ViewBag.category" />
+                    <input type="hidden" name="phaseId" value="@ViewBag.phaseId" />
+                    <input type="hidden" name="SanctionId" value="@ViewBag.SanctionId" />
+                    <h4 class="text-center" style="padding-top:10px">Facility Information</h4>
+                    <hr />
+
+                    <div id="suitWrapper" class="row">
+                        <div class="col-sm-6 Facility" style="border-right: 1px solid black">
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">Depot (Facility) Name</label>
+                                <div class="col-md-7">
+                                    <input type="text" required name="FacilityName" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">Contact Name</label>
+                                <div class="col-md-7">
+                                    <input type="text" required name="ContactName" placeholder="Facility Contact Person" class="form-control" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">Contact Number</label>
+                                <div class="col-md-7">
+                                    <input type="number"  required name="ContactNumber" placeholder="Contact Person Phone Number" class="form-control" value="" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">Facility Address</label>
+                                <div class="col-md-7">
+                                    <input type="text" value="@lg.FacilityAddress" required name="Address_1" class="form-control" placeholder="Enter the Facility location address" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">City</label>
+                                <div class="col-md-7">
+                                    <input type="text" required name="City" value="@ViewBag.City" class="form-control" placeholder="Enter the City" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">State</label>
+                                <div class="col-md-7">
+                                    <select required name="StateId" id="stateId" class="form-control">
+                                        <option value="">Select State Located</option>
+                                        @foreach (var item in ViewBag.stats)
+                                        {
+                                            <option value="@item.State_id">@item.StateName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">LGA</label>
+                                <div class="col-md-7">
+                                    <select required name="LgaId" id="lga" class="form-control">
+                                        <option value="">Select Local Government</option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 suitability">
+                            <div class="form-group row">
+                                <label class="col-md-5 control-label">Size of the Land</label>
+                                <div class="col-md-7">
+                                    <div class="input-group">
+                                        <input type="number" required name="SizeOfLand" class="form-control" placeholder="100" />
+                                        <span class="input-group-addon" style="font-size: 14px;">Square Meters</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Site is Along Pipe Line</label><br/>
+                                <div class="col-md-3">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="ISAlongPipeLine" id="pipeLineYes" value="yes" class="" /><label for="pipeLineYes">YES</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="ISAlongPipeLine" id="pipeLineNo" value="No" class="" /><label for="pipeLineYes">NO</label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Site is Under High Tension</label>
+                                <div class="col-md-3">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsUnderHighTension" id="highTensionYes" value="yes" class="" /><label for="pipeLineYes">YES</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsUnderHighTension" id="highTensionNo" value="No" class="" /><label for="pipeLineYes">NO</label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="StationsWithin2KM" id="StationsWithin2KM" value="0" />
+                            <input type="hidden" name="DistanceFromExistingStation" id="DistanceFromExistingStation" value="More than 800 Meters" />
+
+
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Site is on HighWay</label>
+                                <div class="col-md-3">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsOnHighWay" id="IsOnHighWayYes" value="yes" class="" /><label for="pipeLineYes">YES</label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="IsOnHighWay" id="IsOnHighWayNo" value="No" class="" /><label for="pipeLineYes">NO</label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div style="min-height:30px; clear:both"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5"></div>
+                        <input type="button" id="btnNext" class="col-md-2 btn btn-primary btn-md btn-success" value="NEXT" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div style="clear:both"></div>
+@section Scripts {
+    <script type="text/javascript" src="~/OldDepotStyle/Scripts/bundles.min.js"></script>
+    <script src="~/OldDepotStyle/Scripts/LTO.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $(document).on("click", "#btnNext", function (e) {
+
+                e.preventDefault();
+                var frm = $("#revFrm");
+                var frmvld = frm.valid();
+              
+                if (frmvld !== true) {
+                    alert("Please fill all required fields.");
+                }
+                else {
+
+                    console.log(frm);
+                    $.confirm({
+                        text: "Are you sure you want to save this facility information ?",
+                        confirm: function () {
+                            $("#revFrm").addClass('Submitloader');
+                            $(frm).submit();
+
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+                }
+            });
+
+
+
+            $(document.body).on("change", '#stateId', function () {
+                var stt = $(this).val();
+
+                $.get("/Helpers/getlga/" + stt, function (data) {
+                    $("#lga").empty();
+                    $('#lga').append($('<option/>', { Value: "", text: "Select Local Government" }));
+                    $.each(data, function (i, obj) {
+                        $('#lga').append($('<option>').text(obj.name).attr('value', obj.id));
+                    });
+                });
+            });
+
+        });
+    </script>
+
+}

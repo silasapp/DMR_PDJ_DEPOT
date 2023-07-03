@@ -1,0 +1,65 @@
+﻿@using NewDepot.Helpers;
+@model IEnumerable<NewDepot.Models.ExtraPaymentsModel>
+
+@{
+    ViewData["Title"] = "My Extra Payments";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewData["Title"] </h3>
+        <hr />
+    </div>
+
+
+    <div class="table-responsive" id="">
+
+        <br />
+        <table class="table table-bordered table-hover dataTable" style="font-size:small">
+            <thead>
+                <tr>
+                    <th> App Ref No </th>
+                    <th> Phase </th>
+                    @*<th> Type </th>*@
+                    <th> Payment Type </th>
+                    <th> Payment RRR </th>
+                    <th> Total Amt </th>
+                    <th> Comment </th>
+                    <th> Status </th>
+                    <th> Created At </th>
+                    <th> Action </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    var rrrLink = "https://elps.nuprc.gov.ng/Payment/Pay?rrr=" + a.RRR;
+
+                    <tr>
+                        <td> <b class="text-danger">@a.Reference</b></td>
+                        <td> @a.Phase</td>
+                        <td> @a.Type</td>
+                        <td> @a.RRR</td>
+                        <td> @a.Amount</td>
+                        <td> <small>  @a.Comment </small> </td>
+                        <td> <b> @a.Status</b></td>
+                        <td> @a.Date </td>
+                        <td>
+                            @if (a.Status == GeneralClass.PaymentPending)
+                            {
+                                <a class="btn btn-primary btn-xs" href="@rrrLink"> <i class="fas fa-credit-card"></i> Pay Now </a>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

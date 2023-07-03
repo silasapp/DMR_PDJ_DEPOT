@@ -1,0 +1,496 @@
+﻿@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http;
+
+@{ ViewData["Title"] = "Apply For " + " Legacy";
+                Layout = "~/Views/Shared/_ClientLayout.cshtml";
+                GeneralClass generalClass = new GeneralClass();
+                List<States_UT> states = ViewBag.States as List<States_UT>; }
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName"> @ViewData["Title"] Application </h3>
+        <hr />
+    </div>
+
+    <br />
+
+    <div>
+
+        <center>
+
+            <div style="max-width:1200px;" class="text-left" id="AppDiv">
+
+
+                <form id="FormCreateNewLegacy" action="#">
+                    <br />
+                    <div class="col-sm-12">
+
+                        <div class="row">
+
+                            <div class="col-sm-6">
+
+
+                                <input type="hidden" id="txtCompanyID" value="@generalClass.Decrypt(Context.Session.GetString("_sessionUserID"))" required /> @* company local id*@
+
+
+                                <div class="">
+                                    <b class="text-info"> Facility Information </b>
+                                </div>
+
+                                <hr />
+
+                                <div class="form-group">
+                                    <label> Facility Name</label>
+                                    <input class="form-control col-sm-12" id="txtFacilityName" required name="txtFacilityName" placeholder="Facility name..." />
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label> Facility Address</label>
+                                    <input class="form-control" id="txtFacilityAddress" required name="txtFacilityAddress" placeholder="Facility address..." />
+                                </div>
+
+                                <div class="form-group">
+                                    <label> City </label>
+                                    <input class="form-control" id="txtFacilityCity" required name="txtFacilityCity" placeholder="Facility city..." />
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> State </label>
+                                            <select class="form-control valid" id="txtFacilityState" name="txtFacilityState" required>
+                                                <option></option>
+                                                @foreach (var ct in states)
+                                                {
+                                    <option value="@ct.State_id">@ct.StateName</option>}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> LGA </label>
+                                            <select class="form-control valid" id="txtFacilityLGA"  required name="txtFacilityLGA">
+
+                                            </select>
+                                            <br />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="">
+                                    <b class="text-info"> Land Information </b>
+                                </div>
+
+                                <hr />
+
+                                <div class="form-group">
+                                    <label> Contact Person </label>
+                                    <input type="text" class="form-control" id="txtContactName" required name="txtContactName" placeholder="Fullname" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label> Contact Phone </label>
+                                    <input type="text" class="form-control" id="txtContactPhone" required name="txtContactPhone" placeholder="090**********" />
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> Size of Land (Meters) ? </label>
+                                            <input class="form-control" type="number" id="txtMeters" required name="txtMeters" placeholder="100" />
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> Site along pipe-line ? </label>
+                                            <select class="form-control valid" id="seltxtPipeLine" required name="seltxtPipeLine">
+                                                <option> </option>
+                                                <option value="true">YES</option>
+                                                <option value="false">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> Site under high tension cable ? </label>
+                                            <select class="form-control valid" id="seltxtHighTention" required name="seltxtHighTention">
+                                                <option> </option>
+                                                <option value="true">YES</option>
+                                                <option value="false">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> Site on high-way ? </label>
+                                            <select class="form-control valid" id="seltxtHighWay" required name="seltxtHighWay">
+                                                <option> </option>
+                                                <option value="true">YES</option>
+                                                <option value="false">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <br />
+
+                            </div>
+
+                            <div class="col-sm-6" style="padding-left:30px">
+
+                                <div class="">
+                                    <b class="text-info"> Old Permit/License Details </b>
+                                </div>
+
+                                <hr />
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <label class="label"><b> Last Application Type </b></label>
+                                        <select class="form-control col-sm-12" required id="seltxtAppTypes" name="seltxtAppTypes">
+                                            <option></option>
+
+                                            @if ((ViewBag.CategoryTypes as List<NewDepot.Models.CategoryType>).Count() > 0)
+                                            {
+                                                foreach (var m in (ViewBag.CategoryTypes as List<NewDepot.Models.CategoryType>))
+                                                {
+                                       <option value="@m.CategoryName" data-counter="@m.Counter">@m.CategoryName</option>}
+                                            }
+
+                                        </select>
+                                    </div>
+
+
+                                </div>
+
+                                <br />
+
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label> Licence/Permit Number </label>
+                                        <input type="text" class="form-control" id="txtLicenceNumber" required name="txtLicenceNumber" placeholder="NMDPRA/*********" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> Permit Issue Date </label>
+                                            <input type="date"  class="form-control" id="txtIssuedDate" required name="txtIssuedDate" placeholder="01/01/1900 12:00 AM" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> Permit Expiry Date </label>
+                                            <input type="date" class="form-control" id="txtExpiryDate" required name="txtExpiryDate" placeholder="01/01/1901 12:00 PM" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <br /><br />
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="text-center">
+
+                        <button type="submit" class="btn btn-success m-b-10 m-l-5">Save & Proceed</button>
+
+                        <button type="reset" class="btn btn-secondary m-b-10 m-l-5">Reset</button>
+
+                        <br /><br />
+
+                        <div id="FormAddLegacyInfo"> </div>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+
+        </center>
+
+    </div>
+
+</div>
+
+
+
+<style>
+    #SupplementryDiv {
+        padding: 20px;
+        border: 2px solid whitesmoke;
+        background: #f3eaa2ad;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+        #SupplementryDiv:hover {
+            -webkit-box-shadow: -2px 0px 20px 1px rgba(94, 93, 10, 0.26);
+            box-shadow: -2px 0px 20px 1px rgba(94, 93, 10, 0.26);
+            cursor: pointer;
+        }
+</style>
+
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#txtFacilityState").change(function () {
+                var html = "";
+                var stateID = $("#txtFacilityState option:selected").val();
+                $("#txtFacilityLGA").html("");
+
+                $.getJSON("/Helpers/GetLga/",
+                    { "id": stateID },
+                    function (datas) {
+
+                        $("#txtFacilityLGA").append("<option disabled selected></option>");
+                        $.each(datas,
+                            function (key, val) {
+                                html += "<option value=" + val.id + ">" + val.name + "</option>";
+                            });
+                        $("#txtFacilityLGA").append(html);
+
+                    });
+            });
+
+        });
+
+            </script> <script>
+
+    function updateFile(fileInput, fileID) {
+
+        $("#Error_" + fileID).html("");
+        var documentID = $("#doc_" + fileID).val();
+        var docType = $("#docType_" + fileID).val();
+        var txtUrl = $("#txtURL").val();
+
+        var uploadLocation = '';
+
+        if (docType === "Facility") {
+            var uploadLocation = txtUrl + 'api/FacilityDocument/UpdateFile/' + documentID + '/@ViewData["FacilityElpsID"]' + '?docid=' + documentID;
+        }
+        else {
+
+            var uploadLocation = txtUrl + 'api/CompanyDocument/UpdateFile/' + documentID + '/@ViewData["CompanyElpsID"]' + '/' + docType.toLowerCase() + '?docid=' + documentID;
+        }
+
+        $(".updatefile").fileupload({
+            dataType: 'json',
+            url: uploadLocation,
+            done: function (e, data) {
+                $("#docRow_" + fileID).removeClass("Uploadloader");
+                $("#Update_" + fileID).val('');
+                //DeleteOldDocument(documentID, fileID); // deleteng old document
+                $("#docTable").load(location.href + " #docTable");
+
+                $("#Error_" + fileID).html("<b style='color:blue'> Changing... Please wait.</b>");
+
+                $("#Error_" + fileID).html("<b style='color:green'> Successfully Updated...Please wait </b>");
+            },
+            fail: function (e, data) {
+                $.each(data.messages, function (index, error) {
+                    if (error.toLowerCase().indexOf('bytes exceed file size' > 0)) {
+                        $("#Error_" + fileID).html("");
+                        $("#Error_" + fileID).html("<span class='text-danger'> Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg, jpeg or png) </span>");
+                        $("#Update_" + fileID).val('');
+                    }
+                    else {
+                        $("#Error_" + fileID).html("");
+                        $("#Error_" + fileID).html("<span class='text-danger'> " + error + " </span>");
+                        $("#Update_" + fileID).val('');
+                    }
+                });
+                $("#docRow_" + fileID).removeClass("Uploadloader");
+
+                $("#docRow_" + fileID).removeClass("Uploadloader");
+                $("#Update_" + fileID).val('');
+                var progBox = '#progress_' + fileID + ' .progress-bar';
+
+                $(progBox).css(
+                    'width',
+                    0 + '%'
+                ).text("");
+            },
+            progressall: function (e, data) {
+
+                $("#docRow_" + fileID).addClass("Uploadloader");
+
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+
+                var progBox = '#progress_' + fileID + ' .progress-bar';
+
+                $(progBox).css(
+                    'width',
+                    progress + '%'
+                ).text(progress + '%');
+            }
+
+        });
+    }
+
+
+    function uploadFile(fileInput, fileID) {
+
+        var txtUrl = $("#txtURL").val();
+        var txtHash = $("#txtHash").val();
+
+        $("#Error2_" + fileID).html("");
+        var docTypeID = $("#docTypeID_" + fileID).val().trim();
+        var docType = $("#docType_" + fileID).val().trim();
+
+        var uploadLocation = '';
+
+        if (docType === "Facility") {
+            uploadLocation = txtUrl + 'api/Facility/UploadFile/' + docTypeID + '/@ViewData["CompanyElpsID"]' + '/@ViewData["FacilityElpsID"]' + '/@ElpsServices._elpsAppEmail/' + txtHash + '?docName=&uniqueid=';
+        }
+        else {
+            uploadLocation = txtUrl + 'api/UploadCompanyDoc/' + docTypeID + '/@ViewData["CompanyElpsID"]' + '/@ElpsServices._elpsAppEmail/' + txtHash + '?docName=&uniqueid=';
+        }
+
+
+        $(".uploadfile").fileupload({
+            dataType: 'json',
+            url: uploadLocation,
+            done: function (e, data) {
+
+                $("#Error2_" + fileID).html("<b style='color:blue'> Uploading... Please wait.</b>");
+                $("#Upload_" + fileID).val('');
+                $("#Error2_" + fileID).html("<b style='color:green'> Successfully uploaded... </b>");
+                $("#docTable").load(location.href + " #docTable");
+            },
+            fail: function (e, data) {
+                $.each(data.messages, function (index, error) {
+                    if (error.toLowerCase().indexOf('bytes exceed file size' > 0)) {
+                        $("#Error2_" + fileID).html("");
+                        $("#Error2_" + fileID).html("<span class='text-danger'> Upload file error: Max. File size (4MB) Exceeded OR Invalid file type was selected (only pdf, jpg, jpeg or png) </span>");
+                        $("#Upload_" + fileID).val('');
+                    }
+                    else {
+                        $("#Error2_" + fileID).html("");
+                        $("#Error2_" + fileID).html("<span class='text-danger'> " + error + " </span>");
+                        $("#Upload_" + fileID).val('');
+                    }
+                });
+                $("#docRow2_" + fileID).removeClass("Uploadloader");
+
+                $("#docRow2_" + fileID).removeClass("Uploadloader");
+                $("#Upload_" + fileID).val('');
+                var progBox = '#progress2_' + fileID + ' .progress-bar';
+
+                $(progBox).css(
+                    'width',
+                    0 + '%'
+                ).text("");
+            },
+            progressall: function (e, data) {
+
+                $("#docRow2_" + fileID).addClass("Uploadloader");
+
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+
+                var progBox = '#progress2_' + fileID + ' .progress-bar';
+
+                $(progBox).css(
+                    'width',
+                    progress + '%'
+                ).text(progress + '%');
+            }
+
+        });
+
+    }
+
+
+    function updateBrowse(id) {
+        $("#Update_" + id).click();
+    }
+
+    function OpenUploadBrowse(id) {
+        $("#Upload_" + id).click();
+    }
+
+
+
+    /*
+     * Deleteing a document...
+     */
+    function DeleteDocument(id, fileID, DocType) {
+
+        var msg = confirm("Are you sure you want to delete this document?");
+
+        if (msg === true) {
+
+            $.post("/Helpers/DeleteCompanyDocument", { "CompElpsDocID": id, "DocType": DocType }, function (response) {
+                if (response.trim() === "Network Error") {
+                    $("#Error_" + fileID).html("<span class='text-danger'> No Network. Please check your network. </span>");
+                }
+                else {
+
+                    if (response.trim() === "Document Deleted") {
+                        $("#Error_" + fileID).html("<b style='color:green'> Document deleted successfully </b>");
+                        $("#docTable").load(location.href + " #docTable");
+                    }
+                    else {
+                        $("#Error_" + fileID).html("<span class='text-danger'> Error " + response + " </span>");
+                    }
+                }
+            });
+        }s
+    }
+
+
+
+    /*
+     * Deleteing pervious document when a new document is uploaded
+     * NOT USED
+     */
+    function DeleteOldDocument(OldDocID, fileID) {
+
+        $.post("/Helpers/DeleteCompanyDocument", { "CompElpsDocID": OldDocID }, function (response) {
+            if (response.trim() === "Network Error") {
+                $("#Error_" + fileID).html("<span class='text-danger'> No Network. Please check your network. </span>");
+            }
+            else {
+                if (response.trim() === "Document Deleted") {
+                    $("#Error_" + fileID).html("<b style='color:green'> Previous Document deleted successfully </b>");
+                    $("#docTable").load(location.href + " #docTable");
+                }
+                else {
+                    $("#Error_" + fileID).html("<span class='text-danger'> Error " + response + " </span>");
+                }
+            }
+        });
+    }
+
+    </script>
+}

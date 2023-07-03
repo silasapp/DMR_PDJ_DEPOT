@@ -1,0 +1,60 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_Layoutt.cshtml";
+    ViewBag.Title = "License Search";
+
+}
+
+<div class="row" id="BackImage">
+
+    <br />
+    <h3 class="DashCompanyName">  Verify License </h3>
+    <div class="righty" style="float: right; border-left: 1px solid yellow">
+        <div>
+            <p><a href="/" style="color:lightblue">Home</a></p>
+
+            <p>Verify Permit</p>
+        </div>
+    </div>
+    <hr />
+</div>
+
+@if (ViewBag.Msg != null)
+{
+    string alerttype = (ViewBag.MsgType.ToLower() == "fail" ? "alert-danger" : (ViewBag.MsgType.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+    string head = (ViewBag.MsgType.ToLower() == "fail" ? "Search Error!" : (ViewBag.MsgType.ToLower() == "warn" ? "Alert!" : "Search Result!"));
+    <div class="col-md-12">
+        <div class="alert @alerttype" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>@head</strong> @ViewBag.Msg
+        </div>
+    </div>
+    <hr style="margin: 0 0 10px 0; padding: 0;" />
+}
+<h3 class="txtcenter">Check the Validity of a NMDPRA Permit</h3>
+<hr />
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-lg-12">
+        <div class="well">
+            @using (Html.BeginForm("SearchResult", "Validate", FormMethod.Post))
+            {
+                <div class="form-horizontal">
+                    <div class="form-group row">
+                        <label for="Type" class="control-label col-md-2"><b>Permit Number</b></label>
+                        <div class="col-md-9">
+                            <input type="text" name="permitNo" id="permitNo" required class="form-control" placeholder="e.g.: NMDPRA/PDJ/15/1234567/N1234" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <p class="txtcenter">
+                            <input type="submit" value="Search" class="btn btn-success" />
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

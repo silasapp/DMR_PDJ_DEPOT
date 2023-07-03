@@ -1,0 +1,65 @@
+﻿@using NewDepot.Helpers;
+@model IEnumerable<NewDepot.Models.MySchdule>
+
+@{
+    ViewData["Title"] = "My Schedules";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewData["Title"] </h3>
+        <hr />
+    </div>
+
+
+    <div class="table-responsive" id="">
+
+        <br />
+        <table class="table table-bordered table-hover dataTable" style="font-size:small">
+            <thead>
+                <tr>
+                    <th> App Ref. No </th>
+                    <th> Category </th>
+                    <th>Facility Details</th>
+                    <th>Schedule Date</th>
+                    <th> Location </th>
+                    <th> Comment </th>
+                    <th> My Response </th>
+                    <th> My Comment</th>
+                    <th>Notification Date</th>
+                    <th> Action </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+
+                    <tr>
+                        <td> <b class="text-danger">@a.AppRef</b></td>
+                        <td> @a.Phase</td>
+                        <td> @a.FacilityName ( @a.FacilityAddress )</td>
+                        <td> @a.ScheduleDate</td>
+                        <td> @a.ScheduleLocation</td>
+                        <td> <small>  @a.StaffComment </small> </td>
+                        <td> <b> @a.CustomerResponse </b></td>
+                        <td> @a.CustomerComment </td>
+                        <td> @a.CreatedAt </td>
+                        <td>
+                            @if (a.Accepted == null)
+                            {
+                                <a class="btn btn-primary" href="/Process/CompanySchedule/@generalClass.Encrypt(a.ScheduleID.ToString())">Accept / Reject</a>
+                            }
+                            </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

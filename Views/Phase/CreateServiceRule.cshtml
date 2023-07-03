@@ -1,0 +1,155 @@
+﻿@model NewDepot.Models.ServiceRouteModel
+
+@{
+    ViewBag.Title = "Service Rule setting for \"" + ViewBag.Name + "\" service";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    string back = (ViewBag.Category_Id == null ? "/Service" : "/Service?id=" + ViewBag.Category_Id);
+
+    ViewBag.ServId = Model.routingService.Service_Id;
+}
+
+
+<div class="content">
+    <h2 class="lefty">@ViewBag.Title</h2>
+    <a href="@back" class="btn btn-default righty">
+        Back &nbsp;<i class="icon-arrow-left"></i>
+    </a>
+    <hr class="clear" />
+    @if (ViewBag.Msg != null)
+    {
+        string alerttype = (ViewBag.Type.ToLower() == "fail" ? "alert-danger" : (ViewBag.Type.ToLower() == "warn" ? "alert-warning" : "alert-success"));
+        string head = (ViewBag.Type.ToLower() == "fail" ? "Application Error!" : (ViewBag.Type.ToLower() == "warn" ? "Alert!" : "Success"));
+        <div class="col-md-12">
+            <div class="alert @alerttype" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <strong>@head</strong> @ViewBag.Msg
+            </div>
+        </div>
+        <hr style="margin: 0 0 10px 0; padding: 0;" />
+    }
+
+    <div class="mypanel-2leaf-h">
+
+
+        <div class="">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="left-side">
+                    <div class="pad">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(m => m.routingService.RelativeCategoryId)
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Service Rule</label>
+                            <div class="col-md-8">
+                                @Html.HiddenFor(model => model.routingService.Service_Id)
+                                @Html.DropDownListFor(model => model.routingService.Inspection_Routing_Id, (SelectList)ViewBag.Rule, "Select Rule", new { @required = "required", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.routingService.Inspection_Routing_Id)
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Processing Location</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.routingService.ProcessingLocation, (SelectList)ViewBag.processLocation, "Select Location", new { @required = "required", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.routingService.ProcessingLocation)
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Category Trigger</label>
+                            @*<div class="col-md-8">
+
+                                @Html.DropDownListFor(model => model.routingService.RelativeCategoryId, (SelectList)ViewBag.InheritedRule, "Select Trigger Rule", new { @class = "form-control" })
+
+                            </div>*@
+                            <div class="col-md-8">
+                                @Html.DropDownList("Trigger", (SelectList)ViewBag.TriggerRules, "Select Trigger Rule", new { @class = "form-control" })
+                                
+                            </div>
+                        </div>
+                        <br /><br />
+                        <div class="form-group">
+                            <div class="txtcenter">
+                                <input type="submit" value="Save Rule" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="right-side">
+                <div class="pad">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4>Rules inherited from Parent Category</h4>
+                        </div>
+                        <ul class="list-group">
+                            @foreach (var item in Model.InheritedRules.OrderBy(C => C.SortOrder))
+                            {
+                                <li class="list-group-item">@item.Display</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h4>Created Rules</h4>
+                        </div>
+                        <ul class="list-group">
+                            @foreach (var item in Model.MyRules)
+                            {
+                                <li class="list-group-item">
+                                    @item.Display 
+                                    <div class="btn-group righty">
+                                        @*<button class="btn btn-xs btn-primary editBtn" data-toggle="modal" data-target="#modalPopup" data-id="@item.Id">
+        <span class="fa fa-pencil"></span>
+    </button>*@
+                                        <button class="btn btn-xs btn-danger delBtn" data-toggle="modal" data-target="#modalPopup" data-id="@item.Id">
+                                            <span class="fa fa-times"></span>
+                                        </button>
+                                    </div>
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Categories > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Service']").addClass("selected");
+
+            $(".delBtn").click(function (e) {
+                e.preventDefault();
+
+                $(".modal-title").text("Delete Service Rule");
+                $("#modal-body").html("");
+                $("#modal-body").html(Loading());
+                //Load the view
+                $.get("/Service/DeleteServiceRule", { id: $(this).data("id"), ServId: @ViewBag.ServId }, function (data) {
+                    $("#modal-body").html(data);
+                });
+            });
+
+            //$(".editBtn").click(function (e) {
+            //    e.preventDefault();
+
+            //    $(".modal-title").text("Delete Service Rule");
+            //    $("#modal-body").html("");
+            //    $("#modal-body").html(Loading());
+            //    //Load the view
+            //    $.get("/Service/DeleteCategoryRule", { id: $(this).data("id") }, function (data) {
+            //        $("#modal-body").html(data);
+            //    });
+            //});
+        });
+    </script>
+}

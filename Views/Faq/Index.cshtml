@@ -1,0 +1,64 @@
+﻿@model IEnumerable<NewDepot.Models.faqs>
+
+@{
+    ViewBag.Title = "FAQs";
+}
+
+<div class="">
+
+    <div class="row" id="BackImage">
+
+        <br />
+        <h3 class="DashCompanyName">  @ViewBag.Title </h3>
+        <hr />
+    </div>
+
+</div>
+<div class="marg25"></div>
+
+<div class="marg25">
+    <div class="og-tab">
+        <div class="sidebar">
+            @foreach (var item in Model)
+            {
+                <div class="tab">
+                    <a href="#faq-@item.id" role="tab">@item.name</a>
+                </div>
+            }
+        </div>
+        <div class="tabcontent">
+            @foreach (var item in Model)
+            {
+                <div id="faq-@item.id" class="pane">
+                    <h4>@ViewBag.faqsCat</h4>
+                    @*@Html.ActionLink("List", new { Id = item.id })*@
+                </div>
+            }
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+
+</div>
+
+
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".tab:first-child").addClass("active");
+            $("div.pane:first-child").addClass("active");
+
+            $(".tab a[role='tab']").click(function (e) {
+                e.preventDefault();
+                $(".tab").removeClass("active");
+                $(this).parent(".tab").addClass("active");
+
+                var who = $(this).attr("href");
+                $("div.pane").removeClass("active");
+                $(who).addClass("active");
+            });
+        });
+    </script>
+}

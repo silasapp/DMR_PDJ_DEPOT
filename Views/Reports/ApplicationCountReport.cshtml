@@ -1,0 +1,72 @@
+﻿@model NewDepot.Models.AppCountModel
+
+@{
+    ViewBag.Title = "Application Count Report";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+}
+
+<div class="content">
+    <h2 class="col-md-5">Application Report</h2>
+    <div class="col-md-6 col-md-offset-1 txtright">
+        <div id="dvcharttype" class="righty row xrow">
+            <div class="btn-group">
+                @Html.ActionLink("General", "ApplicationCountReport", "Reports", new { id = "General" }, new { @class = "btn btn-sm btn-info" })
+
+                @Html.ActionLink("Major", "ApplicationCountReport", "Reports", new { id = "Major" }, new { @class = "btn btn-sm btn-primary" })
+
+                @Html.ActionLink("Specialized", "ApplicationCountReport", "Reports", new { id = "Specialized" }, new { @class = "btn btn-sm btn-success" })
+            </div>
+        </div>
+    </div>
+    <hr class="clear" />
+
+    <div class="row xrow" style="margin-right: 15px;">
+        <div class="col-md-8 ">
+            <h4>Category: <strong>@Model.Categories.ElementAt(0).name</strong></h4>
+            <h4>Total Applications: <strong>@Model.Categories.ElementAt(0).ApplicationCount</strong></h4>
+            <h4>Total Permits: <strong>@Model.Categories.ElementAt(0).PermitCount</strong></h4>
+
+        </div>
+        <div class="clear"></div>
+        <div class="col-md-12">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <td>#</td>
+                        <td>Services</td>
+                        <td>Job Speicifcation</td>
+                        <td>Number of Submitted Applications </td>
+                        <td>Number of Issued Permits</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Categories)
+                    {
+                        int counter = 0;
+                        foreach (var service in Model.Services.Where(C => C.application_id == item.id))
+                        {
+                            counter++;
+                            var tot = Model.Specifications.Where(S => S.Id == service.Id).Count() + 1;
+                            <tr>
+                                <td rowspan="@tot">@counter</td>
+                                <td rowspan="@tot"><strong>service.Name</strong></td>
+                                <td></td>
+                                <td><strong>service.ApplicationCount</strong></td>
+                                <td><strong>service.PermitCount</strong></td>
+
+                            </tr>
+                            foreach (var spec in Model.Specifications.Where(S => S.Id == service.Id))
+                            {
+                                <tr>
+                                    <td>spec.Name</td>
+                                    <td>spec.ApplicationCount</td>
+                                    <td>spec.PermitCount</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,339 @@
+﻿@using NewDepot.Models
+
+@model RenewModel
+
+@{
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    ViewBag.Title = "Add/Modify Depot Storage Tank Information";
+    var tnks = Model.Tanks;
+    var aptnks = Model.AppTanks;
+    var pds = Model.Products;
+    var m = "k";
+    if (ViewBag.phaseId != null && ViewBag.phaseId == "5" || ViewBag.phaseId == "9")
+
+
+    {
+        m = "m";
+
+    }
+
+}
+
+
+<div class="row">
+    <div class="pageTitle bg1">
+        <h2 class="lefty">@ViewBag.Title</h2>
+        <div class="righty">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}
+@if (ViewBag.Success != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Success: </strong> @ViewBag.Success
+        </div>
+    </div>
+}
+
+<div class="widget-content">
+
+    <form action="/LTO/UpdateAppTank" id="tankForm" method="post">
+        <div class="widget">
+            <div class="row">
+
+                <input type="hidden" name="ApplicationId" value="@ViewBag.ApplicationId" />
+
+                <div class="col-md-12">
+                    @if (ViewBag.facModification != null)
+                    {
+                        <h4>Application Tanks For <b>@ViewBag.facModification</b></h4>
+                        <small> ( @ViewBag.Ref )</small> <br/>
+                        <label class="form-form-control"><b>Modification Type:</b></label>
+                        <select class="form-control" name="ModifyType" style="width: 200px;" required>
+                            <option value="@ViewBag.facModification">@ViewBag.facModification</option>
+                            <option value="Conversion">Conversion</option>
+                            <option value="ATC">ATC</option>
+                            <option value="Decommissioning">Decommissioning</option>
+                            <option value="Inclusion">Inclusion</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <h4>Application Tanks For <b>@ViewBag.Ref</b></h4>
+                        <label class="form-form-control"><b>Modification Type:</b></label>
+                        <select class="form-control" name="ModifyType" style="width: 200px;" required>
+                            <option value="Conversion">Conversion</option>
+                            <option value="ATC">ATC</option>
+                            <option value="Decommissioning">Decommissioning</option>
+                            <option value="Inclusion">Inclusion</option>
+                        </select>
+                    }
+
+                     
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tank Name</th>
+                                <th>Max. Capacity</th>
+                                <th>Product</th>
+                                <th>Diameter(m)</th>
+                                <th>Height(m)</th>
+                                <th>Include Tank</th>
+
+                                @if (m == "m")
+                                {
+                                    <th>Modification Type</th>
+
+                                }
+                                else
+                                {
+
+                                    <th></th>
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody id="tankContainer" class="special-control">
+                            @* if facility already have tanks, *@
+                            @if (tnks.Count > 0)
+                            {
+                                for (int i = 0; i < tnks.Count; i++)
+                                {
+
+                                    var applicationTanks = aptnks.Where(x => x.TankId == tnks[i].Id).FirstOrDefault(); 
+
+                                    var did = "document" + i;
+                                    var id = "tnks[" + i + "].id";
+                                    var Name = "tnks[" + i + "].Name";
+                                    var Height = "tnks[" + i + "].Height";
+                                    var MaxCapacity = "tnks[" + i + "].MaxCapacity";
+                                    var ProductId = "tnks[" + i + "].ProductId";
+                                    var Diameter = "tnks[" + i + "].Diameter";
+                                    var ModifyType = "tnks[" + i + "].ModifyType";
+                                    var Recalibrate = "tnks[" + i + "].Recalibrate";
+                                    var AppTank = "tnks[" + i + "].AppTank";
+
+                                    var pn = pds.Where(a => a.Id == tnks[i].ProductId).FirstOrDefault();
+                                    var indx = i + 1;
+                                    <tr id="@did" class="tnks">
+                                        <td style="display: table-cell; vertical-align: middle">@indx</td>
+                                        <td>
+                                            <input type="hidden" name="@id" value="@tnks[i].Id" />
+                                            <input type="text" required name="@Name" class="form-control" value="@tnks[i].Name" placeholder="e.g. PMS Tank A" />
+                                        </td>
+                                        <td>
+                                            <input type="number" required name="@MaxCapacity" class="form-control" value="@tnks[i].MaxCapacity" placeholder="e.g. 113000" />
+
+                                        </td>
+                                        <td>
+                                            <select required name="@ProductId" class="form-control">
+                                                <option value="">Select Product</option>
+                                                @foreach (var item in pds)
+                                                {
+                                                    if (item.Id == tnks[i].ProductId)
+                                                    {
+                                                        <option value="@item.Id" selected>@item.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" required name="@Diameter" class="form-control" value="@tnks[i].Diameter" placeholder="e.g. 3.2" />
+
+                                        </td>
+                                        <td>
+                                            <input type="text" required name="@Height" class="form-control" value="@tnks[i].Height" placeholder="e.g. 8" />
+
+                                        </td>
+                                        <td>
+                                            @if (applicationTanks != null)
+                                            {
+                                                <input type="checkbox" checked name="@AppTank" class="AppTank[]" value="Yes" title="Select this Tank if this Tank is for the Application" />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="@AppTank" class="AppTank[]" value="Yes" title="Select this Tank if this Tank is for the Application" />
+                                            }
+                                        </td>
+                                        <td>
+
+
+                                            @if (ViewBag.phaseId != null && (ViewBag.phaseId == "5" || ViewBag.phaseId == "9"))
+                                            {
+                                                /**/
+                                                <select class="form-control" name="@ModifyType" required>
+                                                    <option value="Type">Existing</option>
+                                                    <option value="Decommission">Decommission</option>
+                                                    <option value="Convert">Convert</option>
+                                                    <option value="Convert">Upgrade</option>
+                                                </select>
+                                            }
+
+                                            @if (ViewBag.phaseId != null && ViewBag.phaseId == "11")
+                                            {
+                                                <input type="checkbox" name="@Recalibrate" value="Yes" title="Select tank for Re-calibration" />
+
+                                            }
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+
+
+                                for (int i = 0; i < 1; i++)
+                                {
+                                    var a = i;
+                                    var did = "document" + a;
+                                    var Name = "tnks[" + a + "].Name";
+                                    var Height = "tnks[" + i + "].Height";
+                                    var MaxCapacity = "tnks[" + i + "].MaxCapacity";
+                                    var ProductId = "tnks[" + i + "].ProductId";
+                                    var Diameter = "tnks[" + i + "].Diameter";
+                                    var ModifyType = "tnks[" + i + "].ModifyType";
+                                    var Recalibrate = "tnks[" + i + "].Recalibrate";
+                                    var AppTank = "tnks[" + i + "].AppTank";
+                                    var indx = a + 1;
+                                    <tr id="@did" class="tnks">
+                                        <td style="display: table-cell; vertical-align: middle">@indx</td>
+                                        <td>
+                                            <input type="hidden" name="@AppTank" value="Yes" />
+                                            <input type="text" required name="@Name" class="form-control" value="" placeholder="e.g. PMS Tank A" />
+                                        </td>
+                                        <td>
+                                            <input type="number" required name="@MaxCapacity" class="form-control" value="" placeholder="e.g. 33000" />
+                                        </td>
+                                        <td>
+                                            <select required name="@ProductId" class="form-control">
+                                                <option value="">Select Product</option>
+                                                @foreach (var item in pds)
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" required name="@Diameter" class="form-control" value="" placeholder="e.g. 3.2" />
+
+                                        </td>
+                                        <td>
+                                            <input type="text" required name="@Height" class="form-control" value="" placeholder="e.g. 8" />
+
+                                        </td>
+                                        <td>
+                                            @if (ViewBag.phaseId != null && (ViewBag.phaseId == "5" || ViewBag.phaseId == "9"))
+                                            {
+                                                /**/
+                                                <select class="form-control" name="@ModifyType" required>
+                                                    <option value="Type">Existing</option>
+                                                    <option value="Decommission">Decommission</option>
+                                                    <option value="Convert">Convert</option>
+                                                    <option value="Convert">Upgrade</option>
+                                                </select>
+                                            }
+
+                                            @if (ViewBag.phaseId != null && ViewBag.phaseId == "11")
+                                            {
+                                                <input type="checkbox" name="@Recalibrate" value="Yes" title="Select this Tank if this Thank is One of the Ones to be Recalibrated" />
+
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="btn btn-danger btn-sm delete" data-id=""><i class="fa fa-times"></i>Delete</span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td colspan="7">
+                                    <a id="addTank" href="" data-m="@m" class="btn btn-xs btn-warning">Add More Tank &nbsp; <i class="fa fa-plus"></i></a>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+                <div style="min-height:30px; clear:both"></div>
+                <div>
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-4 col-md-4 col-lg-4 col-sm-4"> </div>
+                <div class="col-xs-4 col-md-4 col-lg-4 col-sm-4">
+                    <button type="button" id="submitTanky" class="btn btn-primary btn-success btn-md" value="UPDATE">UPDATE &nbsp;<i class="fa fa-pen"></i></button>
+
+                </div>
+            </div>
+            </div>
+</form>
+</div>
+<div style="clear:both"></div>
+@section Scripts {
+    <script src="~/OldDepotStyle/Scripts/LTO.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+
+            $("#submitTanky").click(function (e) {
+
+                e.preventDefault();
+                var tankCheck = document.getElementsByClassName("AppTank[]");
+                var getChecked = "false";
+                for (var i = 0; i < tankCheck.length; i++) {
+                    if (tankCheck[i].checked === true) {
+                        getChecked = "true";
+                        break;
+                    }
+                }
+
+
+                if (getChecked === "false") {
+                    alert("Sorry, you have not made any tank selection");
+
+                }
+                else {
+                    $.confirm({
+                        text: "Are you sure of modified tank(s) for this application ?",
+                        confirm: function () {
+                            $("#tankForm").addClass('Submitloader');
+                            $('#tankForm').submit();
+                        },
+                        cancel: function () {
+
+                        },
+                        confirmButton: "Yes",
+                        cancelButton: "No"
+                    })
+
+                }
+
+            });
+        });
+    </script>
+
+}

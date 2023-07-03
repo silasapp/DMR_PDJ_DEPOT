@@ -1,0 +1,239 @@
+﻿@using NewDepot.Helpers;
+@using NewDepot.Controllers.Authentications;
+@using Microsoft.AspNetCore.Http;
+
+@{
+    GeneralClass generalClass = new GeneralClass();
+    var userName = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    @*<link href="~/themes/vendor/fontawesome-free/css/all.css" rel="stylesheet" />*@
+    <link href="~/ela/css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+    <!---AM Charts -->
+    <!-- Resources -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/kelly.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/moonrisekingdom.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/frozen.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/spiritedaway.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/dark.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <link href="~/packagess/core/main.css" rel='stylesheet' />
+    <link href="~/packagess/Tipped/tipped.css" rel='stylesheet' />
+
+    <link href='~/packagess/bootstrap/main.css' rel='stylesheet' />
+    <link href='~/packagess/timegrid/main.css' rel='stylesheet' />
+    <link href='~/packagess/daygrid/main.css' rel='stylesheet' />
+    <link href='~/packagess/list/main.css' rel='stylesheet' />
+
+    <script src='~/packagess/core/main.js'></script>
+    <script src='~/packagess/interaction/main.js'></script>
+    <script src='~/packagess/bootstrap/main.js'></script>
+    <script src='~/packagess/daygrid/main.js'></script>
+    <script src='~/packagess/timegrid/main.js'></script>
+    <script src='~/packagess/list/main.js'></script>
+    @*<script src='~/packagess/js/theme-chooser.js'></script>*@
+    <link href="~/css/jquery.qtip.min.css" rel="stylesheet" />
+
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/nmdpra.png">
+    <title>DEPOT | @ViewData["Title"] </title>
+
+
+    <!-- Bootstrap Core CSS -->
+    <!-- Custom CSS -->
+
+    <link href="~/ela/css/lib/calendar2/semantic.ui.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/semantic ui/dist/semantic.css" />
+
+    <link href="~/ela/css/lib/calendar2/pignose.calendar.min.css" rel="stylesheet">
+    <link href="~/ela/css/lib/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/ela/css/lib/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/ela/css/helper.css" rel="stylesheet">
+    <link href="~/ela/css/style.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="~/css/dataTables.min.css" />
+    <link rel="stylesheet" href="~/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css" />
+
+    <link rel="stylesheet" href="~/css/dataTables.checkboxes.css" />
+    <link rel="stylesheet" href="~/css/jquery.datetimepicker.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/solid.css" integrity="sha384-+0VIRx+yz1WBcCTXBkVQYIBVNEFH1eP6Zknm16roZCyeNg2maWEpk/l/KsyFKs7G" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/regular.css" integrity="sha384-aubIA90W7NxJ+Ly4QHAqo1JBSwQ0jejV75iHhj59KRwVjLVHjuhS3LkDAoa/ltO4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/brands.css" integrity="sha384-1KLgFVb/gHrlDGLFPgMbeedi6tQBLcWvyNUN+YKXbD7ZFbjX6BLpMDf0PJ32XJfX" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/fontawesome.css" integrity="sha384-jLuaxTTBR42U2qJ/pm4JRouHkEDHkVqH0T1nyQXn1mZ7Snycpf6Rl25VBNthU4z0" crossorigin="anonymous">
+
+    <link href="~/ela/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+
+    @if (Context.Session.GetString(AuthController.sessionTheme) != null)
+    {
+        userName = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionUserName).ToString());
+        @if (generalClass.Decrypt(Context.Session.GetString(AuthController.sessionTheme)) == "Dark")
+        {
+            <link rel="stylesheet" href="~/css/BlackTheme.css" />
+        }
+        else
+        {
+            <link rel="stylesheet" href="~/css/LightTheme.css" />
+        }
+    }
+
+    <style>
+        .header {
+/*            background-color: #001a33 !important;
+*/            background-color: #0d2747 !important;
+        }
+
+        .modal-body {
+            max-height: 550px;
+            overflow-y: auto;
+        }
+
+        .efooter {
+            left: 600px;
+            position: relative;
+            bottom: 0 !important;
+            width: 100%;
+        }
+
+        .fadd {
+            min-height: 600px !important
+        }
+
+        h1 {
+            font-family: 'Times New Roman', Times, serif;
+            margin-top: 0px
+        }
+
+        .has-arrow > i > span {
+            color: white !important;
+        }
+
+        .btn-success, .alert-success {
+            background-color: seagreen !important;
+            color: ghostwhite;
+        }
+
+        .cardTank {
+            width: 500px;
+            background: #ffffff none repeat scroll 0 0;
+            margin: 15px 0;
+            padding: 20px;
+            border: 0 solid #e7e7e7;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px 0 rgb(0 0 0 / 15%);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        @*<nav class="navbar top-navbar navbar-expand-md " style="background-color: #010419">*@ 
+        <nav class="navbar top-navbar navbar-expand-md " style="background-color: #0d2747">
+
+            <!-- Logo -->
+            <div class="navbar-header" >
+                <a class="navbar-brand" href="/Staffs/Dashboard" style="margin-left:-140px!important">
+                    <!-- Logo icon -->
+                    <img src="~/images/pdjdepot.jpg" style="width:190%"  height="70" class="d-inline-block align-top" alt="">
+
+                </a>
+            </div>
+            <!-- End Logo -->
+            <div class="navbar-collapse">
+                <!-- toggle and nav items -->
+                <ul class="navbar-nav mr-auto mt-md-0">
+                    <!-- This is  -->
+                    <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted  " href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
+                    <li class="nav-item m-l-10"> <a class="nav-link sidebartoggler hidden-sm-down text-muted  " href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
+                    <!-- Messages -->
+
+                </ul>
+                <!-- User profile and search -->
+                <ul class="navbar-nav my-lg-0">
+                    <!-- Messages Dropdown Menu -->
+                    <!-- Notifications Dropdown Menu -->
+                    <li class="nav-item dropdown">
+
+
+                    </li>
+
+
+                    <!-- Search -->
+                 
+
+                    @*New search bar*@
+                    <li class="nav-item hidden-sm-down search-box">
+                        <a class="nav-link hidden-sm-down text-muted  " href="javascript:void(0)"><i class="ti-search">  </i> Search </a>
+                        <form class="app-search" action="javascript:void(0)" onsubmit="SearchApp()" method="post" id="FormSearchStraddle">
+                            <input type="text" class="form-control" placeholder="Find a Application (Reference Number)" id="txtSearchContent"> <a class="srh-btn"><i class="ti-close"></i></a>
+                        </form>
+                    </li>  
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/Staffs/MyMessages">
+                        <i class="fa fa-envelope"> <span id="myMsgCount" style="color:white!important"></span> </i>  </a>
+                    </li>
+
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-muted   " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <b class="text-primary"> @userName </b> - <span class="text-warning">@generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName).ToString()) </span> <small>(@generalClass.Decrypt(Context.Session.GetString(AuthController.sessionEmail)))</small>
+                            <img src="~/images/Avarta/Advatar1.png" alt="user" class="profile-pic" />
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                            <ul class="dropdown-user">
+                                @if (generalClass.Decrypt(Context.Session.GetString(AuthController.sessionTheme)) == "Dark")
+                                {
+                                    <li><a href="javascript:void(0)" onclick="UseTheme('@generalClass.Encrypt("Light")')"><i class="fas fa-sun"></i> Use Light Theme</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="javascript:void(0)" onclick="UseTheme('@generalClass.Encrypt("Dark")')"><i class="far fa-moon"></i> Use Dark Theme</a></li>
+                                }
+@*                                <li> <a href="/Auth/ChangePassword"> <i class="fa fa-key"></i> Change Password</a></li>
+*@                                <li><a href="/Auth/Logout"><i class="fa fa-power-off"></i> Logout</a></li>
+
+
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+   
+</body>
+
+</html>
+
+        <script>
+
+    function UseTheme(themeName) {
+
+        $.post("/Staffs/UseTheme", { "id": themeName }, function (response) {
+
+            if (response === "Theme Changed") {
+                location.reload(true);
+            }
+            else {
+                alert(response);
+            }
+        });
+    }
+</script>

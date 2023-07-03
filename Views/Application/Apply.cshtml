@@ -1,0 +1,153 @@
+﻿@using NewDepot.Models;
+
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    var cate = (List<Categories>)ViewBag.Category;
+    ViewBag.Title = "Depot License Application ";
+    //var phases = (List<Phases>)ViewBag.Phases;
+    var sanction = (List<Sanctions>)ViewBag.Sanction;
+}
+
+<div class="row" id="BackImage">
+
+    <h3 class="DashCompanyName col-md-5"> Application for Depot License </h3>
+
+
+    <div class="col-md-3"></div>
+    <div class="right col-md-4">
+        <ul style="display:inline">
+            <li class="selected" id="step1">Step 1: <small>Select Application Type <span class="id=appstage">25%</span></small></li>
+            <li id="step2">Step 2: <small>Fill Application Form <span class="id=appstage2"></span></small></li>
+            <li>Step 3: <small>Upload Document</small></li>
+            <li>Step 4: <small>Make Payment </small></li>
+
+        </ul>
+    </div>
+
+</div>
+
+
+<div class="marg50"></div>
+
+@if (ViewBag.Err != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.Err
+        </div>
+    </div>
+}@if (ViewBag.ErrorMessage != null)
+{
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Error!</strong> @ViewBag.ErrorMessage
+        </div>
+    </div>
+}
+@if (ViewBag.PermitUsage != null)
+{
+
+    <div class="col-md-12">
+        <div class="alert alert-warning" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Application Feedback!</strong> @ViewBag.PermitUsage
+        </div>
+    </div>
+}
+<div class="roww">
+    <form id="facfrm" action="/Application/Suitability" method="post" enctype="multipart/form-data">
+
+        <div class="form-horizontal" id="fmload">
+            <div class="form-group">
+                <div class="col-md-8 offset-4 company">
+                    <label for="Type" class="control-label col-md-6">Application Type</label>
+                    <div class="col-md-6">
+                        <select id="category" required name="category" class="form-control">
+                            <option value="">Select Application Type</option>
+                            @foreach (var cat in cate)
+                            {
+                                if (!cat.name.ToLower().Contains("modification"))
+                                { }
+                                <option value="@cat.id" data-prev="">@cat.name</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group hide" id="appStage">
+                <div class="col-md-8 offset-4 company">
+                    <label for="Type" class="control-label col-md-6">Application Stage</label>
+                    <div class="col-md-6">
+                        <select id="Type" required name="PhaseId" class="form-control">
+                            <option value="">Select Application Stage</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hide padd" id="newSuitDiv">
+
+
+            </div>
+
+            <div id="sanctionContainer" class="hide">
+                <div class="form-group">
+                    <div class="col-md-8 offset-4 company">
+                        <label id="permitLabl" class="col-md-6 control-label">Sanction Name:</label>
+                        <div class="col-md-6">
+                            <select name="sId" id="sid" class="form-control">
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="AppContinueDiv" class="hide">
+                <div class="form-group">
+                    <div class="col-md-8 offset-4 company">
+                        <label id="permitLabel" class="col-md-6 control-label"></label>
+                        <div class="col-md-6">
+                            <small id="ATCMessage"></small>
+                            <input type="text" id="permitId" name="permitId" class="form-control" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+    </form>
+</div>
+<div class="form-group">
+    <div class="col-md-4 offset-4 company">
+        <button id="btnSubmit" class="btn btn-primary btn-block hide" type="button" data-target="#confirmSuit">Preview Application</button>
+
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script type="text/javascript" src="~/OldDepotStyle/Scripts/bundles.min.js"></script>
+
+    <script src="~/ela/js/lib/form-validation/jquery.validate.min.js" rel="stylesheet"></script>
+
+    <script src="~/OldDepotStyle/Scripts/application.js"></script>
+    <script>
+        $(function () {
+
+
+            $("#lnkApplication").addClass("active");
+        });
+        $(function () {
+
+
+        });
+    </script>
+
+}

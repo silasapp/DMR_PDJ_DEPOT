@@ -1,0 +1,123 @@
+﻿@model IEnumerable<NewDepot.Models.messages>
+
+@{
+    Layout = null;
+
+    var top10 = Model.Take(10);
+}
+
+
+<table class="table table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.subject)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Company_Id)
+                </th>*@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.sender_id)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.date)
+            </th>
+            @*<th></th>*@
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in top10)
+        {
+            <tr>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Read)*@
+                    @if (item.read == 1)
+                    {
+                        // Message Read Already
+                        <i class="glyphicon glyphicon-envelope gray"></i>
+                    }
+                    else
+                    {
+                        <i class="glyphicon glyphicon-envelope unread"></i>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink(item.subject, "View", new { id = item.id })
+                </td>
+                <td>
+                    @{
+                    var diff = DateTime.Now - item.date;
+                    if (diff.Value.Days >= 7)
+                    {
+                        var weeks = (int)(diff.Value.Days / 7);
+                        
+                        if (weeks > 1)
+                        {
+                            <span>@weeks weeks ago</span>
+                        }
+                        else if (weeks == 1)
+                        {
+                            <span>@weeks week ago</span>
+                        }
+                    }
+                    else if (diff.Value.Days >= 1)
+                    {
+                        if (diff.Value.Days > 1)
+                        {
+                            <span>@diff.Value.Days days ago</span>
+                        }
+                        else if (diff.Value.Days == 1)
+                        {
+                            <span>Yesterday</span>
+                        }
+                    }
+                    else if (diff.Value.Hours >= 1)
+                    {
+                        if (diff.Value.Hours > 1)
+                        {
+                            <span>@diff.Value.Hours Hours ago</span>
+                        }
+                        else if (diff.Value.Hours == 1)
+                        {
+                            <span>@diff.Value.Hours Hour ago</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>@diff.Value.Minutes Minutes ago</span>
+                    }
+                    }
+                </td>
+
+                @*<td>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.subject)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Company_Id)
+                </th>*@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.sender_id)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.date)
+            </th>
+            @*<th></th>*@
+        </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,114 @@
+﻿@using NewDepot.Models
+@using NewDepot.Helpers
+@model MyApps
+@{
+    ViewBag.Title = "Update Facility with Facility Identification Code";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass genClass = new GeneralClass();
+
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<form action="/Facility/Update" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Facility Name</label>
+
+            <div class="col-md-10">
+                <input type="hidden" readonly name="id" class="form-control" value="@Model.FacilityId" />
+                @if (Model.FacilityDetails != null)
+                {
+                    <input type="text" name="facName" class="form-control" value="@Model.FacilityDetails" />
+                }
+                else{
+                <input type="text" name="facName" class="form-control" value="" />
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Address</label>
+
+            <div class="col-md-10">
+                <input type="text" name="address" class="form-control" value="@Model.Address_1" />
+            </div>
+        </div> 
+        <div class="form-group">
+            <label class="control-label col-md-2">City</label>
+
+            <div class="col-md-10">
+                <input type="text" name="city" class="form-control" value="@Model.City" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">State</label>
+
+            <div class="col-md-10">
+                <input type="text" name="state" class="form-control" value="@Model.StateName" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Company Name</label>
+
+            <div class="col-md-10">
+                <input type="text" readonly name="city" class="form-control" value="@Model.CompanyDetails" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Contact Name</label>
+
+            <div class="col-md-10">
+                <input type="text" readonly name="ContactName" class="form-control" value="@Model.fac.ContactName" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Facility Identification Code</label>
+
+            <div class="col-md-10">
+                <input type="text" name="FacCode" class="form-control" value="@Model.fac.IdentificationCode" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Facility Category Code</label>
+
+            <div class="col-md-10">
+                <input type="text" name="cateCode" class="form-control" value="@Model.fac.CategoryCode" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2">First Year of Operation</label>
+
+            <div class="col-md-10">
+                <input type="text" name="FirstOperationYear" class="form-control" value="@Model.fac.FirstOperationYear" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Company Code</label>
+
+            <div class="col-md-10">
+                <input type="text" name="compCode" class="form-control" value="@Model.CategoryCode" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>

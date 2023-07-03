@@ -1,0 +1,31 @@
+﻿@model NewDepot.Models.Document_Type
+
+@{
+    //ViewBag.Title = "Create";
+    Layout = null;
+    string btnLabel = (Model.Id > 0 ? "Edit Documents" : "Save Documents");
+}
+
+
+@using (Html.BeginForm("Create", "Document")) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="modal-body">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, "Document Name", new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+    </div>
+    <div class="clear"></div>
+    <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" value="@btnLabel" class="btn btn-success" />
+    </div>
+}

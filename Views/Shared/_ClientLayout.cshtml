@@ -1,0 +1,560 @@
+﻿@using NewDepot.Controllers;
+@using NewDepot.Helpers;
+@using Microsoft.AspNetCore.Http
+
+@{
+    GeneralClass generalClass = new GeneralClass();
+
+    var appCategory = generalClass.GetAppCategory();
+    List<Phases> appCategories = appCategory as List<Phases>;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewBag.Title - NMDPRA DEPOT PORTAL</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/nmdpra.png">
+    <link rel="stylesheet" href="~/css/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="~/css/dataTables.min.css" />
+    <link rel="stylesheet" href="~/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css" />
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+
+    <link rel="stylesheet" href="~/css/dataTables.checkboxes.css" />
+    <link rel="stylesheet" href="~/css/jquery.datetimepicker.min.css" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/ela/css/lib/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    @*<link href="~/css/FontAwesome.css" rel="stylesheet" />*@
+
+    <link href="~/ela/css/ClientStyle.css" rel="stylesheet" />
+    <link href="~/OldDepotStyle/Content/ogisp_style/MainStyle.css" rel="stylesheet" />
+    <link href="~/OldDepotStyle/Content/ogisp_style/otherStyle.css" rel="stylesheet" />
+
+
+
+    <script src="~/lib/semantic ui/dist/semantic.js"></script>
+    <style>
+        .lefty {
+            font-weight: bolder;
+            font-family: 'Times New Roman' !important;
+        }
+
+        .loading {
+            position: relative;
+        }
+
+            .loading::after {
+                background-color: rgba(44, 104, 198, 0.92);
+                content: 'Loading...';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+            }
+
+        .clientfooter {
+            border-top: 1px solid rgba(37, 37, 38, 0.13);
+            left: 40px;
+            position: relative;
+            bottom: 0 !important;
+            width: 100%;
+            margin-bottom: 0px;
+        }
+
+        .changeBG {
+            opacity: 0.5;
+            background-color: transparent;
+        }
+
+        .stoiip {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60"> <text x="60" y="23" style="float:right">MMstb</text></svg>') no-repeat;
+        }
+
+        .selected {
+            background-color: red;
+        }
+
+        .FirstDashCount {
+            min-height: 150px;
+            text-align: center;
+            box-sizing: border-box;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgb(0, 0, 0);
+            background-color: rgb(11, 10, 10);
+            color: #f1f0f0;
+            opacity: 1;
+            text-align: center;
+            vertical-align: middle;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+            .FirstDashCount > b {
+                font-size: 90px;
+            }
+
+
+        .DashCompanyName {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 30px;
+            color: #eeda6d;
+        }
+
+        .DashCount {
+            opacity: 0.7;
+            float: left;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            width: initial;
+            text-align: center;
+            padding: 10px;
+            background-color: rgb(12, 3, 3);
+            color: white;
+            min-height: 70px;
+            width: inherit;
+            font-weight: bolder;
+            display: inline-block;
+        }
+
+        .DashCompanyName {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 30px;
+            color: #eeda6d;
+        }
+
+
+        #BackImage {
+            background: url('/images/index-bg2.png');
+            padding: 50px 30px 50px 30px;
+            color: whitesmoke;
+            background-repeat: no-repeat;
+            background-size: 100%
+        }
+    </style>
+</head>
+<body>
+    <div class="fad">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="max-height:60px!important; box-shadow: 0 3px 5px black;">
+
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="~/images/nmdpra.png" width="100" style="max-height:60px" class="d-inline-block align-top" alt="">
+
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarsExample07">
+
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/Companies/Dashboard"> Dashboard <span class="sr-only">(current)</span></a>
+                        </li>
+
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Applications
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown07">
+                                <a class="dropdown-item" href="/Application/MyApplications">My Applications</a>
+                                <a class="dropdown-item" href="/Application/Apply">Apply</a>
+
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Legacy Application <b class="badge badge-warning" id="CompanyLegacyCount"></b> </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown07">
+                                <a class="dropdown-item" href="/Legacies/MyLegacy">My Legacy Apps <b class="badge badge-warning" id="CompanyLegacyCount2"></b> </a>
+                                <a class="dropdown-item" href="/Legacies/Apply"> Apply for Legacy</a>
+
+
+
+                                @*@foreach (var m in appCategories)
+        {
+            <a class="dropdown-item" href="/Legacies/Apply/@generalClass.Encrypt(m.id.ToString())"> Apply for @m.name Legacy</a>
+        }*@
+                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/Facility/Index"> My Facilities <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/Application/MyPermits"> My Licenses <span class="sr-only">(current)</span></a>
+                        </li>
+
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/Companies/MySchedules">Schedules <span class="sr-only">(current)</span> <b class="badge badge-warning" id="ScheduleCount"></b></a>
+
+
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/Companies/Messages">Messages <span class="sr-only">(current)</span></a>
+                            <b class="badge badge-warning" id="MessageCount"></b>
+
+                        </li>
+
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggSle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Help
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown07">
+                                <a class="dropdown-item" href="https://dpr.gov.ng/index/wp-content/uploads/2013/10/FILLING-STATION-GUIDELINES.pdf" target="_blank">Guide Line</a>
+                                <a class="dropdown-item" href="/Faq">FAQs</a>
+                                <a class="dropdown-item" href="#">Video Guide</a>
+                                <a class="dropdown-item" href="#">Live Chat</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown active">
+                            @*<a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account <b class="badge badge-warning" id="NotifyCount"></b> </a>*@
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account <b class="badge badge-warning" id="NotifyCountt"></b> </a>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdown07">
+                                <a class="dropdown-item" href="/Companies/CompanyInformation">Company Profile</a>
+                                <a class="dropdown-item" href="/Companies/DocumentsLibrary">Document Library</a>
+                                <a class="dropdown-item" href="/Account/ChangePassword">Change Password</a>
+                                @*<a class="dropdown-item" href="/Company/MySchedule"> My Schedule <b class="badge badge-warning" id="ScheduleCount"></b> </a>*@
+                                <a class="dropdown-item" href="/Companies/MyExtraPayments"> Extra Payments <b class="badge badge-warning" id="ExtraPaymentCount"> </b> </a>
+
+
+                            </div>
+                        </li>
+
+                        @*<li class="nav-item active">
+            <a class="nav-link" href="/Companies/MyPermits"> My Approvals</a>
+        </li>*@
+
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            @*<a class="nav-link text-warning" href="/Companies/CompanyInformation"> <i class="fa fa-user"> </i> @generalClass.Decrypt(Context.Session.GetString(AuthController.sessionUserName)).Substring(0, 7) <span class="sr-only">(current)</span></a>*@
+                        </li>
+
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/Auth/Logout"> <i class="fa fa-power-off"> </i> Logout <span class="sr-only">(current)</span></a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+
+
+        <div class="container" style=" box-shadow:0 0 5px #c5c5c5; padding: 0 15px 20px 15px; background:white;">
+            <div class="panel-body">
+                <br /><br /><p></p>
+
+
+                @RenderBody()
+                <br />
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+
+    <script src="~/js/jqueryConfirm.js"></script>
+    @RenderSection("Scripts", required: false)
+
+    <footer class="clientfooter text-center">
+        Copyright © @DateTime.UtcNow.AddHours(1).Year. The Nigerian Midstream and Downstream Petroleum Regulatory Authority (NMDPRA) Nigeria
+    </footer>
+
+</body>
+</html>
+
+
+
+
+<script src="~/js/dataTables.min.js"></script>
+
+
+
+@* Jquery data table scripts *@
+<script src="~/js/dataTables.buttons.min.js"></script>
+<script src="~/js/buttons.flash.min.js"></script>
+<script src="~/js/jszip.min.js"></script>
+<script src="~/js/pdfmake.min.js"></script>
+<script src="~/js/vfs_fonts.js"></script>
+<script src="~/js/buttons.html5.min.js"></script>
+<script src="~/js/buttons.print.min.js"></script>
+<script src="~/js/buttons.colVis.min.js"></script>
+<script src="~/js/dataTables.checkboxes.min.js"></script>
+
+
+
+
+<script src="~/js/FunctionScript.js"></script>
+<script src="~/js/jquery.ui.widget.js"></script>
+<script src="~/js/jquery.iframe-transport.js"></script>
+<script src="~/js/jquery.fileupload.js"></script>
+@*<script src="~/js/jquery.datetimepicker.min.js"></script>*@
+<script src="~/js/jquery.datetimepicker.full.min.js"></script>
+
+@*Confirm jquery script*@
+<script>
+
+    $(document).ready(function () {
+
+        /*
+    * Verifying and saving MISTDO Staff
+    * 
+    */
+        $("#btnVerifyMistdo").on('click', function (event) {
+            event.preventDefault();
+
+            if ($("#txtMistdoNumber").val() === "") {
+                ErrorMessage("#MistdoInfo", "Please enter your mistdo number");
+            }
+            else {
+
+                var data = new FormData();
+                data.append("CertNo", $("#txtMistdoNumber").val());
+                data.append("FacilityId", $("#txtFacId").val());
+
+              
+                $.confirm({
+                    text: "Are you sure you want to verify and save staff information ?",
+                    confirm: function () {
+                        $("#FormMistdoStaff").addClass("Submitloader");
+
+                        $.ajax({
+                            url: "/Companies/VerifyMistdoStaff",
+                            type: "POST",
+                            contentType: false,
+                            processData: false,
+                            data: data,
+                            success: function (response) {
+                              
+                                if (response === "Saved") {
+
+                                    SuccessMessage("#MistdoInfo", "Mistdo staff verified successfully.");
+
+                                    $("#MistdoReload").load(location.href + " #MistdoReload");
+
+                                    $("#FormMistdoStaff").removeClass("Submitloader");
+
+                                    $("#txtMistdoNumber").val("");
+                                }
+                                else {
+                                    ErrorMessage("#MistdoInfo", response);
+                                    $("#FormMistdoStaff").removeClass("Submitloader");
+                                }
+                            }
+                            ,
+                            failure: function (data) {
+                                alert("Failure");
+                            }
+                        });
+                    },
+                    cancel: function () {
+
+                    },
+                    confirmButton: "Yes",
+                    cancelButton: "No"
+                })
+
+            }
+        });
+
+        $("#btnSaveMistdo").on("click", function (event) {
+            event.preventDefault();
+            
+            $.confirm({
+                text: "Are you sure you want to proceed?",
+                confirm: function () {
+                    $("#FormMistdoStaff").addClass("Submitloader");
+                    var data = new FormData();
+                 
+                    data.append("appid", $("#txtAppId").val());
+                    $.ajax({
+                        url: "/Companies/CheckMistdoStaff",
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (response) {
+
+                                var res = $.trim(response).split("|");
+
+                                if (res[0] === "1") {
+
+                                    SuccessMessage("#MistdoInfo", "Mistdo staff verified successfully.");
+                                    var location = window.location.origin + "/Application/UploadApplicationDocument/" + res[1];
+                                    window.location.href = location;
+                                    $("#FormMistdoStaff").removeClass("Submitloader");
+                                }
+                                else {
+                                    ErrorMessage("#MistdoInfo", res[1]);
+                                    $("#FormMistdoStaff").removeClass("Submitloader");
+                                }
+                            },
+                        failure: function (data) {
+                            alert("Failure");
+                        }
+                    });
+                },
+                cancel: function () {
+
+                },
+                confirmButton: "Yes",
+                cancelButton: "No"
+            })
+        
+        });
+
+
+        $(".dataTable").DataTable({
+
+            dom: 'Bfrtip',
+            buttons: [
+                'pageLength',
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5',
+                {
+                    extend: 'print',
+                    text: 'Print all',
+                    exportOptions: {
+                        modifier: {
+                            selected: null
+                        }
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    collectionLayout: 'fixed two-column'
+                }
+
+            ],
+
+            language: {
+                buttons: {
+                    colvis: 'Change columns'
+                }
+            },
+
+            select: true,
+
+            "pagaing": true,
+            "ordering": true,
+            "info": true,
+            "searching": true,
+            "order": [[0, "asc"]],
+            "processing": true,
+            stateSave: true
+
+
+        });
+
+
+    })
+
+    function RemoveMistdoStaff(id) {
+      
+
+        var data = new FormData();
+        data.append("id", id);
+
+      
+        $.confirm({
+            text: "Are you sure you want to remove this mistdo certified staff?",
+            confirm: function () {
+                $("#FormMistdoStaff").addClass("Submitloader");
+
+                $.ajax({
+                    url: "/Companies/RemoveMistdoStaff",
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (response) {
+                      
+                        if (response.trim() === "Network Error") {
+                            $("#Error_" + fileID).html("<span class='text-danger'> No Network. Please check your network. </span>");
+                            $("#FormMistdoStaff").removeClass("Submitloader");
+                        }
+                        else {
+                            if (response.trim() === "Deleted") {
+                                alert("Selected certified mistdo staff has been removed successfully");
+                                $("#MistdoReload").load(location.href + " #MistdoReload");
+                                $("#FormMistdoStaff").removeClass("Submitloader");
+                            }
+                            else {
+                                alert(response);
+                                $("#FormMistdoStaff").removeClass("Submitloader");
+                            }
+                        }
+                    }
+                    ,
+                    failure: function (data) {
+                        alert("Failure");
+                    }
+                });
+            },
+            cancel: function () {
+
+            },
+            confirmButton: "Yes",
+            cancelButton: "No"
+        })
+
+        }
+    
+
+</script>
+
+
+
+
+@* Local Application configuration script *@
+<script src="~/js/jquery.iframe-transport.js"></script>
+<script src="~/js/jquery.fileupload.js"></script>
+<script src="~/js/jquery.datetimepicker.full.min.js"></script>
+<script src="~/ela/js/lib/form-validation/jquery.validate.min.js"></script>
+<script src="~/js/NewDepot Scripts/CompanyApplications.js"></script>
+<script src="~/js/NewDepot Scripts/Configurations/Countries.js"></script>
+<script src="~/js/NewDepot Scripts/Configurations/States.js"></script>
+<script src="~/js/NewDepot Scripts/Company.js"></script>
+<script src="~/OldDepotStyle/Scripts/application.js"></script>
+<script src="~/OldDepotStyle/Scripts/mainscript.js"></script>
+<script src="~/OldDepotStyle/Scripts/LTO.js"></script>
+<script src="~/js/NewDepot Scripts/Legacy.js"></script>

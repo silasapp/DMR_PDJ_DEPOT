@@ -1,0 +1,77 @@
+﻿<p><u>RE: APPLICATION FOR CALIBRATION OF PETROLEUM PRODUCTS STORAGE TANKS<br />At: {0}</u></p>
+<p style=" text-align: justify;">
+   We refer to your application of {1} for approval to construct a bulk storage depot facility at {0}
+   and the subsequent site inspection visit carried out on {2}.
+</p>
+
+<p style=" text-align: justify;">		 
+
+	In view of the satisfactory report from the visit and the consent obtained from and other appropriate 
+	Government Agencies, I am directed to inform you that <b>{3}</b> is hereby Granted <b>Approval to Calibrate</b> a 
+	Bulk Storage Depot Facility with the following Capacities:
+
+</p>
+ <table style="width: 100%; border-spacing: 0; margin-top: 25px;">
+        <tr>
+            <th>S/N</th>
+            <th>TANK No. </th> 
+            <th>PRODUCT</th>
+            <th>DIAMETER (meters) </th>
+            <th>HEIGHT (meters)</th>
+            <th>CAPACITY (litres)</th>
+        </tr>
+        <tbody>
+            {4}
+        </tbody>
+    </table>
+	<div>
+<p >
+	The construction works shall be carried out under the following conditions; 
+	<ol>
+       <li  style=" text-align: justify;">
+			   The construction shall be in line with the approved drawings submitted to 
+			   the Nigerian Midstream and Downstream Petroleum Regulatory Authority and in accordance with relevant provisions of Petroleum 
+			   Regulations.
+	   </li>
+       <li  style="; text-align: justify;">
+			   All impact mitigation/monitoring measures as provided in the Environmental Impact Assessment (E.I.A) 
+			   report and as indicated in the Environmental Management Plan are comprehensively implemented during the 
+			   construction and operation phases. 
+
+		</li>
+       <li  style=" text-align: justify;">
+			The company should actively work with the NMDPRA staff to be attached to the project and officially inform the 
+			Department of each milestone, particularly pipeline laying, tank/pipeline hydro-tests, and calibration exercises. 
+			The name of the Staff will be communicated to you by our {5} office. 
+	   
+	   </li>
+       <li  style=" text-align: justify;">
+			All petroleum Products dispensing meters, pumps and cargo pumps shall be subjected to Factory Acceptance Tests (FAT) witnessed by NMDPRA. It is mandatory to involve the Department on the specifications of these equipment prior to purchase. 
+
+		</li>
+
+	  <li style=" text-align: justify;"> 
+			All cargo pipelines MUST be fitted with adequate Pressure and flow monitoring devices. 
+	  </li>
+	  <li style=" text-align: justify; page-break-inside:avoid"> 
+		  At the completion of the project, a detailed operational safety case study shall be carried out by a NMDPRA accredited 
+		  consultant and submit a copy of the report to the Department before commissioning the facility.
+	  </li>
+	  <li style=" text-align: justify; page-break-inside:avoid">
+			You shall inform the Department on completion of the construction work for the pre-commissioning inspection prior 
+			to issuance of operating license.
+	  </li>
+      
+   </ol>
+</p>
+<p style=" text-align: justify;">
+   In addition to the above, NMDPRA representatives will periodically visit the site to monitor the construction work and to ensure that 
+   all standards are maintained. 
+
+ 
+</p>
+<p style=" text-align: justify; page-break-inside:avoid">
+	You are therefore requested to strictly adhere to the above as the issuance of an operating license for the facility will be dependent on total compliance. 
+ 
+</p>
+</div>

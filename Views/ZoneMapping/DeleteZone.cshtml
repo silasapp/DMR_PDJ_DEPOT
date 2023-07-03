@@ -1,0 +1,49 @@
+﻿@model NewDepot.Models.ZonalOffice
+
+@{
+    ViewBag.Title = "DeleteZone";
+    Layout = null;
+}
+
+@if (Model != null)
+{
+
+    <div class="modal-body">
+        <div class="extForm">
+            <h4>Are you sure you want to delete this Zone Rule? </h4>
+            <dl class="dl-horizontal lt">
+                    <dt>Zone Name</dt>
+                    <dd>@Model.Name</dd>
+                </dl>
+            <p>
+                All Associated Branches wil be dropped but not deleted.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            <div class="">
+                <a role="button" href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                <input type="submit" value="Confirm & Delete" class="btn btn-danger" />
+            </div>
+        }
+
+    </div>
+
+}
+else
+{
+    <div class="modal-body">
+        <div class="extForm">
+            <h4>No Zone is selected or The selected Zone could not be found. Please select a Zone to delete</h4>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="">
+            <a role="button" href="#" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
+        </div>
+    </div>
+}

@@ -1,0 +1,135 @@
+﻿@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.ReportViewModel>
+
+@{
+    ViewData["Title"] = "Application Report for : " + ViewData["AppRef"];
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<br />
+
+<div class="card-black">
+
+    <h3 class=""> Application Information </h3>
+    <hr />
+
+    <div class="row">
+
+
+        @foreach (var appDetail in Model)
+        {
+
+            <div class="col-sm-4">
+
+                <div class="alert alert-info">
+
+                    <table class="table table-bordered table-striped" style="resize:both;">
+                        <tbody class="text-left">
+                            <tr>
+                                <td>Ref No </td>
+                                <td class="text-left"><b> @appDetail.RefNo </b></td>
+                            </tr>
+
+                            <tr>
+                                <td>Compamy Details </td>
+                                <td class="text-left"><small><b> @appDetail.CompanyName (@appDetail.CompanyAddress) </b></small></td>
+                            </tr>
+                            <tr>
+                                <td>Facility Details </td>
+                                <td class="text-left"><small><b> @appDetail.Facility </b></small></td>
+                            </tr>
+                            <tr>
+                                <td>Category </td>
+                                <td class="text-left"><b class="text-primary" style="font-weight:bold"> @appDetail.Category </b></td>
+                            </tr>
+                            @*<tr>
+                                <td>Type </td>
+                                <td class="text-left"><b class="text-primary" style="font-weight:bold"> @appDetail.Type </b></td>
+                            </tr>*@
+                        
+                            <tr>
+                                <td>Products </td>
+                                <td class="text-left"><small><b class="" style="font-weight:bold"> @appDetail.Products </b></small></td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td class="text-left"><b> @appDetail.Status </b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-8">
+
+                <div style="border-left:1px solid black; padding-left: 10px;">
+
+                    <h3 class="text-danger"><b>@ViewData["Title"]</b></h3>
+
+                    <hr />
+
+                    <div style="padding:15px">
+
+                        <div class="row">
+
+                            <div class="col-sm-8">
+                                <h4><b>Title : @appDetail.Subject</b></h4>
+
+                                <h4><b>Staff : @appDetail.Staff</b></h4>
+
+                            </div>
+
+                            @*<div class="col-sm-4">
+
+                                @if (appDetail.DocSource == "NILL")
+                                {
+                                    <b>No File uploaded</b>
+                                }
+                                else
+                                {
+                                    <div class="text-center">
+
+                                        <a href="@appDetail.DocSource" target="_blank">
+                                            <i class="far fa-file-pdf fa-5x text-danger"></i>
+
+                                            <p></p>
+
+                                            <b>Click to view file</b>
+                                        </a>
+
+                                    </div>
+                                }
+                            </div>*@
+
+                        </div>
+
+                        <hr />
+
+                        <div style="line-height:40px; text-align:justify; font-size:16px; padding:10px;" class="">
+                            @appDetail.Comment
+                        </div>
+
+                        <hr />
+
+                        <p class="">Created At : <b>@appDetail.ReportDate.Value.ToLongDateString()</b></p>
+                        <p class="text-danger">Updated At : <b>@appDetail.UpdatedAt?.ToLongDateString()</b></p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        }
+
+    </div>
+
+</div>
+

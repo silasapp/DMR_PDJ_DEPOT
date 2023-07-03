@@ -1,0 +1,74 @@
+﻿@using NewDepot.Models
+
+@model CategoryRoutings
+
+@{
+    //ViewBag.Title = "Create";
+    Layout = null;
+
+    var locations = new FieldOffices();
+}
+
+
+@using (Html.BeginForm("CreateCategoryRule", "Category", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+        @Html.ValidationSummary(true)
+
+        <input type="hidden" name="id" value="@Model.Id" />
+        <input type="hidden" name="category_id" value="@ViewBag.catId" />
+        <div class="form-group">
+            <label class="control-label col-md-4">Inspection Rule</label>
+            <div class="col-md-8">
+                <select name="ProcessingRule_id" id="ProcessingRule_id" required class="form-control">
+                    <option value="">Select Inspection Rule</option>
+                    @foreach (var rule in (List<ProcessingRules>)ViewBag.inspectionRule)
+                    {
+                        @*if (Model.ProcessingRule_id == rule.Id)
+                        {
+                            <option selected value="@rule.Id">@rule.DepartmentsName (@rule.RoleName)</option>
+                        }
+                        else
+                        {
+                            <option value="@rule.Id">@rule.DepartmentsName (@rule.RoleName)</option>
+                        }*@
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-4">Processing Location</label>
+            <div class="col-md-8">
+                <select name="ProcessingLocation" class="form-control">
+                    <option value="">Select Processing Location</option>
+                    @*@foreach (var item in locations.GetLocations())
+                    {
+                        if (Model != null && !string.IsNullOrEmpty(Model.ProcessingLocation) && item.Id.ToLower() == Model.ProcessingLocation.ToLower())
+                        {
+                            <option value="FD" selected>FD (Field Office)</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.LocationName</option>
+                        }
+                    }*@
+                  </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-4">Sort Order</label>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.SortOrder, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SortOrder)
+            </div>
+        </div>
+    </div>
+    <hr class="clear" />
+    <div class="form-group">
+        <div class="txtcenter">
+            <input type="submit" value="Save & Continue" class="btn btn-success" />
+        </div>
+    </div>
+}

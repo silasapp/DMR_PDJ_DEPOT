@@ -1,0 +1,39 @@
+﻿
+
+<p style="font-size: 0.8em; "><u><b>RE: APPLICATION FOR STORAGE CONVERSION AT: {0}</b></u></p>
+
+<div style="font-size: 0.8em; ">
+<p style="text-align:justify; padding-top:-5px!important;">
+	Your letter dated {1} on the above subject refers.<br/>
+	In view of the inspection visit and satisfactory construction of the approved storage tank carried out by your company under
+	the supervision of our representatives from the {8}, I am directed to convey to <b>{2}</b> &nbsp;&nbsp; the approval to operate your facility with the approved storage tank configuration
+	as shown in the table below;
+
+</p>
+ <table style="width: 100%; border-collapse: collapse; margin-top: -10px;"  class="table table-sm table-bordered">
+	<tr style="border: 1px solid black;">
+	<th colspan="5" style="border: 1px solid black;padding: 15px;height: 20px;">
+	<h4><b>APPROVED STORAGE TANK CONFIGURATION</b></h4>
+	</th>
+	</tr>
+	 <tr style="border: 1px solid black;">
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">S/No.</th>
+	 	<th style="border: 1px solid black; padding:2px;height: 20px;">Tank No. </th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">Product</th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">Capacity (litres)</th>
+	 	<th style="border: 1px solid black;padding: 2px;height: 20px;">Remark</th>
+	 </tr style="border: 1px solid black;">
+        <tbody>
+            {3}
+        </tbody>
+    </table>
+	<br/>
+	<br/>
+	<p style="text-align:justify; margin-bottom:2px!important; margin-top:-3px!important">
+		Consequently, you are to ensure next renewal application for Storage and Sales (depot) Licence for the year {9} reflect this current approved configuration and there shall be no reconfiguration
+		of the approved storage tanks within this licencing year.
+	</p>
+
+	<p>
+	
+	</div>

@@ -1,0 +1,130 @@
+﻿@model NewDepot.Models.payment_transactions
+
+@{
+    ViewBag.Title = "Transaction Detail";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    decimal amt = Convert.ToDecimal(Model.transaction_amount);
+}
+
+<div class="content">
+    <h2>Transaction Detail</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="well">
+                <dl class="dl-horizontal lt">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.id)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.id)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.transaction_date)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.transaction_date)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.reference_number)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.reference_number)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Webpay_Reference)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Webpay_Reference)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.payment_reference)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.payment_reference)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.approved_amount)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.approved_amount)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.response_description)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.response_description)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.transaction_amount)
+                    </dt>
+
+                    <dd>
+                        ₦ @amt.ToString("N2")
+                    </dd>
+
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.customer_name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.customer_name)
+                    </dd>
+
+
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.order_id)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.order_id)
+                    </dd>
+
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.query_date)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.query_date)
+                    </dd>
+
+
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#lnk-payment > a").addClass("selected").find(".act").addClass("selected");
+        $(".sidebar > ul > li > ul li a[href='/Company/All']").addClass("selected");
+
+
+    });
+</script>

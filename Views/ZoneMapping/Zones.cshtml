@@ -1,0 +1,123 @@
+﻿@model IEnumerable<NewDepot.Models.ZonalOffice>
+
+@{
+    ViewBag.Title = "Zones";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <h2 class="lefty">Zones</h2>
+
+    <p class="righty">
+        @*<a href="#" data-url="/ZoneMapping/AddZone" class="btn btn-primary addZ" data-target="#modalPopup" data-toggle="modal" 
+           data-uid="1">Add New Zone</a>*@
+    </p>
+    <hr class="clear" />
+
+    <table class="table table-striped table-hover dataTable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>*@
+                @*<th>
+                        @Html.DisplayNameFor(model => model.CountryName)
+                    </th>*@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Code)
+                    </td>
+                    @*<td>
+                        @if (item.Status == 1)
+                        {
+                            <span>Active</span>
+                        }
+                        else
+                        {
+                            <span>Not Active</span>
+                        }
+
+                    </td>*@
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.CountryName)
+                    </td>*@
+                    <td class="txtright">
+                        <div class="btn-group">
+                            <a href="/ZoneMapping/ZoneStates?id=@item.Id&s=@item.Name" class="btn btn-xs btn-warning">View States Covered</a>
+                            <a href="/ZoneMapping/?id=@item.Id" class="btn btn-xs btn-danger">View Field Offices</a>
+
+                            @*<a href="#" data-url="/ZoneMapping/AddZone?id=@item.Id" class="btn btn-xs btn-warning edit" 
+                               data-target="#modalPopup" data-toggle="modal" data-uid="2" data-name="@item.Name">Edit <i class="fa fa-edit"></i></a>
+                            <a href="#" data-url="/ZoneMapping/DeleteZone?id=@item.Id" class="btn btn-xs btn-danger del" 
+                               data-target="#modalPopup" data-toggle="modal" data-uid="3">Delete <i class="fa fa-edit"></i></a>*@
+                               @*@Html.ActionLink("Edit", "AddZone", new { id = item.Id }, new { @class = "btn btn-xs btn-warning" })
+                               @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-xs btn-danger" })*@
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#lnk-Zone > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/ZoneMapping/Zones']").addClass("selected");
+
+            $(".dataTable").dataTable({
+                "aLengthMenu": [25, 50, 75, 100, 200],
+                'iDisplayLength': 25,
+                columnDefs: [{ orderable: false, "targets": [-1] }],
+                "language": {
+                    "lengthMenu": "Display  _MENU_ records per page",
+                    "zeroRecords": "Nothing found - sorry",
+                    "info": "Showing page _PAGE_ of _PAGES_",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            $(".addZ, .edit, .del").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("data-url");
+                var uid = $(this).attr("data-uid");
+                var name = $(this).attr("data-name");
+
+                $("#modal-body").html("");
+                if (uid == "1") {
+                    var headTitle = "Add New Zone";
+                } else if (uid == "2") {
+                    var headTitle = "Edit Zone '" + name + "'";
+                } else if (uid == "3") {
+                    var headTitle = "Delete Zone '" + name ;
+                }
+
+                $(".modal-title").text(headTitle);        // find title for changr
+                $("#modal-body").html("");
+                $("#modal-body").html(Loading());
+                //Load the view
+                $.get(url, function (data) {
+                    $("#modal-body").html(data);
+                });
+            });
+        });
+    </script>
+}

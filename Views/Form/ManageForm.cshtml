@@ -1,0 +1,239 @@
+﻿@model IEnumerable<NewDepot.Models.Fields>
+@using NewDepot.Helpers;
+@{
+    ViewBag.Title = "Manage Form Fields";
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    int count = 0;
+}
+
+@if (ViewBag.Alert != null)
+{
+    AlertBox alert = (AlertBox)ViewBag.Alert;
+
+    <div class="col-md-12">
+        <div class="alert @alert.GetTypeString" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>@alert.Title!</strong> @alert.Message
+        </div>
+    </div>
+}
+<div class="row">
+
+    <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+        @if (Model != null)
+        {
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Manage <i class="text-danger text-sm"> @ViewBag.FormsName</i> Fields</h2>
+                    </div>
+                    <div class="col-md-12"><hr /></div>
+
+                    <div class="col-md-12">
+                        <small>PLEASE NOTE: ONCE THIS FORM HAS BEEN FILLED BY A USER, IT CAN NO LONGER BE MODIFIED</small>
+                        <hr />
+                    </div>
+                </div>
+
+                <div class="holder">
+                        <div id="stage">
+                            @using (Html.BeginForm("CreateField", "Form", FormMethod.Post, new { @class = "form-horizontal" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => Model.FirstOrDefault().FormId)
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="@Model.FirstOrDefault().Label">Field Label</label>
+                                    <div class="col-md-12 editor-field">
+                                        @Html.TextBoxFor(model => Model.FirstOrDefault().Label, htmlAttributes: new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => Model.FirstOrDefault().Label)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-12" for="@Model.FirstOrDefault().Label">Field Description</label>
+                                    <div class="col-md-12">
+                                        @Html.TextBoxFor(model => Model.FirstOrDefault().Description, htmlAttributes: new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12 col-md-offset-12">
+                                        <div class="checkbox">
+                                            <label style="padding-left: 30px;">
+                                                @Html.CheckBoxFor(model => Model.FirstOrDefault().IsRequired, new { @style = "top: 10px; width: 18px; height: 18px; margin-left: -30px;" }) This is Field Compulsory?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-12" for="@Model.FirstOrDefault().DataType">Datatype</label>
+                                    <div class="col-md-12 editor-field">
+                                        @Html.DropDownListFor(model => Model.FirstOrDefault().DataType, (SelectList)@ViewBag.types, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => Model.FirstOrDefault().DataType)
+                                    </div>
+                                </div>
+                                <div class="form-group hide" id="dropVals">
+                                    <label class="control-label col-md-12">Option values</label>
+                                    <div class="col-md-12">
+                                        @Html.TextBoxFor(model => Model.FirstOrDefault().OptionValue, htmlAttributes: new { @class = "form-control", @placeholder = "e.g. Option1, Option 2, Option3" })
+                                        <div id="note1" class="notes hide"><small>Separate each value with a comman (,)</small></div>
+                                        <div id="note2" class="notes hide">
+                                            <small>
+                                                <b>Format For Table type:</b> Cols=Col Label 1; Col Label 2; Col Label 3 | Rows=Row Label 1; Row Label 2; Row Label 3<br />
+                                                <b>For Dynamic rows:</b> Rows=-1; Label e.g. Rows=-1;Total no of Facility(ies)
+                                            </small>
+                                        </div>
+                                        <div id="note3" class="notes hide"><small><b>Format For Image Type:</b> Max=1; Dynamic/All</small></div>
+                                    </div>
+                                </div>
+                                <div class="form-group marg25">
+                                    <div class="txtcenter">
+                                        <input type="submit" value="Create Field" class="btn btn-success" /> &nbsp; &nbsp;@Html.ActionLink("Back", "List", null, new { @class = "btn btn-default" })
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    <div class="clearfix"></div>
+                    <hr />
+                    <div>
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="content">
+                <h4>Form has been filled by atleast one user, hence, fields modification can not be done..</h4>
+            </div>
+        }
+    </div>
+    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover dataTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Label</th>
+                        <th>Description</th>
+                        <th>Datatype</th>
+                        <th>Option Values</th>
+                        <th>Required Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        count++;
+                        string req = (bool)item.IsRequired ? "True" : "False";
+                    <tr class="">
+                        <td>
+                            @count
+                        </td>
+                        <td>
+                            @item.Label
+                        </td>
+                        @if (item.Description != null)
+                        {
+                            <td>
+                                @item.Description
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <p>No description</p>
+                            </td>
+                        }
+                        <td>
+                            @item.DataType
+                        </td>
+                        @if (item.OptionValue != null)
+                        {
+                            <td>
+                                @item.OptionValue
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <p>Not Applicable</p>
+                            </td>
+                        }
+                        <td>
+                            @req
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+    </div>
+
+    @section Scripts{
+        <script type="text/javascript">
+
+        $(function () {
+            $("#lnk-Form > a").addClass("selected").find(".act").addClass("selected");
+            $(".sidebar > ul > li > ul li a[href='/Form/List']").addClass("selected");
+
+
+            $("#DataType").on("change", function () {
+                var sel = $(this).val().toLowerCase();
+                if (sel == 'options' || sel == 'checkbox' || sel == 'table' || sel == 'image') {
+                    $("#dropVals").removeClass("hide");
+                    $("#OptionValue").attr("required", "required");
+                    switch (sel) {
+                        case 'options':
+                            console.log("Options");
+                            $(".notes").addClass("hide");
+                            $("#note1").removeClass("hide");
+                            break;
+                        case 'checkbox':
+                            console.log("Options");
+                            $(".notes").addClass("hide");
+                            $("#note1").removeClass("hide");
+                            break;
+                        case 'table':
+                            console.log("Table");
+                            $(".notes").addClass("hide");
+                            $("#note2").removeClass("hide");
+                            break;
+                        case 'image':
+                            $(".notes").addClass("hide");
+                            $("#note3").removeClass("hide");
+                            break;
+                        default:
+                            $(".notes").addClass("hide");
+                            break;
+                    }
+                }
+                else {
+                    $("#dropVals").addClass("hide");
+                    $("#OptionValue").removeAttr("required");
+                }
+            });
+
+            $(".delFormField").on("click", function (e) {
+                e.preventDefault();
+                alert("Delete Field");
+            });
+            $(document).on("click", ".editFormField", function (e) {
+                e.preventDefault();
+                //alert("Edit Field");
+                var url = '@Url.Action("EditField", "Form")';
+                var id = $(this).data("id");
+                $("#stage").html(Loading());
+                $.get(url, { id: id }, function (data) {
+                    $("#stage").html(data);
+                });
+            });
+
+        });
+        </script>
+    }

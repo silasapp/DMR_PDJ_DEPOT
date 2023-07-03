@@ -1,0 +1,161 @@
+﻿
+@using NewDepot.Helpers
+@model IEnumerable<NewDepot.Models.MyApps>
+@using Microsoft.AspNetCore.Http;
+@using NewDepot.Controllers.Authentications;
+
+@{ ViewData["Title"] = ViewData["StaffDeskDetails"].ToString().ToLower();
+    Layout = "~/Views/Shared/_ElaLayout.cshtml";
+    GeneralClass generalClass = new GeneralClass();
+
+    var userRole = generalClass.Decrypt(Context.Session.GetString(AuthController.sessionRoleName));
+
+}
+
+<h3>@ViewData["Title"].ToString()</h3>
+
+<br />
+
+<div class="card-black">
+
+    <div class="card-title">
+        <h4>  @ViewData["StaffDeskDetails"].ToString() </h4>
+
+        @if (userRole == GeneralClass.ADMIN || userRole == GeneralClass.IT_ADMIN || userRole == GeneralClass.ICT_ADMIN || userRole == GeneralClass.ADPDJ || userRole == GeneralClass.HDS || userRole == GeneralClass.OPSCON || userRole == GeneralClass.SUPERVISOR || userRole == GeneralClass.ADOPS || userRole == GeneralClass.TEAMLEAD || userRole == GeneralClass.ADOPS || userRole == GeneralClass.IT_ADMIN || userRole == GeneralClass.ICT_ADMIN || userRole == GeneralClass.SUPER_ADMIN || userRole == GeneralClass.ADMIN || userRole == GeneralClass.SUPPORT)
+        {
+            @if (Model.Where(x => x.hasWorked == false).Count() > 0)
+            {
+                <button type="button" id="btnStaffRerouteApps" class="btn btn-info pull-right" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#">
+                    Click to distribute @Model.Where(x => x.hasWorked == false).Count() pending application(s) to staff in the same role
+                </button>
+
+                <button type="button" hidden id="btnGetStaffs" class="btn btn-primary pull-right" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#InsPushAppModal">
+                    Click
+                </button>
+            }
+            <input value="@generalClass.Encrypt(ViewData["OriginalStaffID"].ToString())" type="text" hidden id="txtOriginalStaffID" />}
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover" id="MyDeskAppTable" style="font-size:smaller">
+
+            <thead>
+                <tr>
+                    <th class="dt-checkboxes-select-all">
+                        <input  type="checkbox" />
+                    </th>
+                    <th>Ref. No</th>
+                    <th>Staff </th>
+                    <th>Company</th>
+                    <th>Facility</th>
+                    <th>Category</th>
+                    <th>Processed</th>
+                    <th>Status</th>
+                    @*<th>Current Desk</th>*@
+                    <th>Landed On</th>
+                    <th>Processed At</th>
+                    <th>Processing Days</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (Model.Count() > 0)
+                {
+                    foreach (var a in Model.Where(x=> x.hasWorked != true))
+                    {
+                        var app_id = generalClass.Encrypt(a.appID.ToString());
+
+                        var hasWorked = a.hasWorked == true ? "YES" : "NO";
+                        var hasWorked2 = a.hasWorked == true ? "btn-warning" : "btn-danger";
+
+                        <tr>
+                            <td>
+                                @a.appID
+
+
+                            </td>
+                            <td>  <a href="/Application/ViewApplication/@a.appID" class=""> <b>@a.Reference</b> </a> </td>
+                            <td>  @a.Staff </td>
+                            <td> <b> @a.CompanyName</b></td>
+                            <td>  @a.FacilityName</td>
+                            <td>  <b>@a.CategoryName</b> </td>
+                            <td>  <button class="btn btn-sm @hasWorked2">@hasWorked</button> </td>
+                            <td> <b> @a.Status</b> </td>
+                            @*<td> <b>@a.CurrentStaff</b> </td>*@
+                            <td>  @a.Date_Added </td>
+                            <td>  @a.ProcessedOn </td>
+                            <td>  @a.ProcessingDays Days </td>
+                            <td> <a href="/Application/ViewApplication/@a.appID" class="btn btn-primary btn-sm"> <i class="fa fa-eye"> </i> View App </a></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<input type="text" id="Insshowpush" hidden />
+
+
+<div class="modal" id="InsPushAppModal">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card-black">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+
+                <h4 class="modal-title">Select one staff to re-route application to </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="btn btn-danger btn-sm">Close</span>
+                </button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+                <div class="text-center"> <b class="text-primary"> Showing staff in the same role with the previously selected staff</b></div>
+
+                <br />
+
+                <table class="table table-bordered table-hover" style="" id="TableDistributeApps">
+                    <thead>
+                        <tr>
+                            <th class="hidden">StaffId</th>
+                            <th>LastName</th>
+                            <th>FirstName</th>
+                            <th> Email</th>
+                            <th> Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+
+                <div id="InsAppDropInfo" class="text-danger">
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts{
+
+}

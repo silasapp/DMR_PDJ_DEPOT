@@ -1,0 +1,14 @@
+﻿@model IList<NewDepot.Models.Products>
+
+@{
+    Layout = null;
+    var nm = "tnks[" + ViewBag.id + "].ProductId";
+}
+<select name="@nm" required class="form-control">
+    <option value="">Select Product</option>
+    @foreach (var item in Model)
+    {
+        <option value="@item.Id">@item.Name</option>
+    }
+</select>
+   

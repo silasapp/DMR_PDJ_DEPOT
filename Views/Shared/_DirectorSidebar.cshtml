@@ -1,0 +1,107 @@
+﻿
+<ul>
+    <li>
+        <a href="#">
+            <span>Control Panel</span>
+            <br />
+            <small>Management</small>
+        </a>
+    </li>
+
+
+    <li id="lnk-Applications" class="more">
+        <a href="#">
+            <i class="icon-note" aria-hidden="true"></i>
+            <span>Applications</span>
+            <span class="more"></span><span class="act"></span>
+        </a>
+        <ul>
+            <li>
+                <a href="/Application">
+                    <i class="fa fa-book" aria-hidden="true"></i>
+                    <span>All Applications</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Company/All">
+                    <i class="fa fa-building-o" aria-hidden="true"></i>
+                    <span>All Companies</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    @*<li id="lnk-Reports" class="more">
+        <a href="#" class="">
+            <i class="icon-graph" aria-hidden="true"></i>
+            <span>Reports</span>
+            <span class="more"></span>
+            <span class="act"></span>
+        </a>
+        <ul>
+            <li>
+                <a href="/Reports/ApplicationSummary">
+                    <i class="icon-graph" aria-hidden="true"></i>
+                    <span>Applications Report</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Reports/PermitReport">
+                    <i class="icon-pie-chart" aria-hidden="true"></i>
+                    <span>Permits Report</span>
+                </a>
+            </li>
+        </ul>
+    </li>*@
+    <li id="lnk-Reports" class="more">
+        <a href="#" class=""><i class="fa fa-bar-chart" aria-hidden="true"></i>Reports <span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+            <li id="lnk-Year" class="more">
+                <a href="#" class=""><i class="fa fa-bar-chart" aria-hidden="true"></i>Application Year<span class="fa fa-chevron-down"></span></a>
+
+                <ul class="nav child_menu">
+                    @using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                    {
+                        <li>
+                            <input type="submit" value="2018" class="btn btn-success" />
+                            <input class="form-control" type="hidden" id="year" name="year" value="2018" hidden />
+                        </li>
+                    }@using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                    {
+                        <li>
+                            <input type="submit" value="2019" class="btn btn-success" />
+                            <input class="form-control" type="hidden" id="year" name="year" value="2019" hidden />
+                        </li>
+                    }@using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                    {
+                        <li>
+                            <input type="submit" value="2020" class="btn btn-success" />
+                            <input class="form-control" type="hidden" id="year" name="year" value="2020" hidden />
+                        </li>
+                    }@using (Html.BeginForm("ApplicationByYear", "Reports", FormMethod.Post))
+                    {
+                        <li>
+                            <input type="submit" value="2021" class="btn btn-success" />
+                            <input class="form-control" type="hidden" id="year" name="year" value="2021" hidden />
+                        </li>
+                    }
+                    @*<li><a href="/Reports/ApplicationSummary">2018</a></li>
+                        <li><a href="/Reports/ApplicationSummary">2019</a></li>
+                        <li><a href="/Reports/ApplicationSummary">2020</a></li>
+                        <li><a href="/Reports/ApplicationSummary">2021</a></li>*@
+
+                </ul>
+
+            </li>
+            <li><a href="/Reports/PaymentSummary">Payment Summary</a></li>
+            <li><a href="/Reports/PaymentExport">Payment Receipt</a></li>
+            <li><a href="/Reports/PermitNLicenseSummary">Permits Summary</a></li>
+            <li><a href="/Reports/ApplicationSummary">Applications Summary</a></li>
+            <li>
+                <a href="@Url.Action("RejectedApplications", "Application")">Rejected Applications</a>
+            </li>
+            <li><a href="/Invoice">Invoice</a></li>
+            <li><a href="/Invoice/Receipt">Receipt</a></li>
+        </ul>
+    </li>
+</ul>
